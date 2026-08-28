@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第九十五回精读：定力与因果</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第九十五回精读：定力与因果</h1>
+            <p class="text-lg text-gray-700 serif">“假合形骸擒玉兔，真阴归正会灵元”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">唐僧定力</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">揭穿假公主</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">追至毛颖山</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">真阴归正</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 唐僧定力 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">面对美色才女，唐僧“全不动念”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空变成蜜蜂钉在唐僧的毗卢帽上跟入宫中。鼓乐喧天、异香扑鼻，两班才女排得像蕊宫仙府一般，可唐僧低着头不敢看、全不动念。悟空暗自咂嘴夸赞：“好和尚！”——唐僧打也打不过、看也看不明，为什么能取到真经？关键就在“全不动念”，取经的心极为坚定，面对美色财礼完全不放在心上。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">全不动念</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">唐僧的本事</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            两班才女排得像<strong>蕊宫仙府</strong>一般，唐僧却<strong>低着头全不动念</strong>——悟空暗自夸赞“好和尚”。<strong>打不过、看不明的唐僧，靠的就是这份“定力”</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">蜜蜂随行</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">钉在毗卢帽上</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            悟空变成<strong>蜜蜂钉在唐僧的毗卢帽上</strong>跟入宫中——近距离观察师父的定力，也准备随时辨真假。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">定力，是最难练的本事</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    唐僧没有武力、没有眼力，却凭“全不动念”取到真经。<strong>在诱惑面前坐得住、不迷心，这比会打、会看更难得——定力，是真正的“内功”</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 揭穿假公主 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">悟空一把揪住“公主”，妖怪脱衣取短棍</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    公主出宫，悟空看出她头上“微露一点妖气”，却也不十分凶恶——这妖怪并非大恶。悟空性急，现出本相大喝一声揪住公主：“孽畜，在这里弄假成真，受用够了，心还不足，还想骗我师父！”吓得国王呆怔、后妃跌爬。妖怪脱了衣饰钗环，跑到御花园土地庙取出一条“对嘴样”的短棍来打——原来是一头大一头小的捣药杵。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">弄假成真</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">现本相揪公主</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            悟空看出公主头上<strong>“微露一点妖气，却也不十分凶恶”</strong>——性急的他现出本相，大喝“孽畜，弄假成真受用够了，还想骗我师父！”吓得满宫乱作一团。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">捣药杵</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">一头大一头小的短棍</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            妖怪脱了衣饰，从御花园土地庙取出<strong>“对嘴样的短棍”</strong>——像捣蒜的杵头，一头粗一头细。<strong>“广寒宫里捣药杵，打人一下命归泉”</strong>，正是月宫玉兔的兵器。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">“火眼金睛”，看得透假象</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    满朝人都被“公主”骗了，只有悟空一眼看穿。<strong>不被“漂亮的外表”迷惑，透过现象看本质——这种“眼力”，比聪明更值钱</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 追至毛颖山 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">妖怪逃进兔子洞，山神供出“狡兔三窟”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    妖怪打不过，化清风往西天门逃——悟空追到正南一座大山，妖怪钻进洞不见了。悟空叫来山神土地一问：这山叫毛颖山，只有三处兔穴，“狡兔三窟”，从来无妖。可第三处兔穴用两块大石挡住洞口——悟空撬开石块，妖怪果然藏在里面！二人打斗间，天上有人高叫：“大圣不要动手！”——是太阴星君（月神）带着嫦娥来了。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">毛颖山</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">狡兔三窟</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            妖怪逃进<strong>毛颖山</strong>的兔子洞——山神说“狡兔三窟”，这山只有三处兔穴。第三处洞口被<strong>两块大石挡住</strong>，悟空撬开一看，妖精果然藏在里面。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">太阴星君</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">月神现身</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            打斗间天上高叫<strong>“大圣不要动手”</strong>——<strong>太阴星君（月神）</strong>带着嫦娥仙子驾彩云而来：这妖怪就是我广寒宫中捣药的<strong>玉兔</strong>，偷开玉冠金锁下凡一年了。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">狡兔三窟，也躲不过“天网”</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    兔子再狡猾、挖再多洞，主人一来就现原形。<strong>做坏事也许能躲一时，躲不了一世——总有“发现你”的那一天</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 真阴归正 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">太阴收玉兔，布金寺接回真公主</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    太阴星君讲出因果：真公主原是月宫“素娥仙子”，二十年前打过玉兔一掌；玉兔记恨，思凡下界把素娥抛在荒野、自己假扮公主。太阴带玉兔到天竺国现出白兔原身，明证真假。国王这才大哭，赶到布金寺——后房锁着的“妖邪”原来就是受了一年苦的真公主！国王皇后搂着女儿：“我受苦的儿啊！”天竺国一难圆满结束。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">前世因果</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">素娥与玉兔的20年冤孽</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            真公主原是月宫<strong>素娥仙子</strong>，20年前打过玉兔一掌；玉兔怀恨，思凡下界把她抛于荒野、<strong>自己假扮公主</strong>——这“前世冤孽”，太阴星君了如指掌。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">父女团圆</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“我受苦的儿啊！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            太阴星君带玉兔到天竺国<strong>现出白兔原身</strong>明证；国王到布金寺打开后房，搂着受了一年苦的真公主大哭——<strong>“我受苦的儿啊”</strong>，天竺国一难结束。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">因果有头，善恶有报</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    素娥一掌之仇，玉兔记了二十年。<strong>种什么因、结什么果——待人接物要留善意，别给自己埋下“报复”的种子</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第九十五回“假合形骸擒玉兔，真阴归正会灵元”讲的是天竺国真假公主之难的收尾：唐僧面对美色才女“全不动念”，悟空赞他是“好和尚”；悟空看出公主头上微露妖气，现本相揪出假公主；妖怪是月宫捣药的玉兔，用“广寒宫里捣药杵”和悟空打到西天门，逃进毛颖山“狡兔三窟”；太阴星君现身，讲出素娥仙子与玉兔二十年前的一掌之仇；玉兔现原身明证，国王在布金寺接回受苦一年的真公主。这一回让我们看到：定力是最难练的本事、火眼金睛看得透假象、做坏事躲不了一世、因果有头善恶有报。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第九十五回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "悟空跟着唐僧进宫，变成了什么？",
+                    "options": {"A": "苍蝇","B": "蜜蜂，钉在唐僧的毗卢帽上","C": "蝴蝶","D": "蚊子"},
+                    "correct": "B",
+                    "analysis": "悟空“钉在唐僧的毗卢帽上”跟入宫中——既能保护唐僧，又能暗中观察公主真假。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "面对两班才女，唐僧的表现是什么？",
+                    "options": {"A": "多看几眼","B": "低着头不敢看，全不动念","C": "很高兴","D": "害怕"},
+                    "correct": "B",
+                    "analysis": "两班才女排得像蕊宫仙府，唐僧却“低着头也不敢看”——悟空暗自咂嘴夸赞“好和尚”。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "唐僧打不过妖怪、看不明真假，为什么还能取到真经？",
+                    "options": {"A": "运气好","B": "取经之心极为坚定，面对诱惑“全不动念”","C": "有神仙帮","D": "徒弟强"},
+                    "correct": "B",
+                    "analysis": "唐僧的“本事”就是定力——对美色财礼完全不放在心上，取经的心极其坚定。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "悟空看出假公主头上有什么？",
+                    "options": {"A": "金钗","B": "微露一点妖气（却不十分凶恶）","C": "灰尘","D": "光芒"},
+                    "correct": "B",
+                    "analysis": "悟空看破“公主头上微露一点妖气，却也不十分凶恶”——这个妖怪并非作恶多端的妖。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空揭穿假公主时，说了什么？",
+                    "options": {"A": "“妖怪看打”","B": "“孽畜，在这里弄假成真，受用够了，心还不足，还想骗我师父！”","C": "“快现原形”","D": "“你是谁”"},
+                    "correct": "B",
+                    "analysis": "悟空性急又嫉恶如仇，现出本相大喝——满宫吓得国王呆怔、后妃跌爬。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "假公主的兵器是什么？",
+                    "options": {"A": "短剑","B": "“对嘴样”的短棍，即广寒宫里捣药杵","C": "狼牙棒","D": "大刀"},
+                    "correct": "B",
+                    "analysis": "妖怪取出一条“对嘴样”的短棍——像捣蒜的杵头，一头大一头小，正是“广寒宫里捣药杵”。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "妖怪自述兵器“久住蟾宫桂殿边”，说明它住在哪里？",
+                    "options": {"A": "花果山","B": "月宫（蟾宫桂殿）","C": "龙宫","D": "天宫"},
+                    "correct": "B",
+                    "analysis": "“蟾宫桂殿”指月亮上的广寒宫——玉兔为嫦娥捣药，所以住在月宫。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "妖怪骂悟空是什么？",
+                    "options": {"A": "泼猴","B": "弼马温（五百年前大闹天宫的）","C": "妖怪","D": "小贼"},
+                    "correct": "B",
+                    "analysis": "天上下来的都知悟空老底——妖怪骂他“你不就是五百年前大闹天宫的弼马温吗？”"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "妖怪为什么恨悟空“破人亲事”？",
+                    "options": {"A": "不想嫁","B": "“你破人亲事，有如杀父母之仇”","C": "讨厌唐僧","D": "想独身"},
+                    "correct": "B",
+                    "analysis": "玉兔一心想跟唐僧成亲，悟空揭穿了它——妖怪说“破人亲事，有如杀父母之仇”，所以要打悟空。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "妖怪逃到哪座山？",
+                    "options": {"A": "青龙山","B": "毛颖山","C": "狮驼岭","D": "花果山"},
+                    "correct": "B",
+                    "analysis": "妖怪化金光奔正南，钻进“毛颖山”的洞里——“毛颖”二字点出它是毛茸茸的兔子。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "山神说“狡兔三窟”，毛颖山上有几处兔穴？",
+                    "options": {"A": "一处","B": "三处","C": "五处","D": "七处"},
+                    "correct": "B",
+                    "analysis": "“狡兔三窟”说兔子会挖多个洞藏身——毛颖山正好有三处兔穴，第三处洞口用大石挡住。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "悟空为什么不直接告诉国王真公主在布金寺？",
+                    "options": {"A": "忘了","B": "不拿住假公主国王不信，也怕假公主报复真公主","C": "不知道在哪","D": "不想说"},
+                    "correct": "B",
+                    "analysis": "悟空想：先拿住假公主国王才信；提前说出真公主下落，假公主可能去害她——所以要等降妖后再带回来。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "太阴星君是谁？",
+                    "options": {"A": "月宫之神（月神）","B": "太阳神","C": "观音","D": "玉帝"},
+                    "correct": "A",
+                    "analysis": "“太阴”就是月亮——太阴星君是月宫之神，带着嫦娥（姮娥仙子）来收玉兔。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "真公主的真实身份是什么？",
+                    "options": {"A": "凡间女子","B": "月宫素娥仙子（二十年前打过玉兔一掌）","C": "龙女","D": "织女"},
+                    "correct": "B",
+                    "analysis": "太阴星君讲：真公主原是“我宫中的素娥”——二十年前打了玉兔一掌，玉兔怀恨报复，把她抛于荒野。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "玉兔唯一的“真罪”是什么？",
+                    "options": {"A": "藏公主","B": "不该想跟唐僧结婚、破坏取经大业","C": "下凡","D": "打人"},
+                    "correct": "B",
+                    "analysis": "太阴星君说：藏公主是前世因果，尚可放过；但“不该玷辱唐僧，此罪是真不可恕”——破坏取经大业才是真罪。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "国王在布金寺见到真公主，说了什么？",
+                    "options": {"A": "“你是谁”","B": "“我受苦的儿啊，你怎么被折磨成这个样子”","C": "“快回家”","D": "“别哭”"},
+                    "correct": "B",
+                    "analysis": "国王皇后近前搂抱真公主——“我受苦的儿啊”，一家终于团圆，天竺国一难结束。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "唐僧“全不动______”，所以能取到真经。",
+                    "answer": "念",
+                    "analysis": "“全不动念”指心中不起贪念——唐僧面对美色财礼毫不动心，这是取经成功的关键。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "妖怪的兵器叫“广寒宫里______药杵”。",
+                    "answer": "捣",
+                    "analysis": "“捣药杵”是月宫玉兔为嫦娥捣长生药的杵——正是这妖怪的武器，打人一下命归泉。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "妖怪自称“久住______宫桂殿边”，住在月宫。",
+                    "answer": "蟾",
+                    "analysis": "“蟾宫”是月宫的别称（传说月中有蟾蜍）——蟾宫桂殿，就是月亮上的广寒宫。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "山名叫______颖山，暗示这是兔子的地盘。",
+                    "answer": "毛",
+                    "analysis": "“毛颖”本指毛笔（兔毛所制），用在兔子洞所在的山名上，暗藏“毛茸茸的兔子”之意。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "“狡兔三______”，兔子会挖多个洞藏身。",
+                    "answer": "窟",
+                    "analysis": "“狡兔三窟”是成语——狡猾的兔子有三个洞，比喻多个藏身之处，也指做人要多留退路。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "太阴星君就是月宫之神，带着______娥仙子而来。",
+                    "answer": "嫦（姮）",
+                    "analysis": "“嫦娥（姮娥）”是月宫仙子——西游记里的嫦娥是月宫的仙女们，猪八戒当年调戏的正是她们。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "真公主原是月宫______娥仙子，二十年前打了玉兔一掌。",
+                    "answer": "素",
+                    "analysis": "“素娥”是月宫仙女——素娥曾打玉兔一掌，结下二十年的冤孽，玉兔下凡报复。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "太阴星君用手一指：“孽畜还不归正！”玉兔打个滚就现出______兔原身。",
+                    "answer": "白",
+                    "analysis": "“白兔”是玉兔的原身——太阴星君一指，玉兔打了个滚就现出白兔本相，被带走了。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“定力”】唐僧打不过、看不明，却凭“全不动念”取到真经。请谈谈：为什么“定力”比“聪明”更难得？你如何做到“面对诱惑不动心”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>坐怀不乱，才是真功夫：</strong> 唐僧没有神通，却面对美色财礼毫不动心——<strong>聪明决定“跑得快”，定力决定“走得远”</strong>。</p>\n                        <p class=\"mt-2\"><strong>面对诱惑不动心：</strong> ①写作业时，把手机、玩具放远；②游戏再好玩，先完成正事再玩；③别人炫耀“新东西”，不眼红不攀比；④心里立个“底线”：什么能碰、什么不能碰；⑤把注意力放在“目标”上，诱惑就淡了。<strong>有定力的人，才能守住初心</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“火眼金睛”】满朝人被“公主”骗了，只有悟空一眼看穿。请谈谈：为什么“透过现象看本质”很重要？你如何练就自己的“火眼金睛”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>外表的假象，最会骗人：</strong> “公主”那么美、那么像，却是妖怪变的——<strong>看人看事，不能只看表面“像不像”</strong>。</p>\n                        <p class=\"mt-2\"><strong>练就火眼金睛：</strong> ①多问“他为什么这么做、图什么”；②看宣传、广告，想“真实效果如何”；③发现“太完美”的事，先打个问号；④把现象和本质分开：表面一套，里子一套；⑤多读书、多经历，见识广了，眼睛就亮了。<strong>真正的火眼金睛，是用心去看</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“因果报应”】素娥打了玉兔一掌，二十年后被报复。请谈谈：为什么“种善因得善果、种恶因得恶果”？你如何做到“与人为善、少结怨”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>善恶终有报，只是时候未到：</strong> 素娥的一掌，玉兔记了二十年——<strong>你怎样对别人，往往迟早会回到自己身上</strong>。</p>\n                        <p class=\"mt-2\"><strong>与人为善：</strong> ①对同学友善，不嘲笑、不欺负；②发生矛盾，先讲道理不结怨；③能帮一把就帮一把，积攒善意；④不背后说人坏话、不栽赃；⑤把“对不起”说出口，把恩怨化解在当下。<strong>少种一个“怨”，就少收一个“果”</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“不让步”】太阴星君说玉兔藏公主可恕，想骗唐僧成亲却是真罪。请谈谈：为什么“小事可忍，大节不让”？你如何守住自己的“大原则”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>大节不亏，小节不拘：</strong> 太阴星君原谅玉兔藏公主的旧怨，却不放过它破坏取经的“真罪”——<strong>小事能让，原则不能让</strong>。</p>\n                        <p class=\"mt-2\"><strong>守住大原则：</strong> ①诚实不撒谎、考试不作弊，是底线；②不偷、不抢、不欺负人，是底线；③重要的事上，不让步、不和稀泥；④分清“能让的”和“不能让的”；⑤守住原则的人，别人才敬你。<strong>人可以随和，原则不能打折</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“留退路”】“狡兔三窟”说兔子会多留几个洞。请谈谈：为什么“凡事多留一手准备”是智慧？你如何做到“有备无患”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>有备无患，未雨绸缪：</strong> 兔子挖三个洞，遇险有处藏——<strong>凡事多想一步、多备一手，遇到突发才不慌</strong>。</p>\n                        <p class=\"mt-2\"><strong>有备无患：</strong> ①考试前多复习几遍，不只赌“考这个”；②出门前检查文具、作业是否带齐；③重要的事，多想“如果失败怎么办”；④准备一套“备用方案”，以备不时之需；⑤把“应该没事”换成“做好准备”。<strong>留退路的人，进可攻、退可守</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“慈悲与公正”】悟空请太阴星君明证，既救了玉兔，又还了真公主公道。请谈谈：为什么“有原则的善良”最难得？你如何做到“善良且有底线”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>善良不等于纵容：</strong> 悟空让太阴收走玉兔（给它生机），又必须当众明证真假（还公道）——<strong>好心要有原则，否则就成了“老好人”</strong>。</p>\n                        <p class=\"mt-2\"><strong>善良有底线：</strong> ①帮人，但不帮人做坏事；②对人好，但不一味忍让；③分清“宽容”和“纵容”；④该说“不”的时候，勇敢说“不”；⑤用智慧去善：既帮人，也辨是非。<strong>善良是本性，带底线的善良才是本事</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

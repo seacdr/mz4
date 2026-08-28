@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第六回精读：变化之战</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第六回精读：变化之战</h1>
+            <p class="text-lg text-gray-700 serif">“观音赴会问原因，小圣施威降大圣”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-guanyin')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-guanyin">第一章：观音登场</button>
+                <button onclick="NavigationModule.switchTab('section-erlang')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-erlang">第二章：二郎真君</button>
+                <button onclick="NavigationModule.switchTab('section-change')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-change">第三章：斗变化</button>
+                <button onclick="NavigationModule.switchTab('section-art')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-art">第四章：擒拿的艺术</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Guanyin -->
+        <section id="section-guanyin" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">叙事视角的转换：从道到佛</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    天庭力量已近穷尽，若继续增兵，情节必然重复乏味。作者于是巧妙引入<strong>佛家视角</strong>，借前文蟠桃会邀请的伏笔，让观音菩萨自然登场，打破叙事僵局。点击下方卡片，认识三大势力的格局。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>道家代表</h3>
+                    <p class="text-center text-5xl mb-3">☯️</p>
+                    <p class="text-center font-bold text-amber-900 mb-2">太上老君</p>
+                    <p class="text-sm text-gray-600 text-center">以“金丹”“八卦炉”为标志，将在后文扮演关键角色</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>佛家代表</h3>
+                    <p class="text-center text-5xl mb-3">🪷</p>
+                    <p class="text-center font-bold text-amber-900 mb-2">观音菩萨（如来未出）</p>
+                    <p class="text-sm text-gray-600 text-center">携惠岸行者赴会，为天宫困局提供新解法</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>神圣体系</h3>
+                    <p class="text-center text-5xl mb-3">👑</p>
+                    <p class="text-center font-bold text-amber-900 mb-2">玉皇大帝 & 王母娘娘</p>
+                    <p class="text-sm text-gray-600 text-center">天宫秩序的掌控者，正为妖猴之乱焦头烂额</p>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">观音的“礼数”</h3>
+                <p class="text-gray-800 italic mb-4">菩萨虽已听闻事端，仍正式向玉帝询问蟠桃会情况</p>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    观音抵达时蟠桃会已是残局，但她依然<strong class="text-amber-900">按礼数询问</strong>，体现“家丑不可外扬”的分寸。随后，她派大徒弟<strong class="text-amber-900">惠岸行者</strong>（即李天王次子木叉）下界打探军情——佛家势力正式介入征讨。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Erlang -->
+        <section id="section-erlang" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">二郎真君：一个特别的存在</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    惠岸行者大战五六十回合不敌败走，观音深知常规手段已无效，便举荐了一位“玉帝也难以直接调遣”的特殊人物——二郎真君。点击翻转卡片，认识这位与众不同的神将。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-er1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">身份特殊</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-er1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">玉帝外甥</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-er1-back">
+                        <p class="text-gray-700 text-left">
+                            <strong>“听调不听宣”：</strong>平时不听天庭宣召，只在有军令时才奉调出战，独立性极强。<strong>劈山救母：</strong>曾劈开桃山救出母亲（玉帝之妹），与天庭有微妙的家世渊源。这样的身份，使他成为一个游离于天庭体系之外、却战力超群的强者。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-er2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">兵力对比</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-er2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">梅山六兄弟 + 一千二百草头神</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-er2-back">
+                        <p class="text-gray-700 text-left">
+                            二郎神拥有<strong>梅山六兄弟</strong>和<strong>一千二百草头神</strong>，兵力强盛。这与孙悟空“孤军奋战”形成鲜明对比。作者故意安排悬殊的力量对比，为悟空后来的“寡不敌众”埋下伏笔，也让他撤退得“合情合理”，不损形象。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">出征的“狩猎”姿态</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    二郎神出征时“执殿本部神兵，驾鹰牵犬，踏弩张弓”，全然一副<strong class="text-amber-900">狩猎</strong>的姿态。作者把“征讨妖猴”变成了“猎人追猎”的隐喻，预示接下来的战斗将以<strong class="text-amber-900">变化追逐</strong>为核心，开启一个全新的叙事场景——一场精彩绝伦的“斗变化”。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Change -->
+        <section id="section-change" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">一物降一物：变化大博弈</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空与二郎神的变化斗法，是全书最精彩的“游戏化”战斗。双方变来变去，像打牌一样循环相克，妙趣横生。请<strong class="text-amber-700">点击下方诗句</strong>，一步步看这场“变身攻防战”。
+                </p>
+            </div>
+            <div class="flex flex-col md:flex-row gap-8 items-start mb-10">
+                <div class="w-full md:w-1/2 bg-[#fdfbf7] p-8 rounded-xl shadow-inner border border-gray-200">
+                    <h3 class="text-xl font-bold mb-6 serif text-center">变身攻防战</h3>
+                    <div class="space-y-4 text-center text-lg serif">
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line1', this)">第一回合：麻雀 vs 松鹰</p>
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line2', this)">第二回合：大鹚 vs 大海鹤</p>
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line3', this)">第三回合：鱼儿 vs 鱼鹰</p>
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line4', this)">终极破局：花鸨登场</p>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 bg-white p-8 rounded-xl shadow-md border-t-4 border-amber-800 min-h-[300px] flex flex-col justify-center transition-all" id="meaning-panel">
+                    <div class="text-center">
+                        <span class="text-4xl">👆</span>
+                        <h4 class="text-xl font-bold mt-4 mb-2 text-gray-400">点击左侧回合查看博弈解析</h4>
+                        <p class="text-gray-500">体会“一物降一物”的循环相克。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+                    <h3 class="text-xl font-bold mb-4 serif text-red-900">土地庙的破绽</h3>
+                    <p class="text-gray-700 text-sm mb-4">
+                        悟空滚下山崖，变作一座土地庙：口为庙门，牙为门扇，舌为菩萨像，眼为窗棂，尾巴变旗杆竖在<strong>背后</strong>。
+                    </p>
+                    <p class="text-gray-700 text-sm">
+                        二郎神识破：“哪有旗杆竖在庙后的？”扬言要“捣窗户、踢门扇”。尾巴变旗杆的破绽，让悟空心惊肉跳。
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+                    <h3 class="text-xl font-bold mb-4 serif text-blue-900">游戏化的战斗</h3>
+                    <p class="text-gray-700 text-sm mb-4">
+                        作者用“一物降一物”的循环变化替代生死搏杀，把战斗写得像打牌游戏一样好玩。
+                    </p>
+                    <p class="text-gray-700 text-sm">
+                        这样的写法<strong>淡化残酷、增强趣味</strong>，既避免战斗场面重复单调，又凸显悟空“即使落败也不失神采”的不凡气概。
+                    </p>
+                </div>
+            </div>
+        </section>
+        <!-- Section 4: Art -->
+        <section id="section-art" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">既擒悟空，又不损其形象</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    作者面临一个难题：必须让悟空被擒（推动剧情），又不能削弱他的强大形象。他是如何做到的？点击下方卡片，拆解这套“擒拿的艺术”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-art1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">失败归因设计</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-art1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">不是技不如人</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-art1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空落败的原因被归结为<strong>“人少敌多、队友不力”</strong>：猴群非正规军，抛戈弃甲、四散奔逃；二郎神却有梅山六兄弟和草头神的强力支援。撤退因此<strong>合情合理</strong>，既写出结果，又不损害悟空“神通广大”的形象。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-art2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">借助外力擒拿</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-art2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">金刚琢</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-art2-back">
+                        <p class="text-gray-700 text-left">
+                            高层神仙齐出南天门观战。观音欲用净瓶砸悟空，老君担心“瓷的会碎”，便献出<strong>金刚琢</strong>——能变大变小、水火不侵、能套诸物。老君从天上丢下金刚琢，正中悟空天灵盖，将他打了一跤，二郎神的细犬趁势咬住——悟空终于被擒。靠的是<strong>“神队友+法宝”</strong>，而非单打独斗。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 mt-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">不灭的“顽皮”</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    被追得最紧时，悟空还不忘<strong class="text-amber-900">变作二郎神模样</strong>闯进灌江口庙宇，鬼判纷纷磕头迎接。他宣称“郎君不消，把庙宇姓孙了罢”——即使身处险境，也保留着一份顽皮与从容。这种“打不死、压不垮”的生命力，正是孙悟空魅力所在。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第六回“观音赴会问原因，小圣施威降大圣”是一场精彩绝伦的“变化之战”。悟空与二郎神的斗法告诉我们：强弱不仅取决于本领，还取决于团队、策略与环境。而悟空虽败犹荣的形象，也让我们懂得什么是真正的气概。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第六回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic Local -->
+    <script>
+        /**
+         * 页面本地数据
+         */
+        const Page_DATA = {
+            poemData: {
+                line1: {
+                    title: "麻雀 vs 松鹰",
+                    content: "悟空藏棒变作麻雀飞上树梢，梅山六兄弟高呼“走了这猴精”。二郎神圆睁凤目识破，摇身变作松鹰追去。——一物降一物，见招拆招。",
+                    icon: "🐦"
+                },
+                line2: {
+                    title: "大鹚 vs 大海鹤",
+                    content: "悟空变作大鹚冲天而去，二郎神随之化作大海鹤钻上云霄追赶。你变我也变，双方在空中展开追逐。",
+                    icon: "🦅"
+                },
+                line3: {
+                    title: "鱼儿 vs 鱼鹰",
+                    content: "悟空纵身入水变作一条鱼儿，二郎神变作鱼鹰飘荡在水面上等待。悟空暗自思忖：“想是二郎变化了等我哩！”——一场智力与变化的较量。",
+                    icon: "🐟"
+                },
+                line4: {
+                    title: "花鸨登场破局",
+                    content: "悟空最后变作“至贱至淫”的花鸨，任何猛禽靠近皆受其辱，二郎神无法以鸟形应对，遂放弃禽形，改取弹弓变作打鸟之人，一弹弓将悟空打落——游戏僵局被物理攻击打破。",
+                    icon: "🎯"
+                }
+            }
+        };
+        // 诗句互动管理模块
+        const PoemModule = {
+            updateMeaning(lineKey, element) {
+                document.querySelectorAll('.poem-line').forEach(line => line.classList.remove('active'));
+                element.classList.add('active');
+                const panel = document.getElementById('meaning-panel');
+                const data = Page_DATA.poemData[lineKey];
+                
+                panel.innerHTML = `
+                    <div class="text-center animate-fade-in">
+                        <span class="text-4xl">${data.icon}</span>
+                        <h4 class="text-2xl font-bold mt-4 mb-4 text-amber-900 serif">${data.title}</h4>
+                        <p class="text-gray-700 leading-relaxed text-lg">${data.content}</p>
+                    </div>
+                `;
+                panel.style.opacity = '0';
+                setTimeout(() => {
+                    panel.style.transition = 'opacity 0.4s ease';
+                    panel.style.opacity = '1';
+                }, 50);
+            }
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+        });
+    </script>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "作者安排观音菩萨在此时登场，最主要的叙事目的是：",
+                    "options": {
+                        "A": "让观音来给玉帝祝寿，修复天庭关系",
+                        "B": "天庭力量已近穷尽，需要引入佛家视角打破叙事僵局，避免情节重复",
+                        "C": "观音想要争夺天庭的领导权",
+                        "D": "观音恰巧路过，顺便看看热闹"
+                    },
+                    "correct": "B",
+                    "analysis": "天庭连续派兵皆难制服悟空，若继续增兵必然重复乏味。作者借前文蟠桃会邀请的伏笔，让观音赴会自然登场，引入佛家视角，为困局提供新解法，推动情节发展。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "观音的大徒弟惠岸行者，在天庭还有另一重身份，他是：",
+                    "options": {
+                        "A": "托塔天王李靖的次子木叉",
+                        "B": "哪吒三太子的兄长金吒",
+                        "C": "二郎神的结拜兄弟",
+                        "D": "太上老君座下的童子"
+                    },
+                    "correct": "A",
+                    "analysis": "惠岸行者是观音的大弟子，同时也是托塔天王李靖的次子木叉。这一设定前文已有铺垫，使惠岸以“观音大徒弟”和“李天王二太子”双重身份参战显得自然而不突兀。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "惠岸行者与悟空交战五六十回合后不敌败走。与前几场战斗相比，这一战的特点是：",
+                    "options": {
+                        "A": "一击制胜，瞬间分胜负",
+                        "B": "以少胜多，突出悟空的机智",
+                        "C": "正面硬撼、持久对战后落败，进一步强化悟空的持续战斗力",
+                        "D": "用计谋取胜，体现战术智慧"
+                    },
+                    "correct": "C",
+                    "analysis": "此前巨灵神被一击折斧、哪吒被偷袭取胜、九曜星被群战反杀，而惠岸是与悟空正面大战五六十回合才落败，从“持久战”角度再次强化了悟空神威，写法各不相同，避免重复。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "二郎真君“听调不听宣”的设定，说明了：",
+                    "options": {
+                        "A": "他法力太低，不敢接受天庭宣召",
+                        "B": "他独立性极强，平时不受天庭直接管辖，只在有军令时奉调出战",
+                        "C": "他正在闭关修炼，无暇顾及天庭事务",
+                        "D": "他与天庭断绝了所有往来"
+                    },
+                    "correct": "B",
+                    "analysis": "“听调不听宣”意味着二郎神平时不听宣召，只在接到明确军令时才出战，体现其独立性。加上他曾劈桃山救母（玉帝之妹），与天庭关系微妙，更显其身份特殊。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "二郎神出征时“驾鹰牵犬，踏弩张弓”的描写，其象征意义是：",
+                    "options": {
+                        "A": "二郎神喜欢打猎，出征只是顺便",
+                        "B": "把“征讨妖猴”隐喻为“猎人追猎”，预示战斗将以变化追逐为核心",
+                        "C": "二郎神兵力不足，需要靠打猎补充军粮",
+                        "D": "二郎神在展示自己箭法高超"
+                    },
+                    "correct": "B",
+                    "analysis": "作者把二郎神塑造成“猎人”形象，将征讨妖猴隐喻为一场狩猎，预示接下来的战斗以变化追逐（变麻雀、变鱼等）为核心，构建了全新的叙事场景。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "悟空变作麻雀被识破后，又变作大鹚、鱼儿等。下列对这场“变身博弈”特点的概括最准确的是：",
+                    "options": {
+                        "A": "双方随机变化，毫无章法",
+                        "B": "呈现“一物降一物”的循环相克模式，像打牌游戏一样循环博弈",
+                        "C": "悟空只变不会飞的动物，二郎神只变猛兽",
+                        "D": "变身只是为了逃跑，与战斗无关"
+                    },
+                    "correct": "B",
+                    "analysis": "变身博弈呈现“一物降一物”的循环：麻雀被松鹰克、大鹚被大海鹤追、鱼被鱼鹰盯。这种游戏化模式使战斗充满娱乐性，避免重复单调，也淡化了生死搏杀的残酷。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "悟空最后变作“花鸨”，其作用是：",
+                    "options": {
+                        "A": "花鸨飞行最快，方便逃跑",
+                        "B": "花鸨“至贱至淫”，任何猛禽靠近皆受其辱，使二郎神无法以鸟形应对",
+                        "C": "花鸨体型最大，能吓退二郎神",
+                        "D": "花鸨叫声刺耳，能扰乱对方心神"
+                    },
+                    "correct": "B",
+                    "analysis": "花鸨是“至贱至淫”之鸟，猛禽靠近会受到羞辱，二郎神因此无法再用鸟形来克它，只能改取弹弓、变作打鸟之人，用物理攻击打破僵局。这是悟空绝境中的机智一招。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "悟空变作土地庙时，暴露出一个致命破绽，这个破绽是：",
+                    "options": {
+                        "A": "庙门太新，不像旧庙",
+                        "B": "把尾巴变作旗杆竖在庙后——现实中旗杆应在庙前而非庙后",
+                        "C": "庙里没有菩萨像",
+                        "D": "庙顶没有瓦片"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空把尾巴变作旗杆竖在背后，而真实的旗杆应在庙前。二郎神一眼识破：“这庙后怎么会有旗杆？”这个细节既幽默又符合生活常识，体现了作者戏谑化的叙事风格。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "作者故意把悟空落败的原因设计为“人少敌多、队友不力”，其用意是：",
+                    "options": {
+                        "A": "说明悟空实力确实不如二郎神",
+                        "B": "让失败合情合理，既写出被擒结果又不损害悟空“神通广大”的形象",
+                        "C": "为后文悟空拜师二郎神做铺垫",
+                        "D": "讽刺天庭军队纪律涣散"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空落败是因为猴群溃散、寡不敌众，对手却有多方支援，而非自身技不如人。这种归因使撤退和被擒都合情合理，既推动剧情又不削弱悟空形象，体现了作者高超的叙事设计。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "悟空被追得最紧时，变作二郎神模样闯进灌江口庙宇。这一情节主要体现了悟空的：",
+                    "options": {
+                        "A": "贪生怕死，想躲进庙里避难",
+                        "B": "顽皮天性与从容不迫——身处险境仍不忘戏弄敌人",
+                        "C": "野心勃勃，想冒充二郎神夺取其势力",
+                        "D": "走投无路，随便找个地方躲藏"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空被追得狼狈时还变作二郎神模样戏弄其庙宇鬼判，宣称“把庙宇姓孙了罢”，充分体现他顽皮、爱捉弄人的天性，即使身处险境也从容不迫、不失神采。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "观音想用净瓶砸悟空，太上老君却劝阻，理由是：",
+                    "options": {
+                        "A": "净瓶威力不够，打不中悟空",
+                        "B": "净瓶是瓷的，怕打碎，不如用金刚琢",
+                        "C": "净瓶是观音的私人法器，不该用于战斗",
+                        "D": "怕净瓶砸中自己人"
+                    },
+                    "correct": "B",
+                    "analysis": "老君说观音的净瓶是“瓷的，恐碎”，于是献出自己水火不侵、能套诸物的金刚琢。老君从天上丢下金刚琢正中悟空天灵盖，将其打了一跤，二郎神的细犬趁机咬住，悟空被擒。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "金刚琢（金刚镯）的三大特性不包括：",
+                    "options": {
+                        "A": "能变：可随意变化大小",
+                        "B": "水火不侵：不受任何伤害",
+                        "C": "能套诸物：可收摄一切法宝兵器",
+                        "D": "能定身：念咒即可定住敌人"
+                    },
+                    "correct": "D",
+                    "analysis": "金刚琢具备能变、水火不侵、能套诸物三大特性，是太上老君的厉害法宝。它并不具备“定身”功能，定身法术是悟空的七十二变能力之一。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "本回的战斗描写“游戏化”程度很高。下列对作者这种写法的评价正确的是：",
+                    "options": {
+                        "A": "削弱了战斗的紧张感，属于败笔",
+                        "B": "用“一物降一物”的趣味变化替代生死搏杀，增强可读性，避免战斗重复单调",
+                        "C": "说明作者不擅长描写战斗",
+                        "D": "是为了缩短篇幅，加快叙事节奏"
+                    },
+                    "correct": "B",
+                    "analysis": "作者把变身斗法写得像打牌游戏，既保留了对战的紧张刺激，又加入幽默趣味，使战斗场景焕然一新。这种“游戏化”写法正是《西游记》区别于一般神魔小说的艺术魅力。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "悟空被擒的主要经过是：",
+                    "options": {
+                        "A": "被二郎神正面击败，束手就擒",
+                        "B": "被老君金刚琢击中天灵盖打了一跤，又被二郎神的细犬咬住，从而被擒",
+                        "C": "主动投降，自愿归顺天庭",
+                        "D": "被十万天兵合力围困，力竭被擒"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空并非被正面击败：太上老君从高空丢下金刚琢正中他天灵盖，将他打了一跤，二郎神的细犬趁势咬住他的腿，众神才趁机将其擒获——再次印证“借助外力”的擒拿设计。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "本回中悟空“虽败犹荣”的根本原因在于：",
+                    "options": {
+                        "A": "作者把失败归因于寡不敌众和意外偷袭，并处处保留悟空的机智与顽皮",
+                        "B": "悟空败给的是大名鼎鼎的二郎神，输了也不丢人",
+                        "C": "悟空在战斗中偷学到了二郎神的法术",
+                        "D": "悟空虽然被擒，但天庭损失更惨重"
+                    },
+                    "correct": "A",
+                    "analysis": "作者通过“失败归因设计”（寡不敌众、队友不力）和“保留主角体征”（顽皮、机智、从容）等手法，让悟空即使被擒也不失神采，塑造了一个“虽败犹荣”的英雄形象。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "观音菩萨的大徒弟惠岸行者，在天庭是托塔天王李靖的次子______。",
+                    "answer": "木叉",
+                    "analysis": "惠岸行者俗名「木叉」，是托塔天王李靖的次子，也是观音菩萨的大徒弟。观音赴会路过花果山时派他去探听战况，后来又派他助阵。先让徒弟「试水」，再请二郎神出手，可见收服悟空靠的不是蛮力，而是步步为营的布局。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "二郎真君居______，其地位特殊，表现为“听调不听宣”，还曾劈桃山救母。",
+                    "answer": "灌江口",
+                    "analysis": "二郎真君住在灌江口（今四川都江堰一带），身份特殊：玉帝封他为「显圣二郎真君」，他却「听调不听宣」——愿意出兵相助，但不肯随时奉诏朝见。他还曾「斧劈桃山」救母。这样一位既忠心又有个性的「小圣」，正是制衡「大圣」的最佳人选。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "二郎神手下有______六兄弟及一千二百草头神，兵力强盛。",
+                    "answer": "梅山",
+                    "analysis": "二郎神手下有「梅山」六兄弟（康、张、姚、李四太尉，郭申、直健二将军）以及一千二百草头神，势力强大。草头神是地方上招募的神兵，说明二郎神在地方威望很高。这就是他敢与悟空「硬碰硬」的本钱。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "悟空变作麻雀被二郎神识破，二郎神变作______追击；悟空变作鱼，二郎神便变作______。",
+                    "answer": "松鹰|鱼鹰",
+                    "analysis": "原著写二郎神与悟空「变戏法」大战：悟空变麻雀，二郎神变饿鹰；悟空变鱼，二郎神变鱼鹰。一物降一物，二郎神总能变出克制悟空的东西。这就像下棋，每一步都要想到对方下一步怎么走——知己知彼，才能百战不殆。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "悟空变作土地庙时，把______变作旗杆竖在庙后，被二郎神识破破绽。",
+                    "answer": "尾巴",
+                    "analysis": "悟空变作一座土地庙，嘴巴当庙门、牙齿当门扇，可尾巴没处放，只好变作旗杆竖在庙后面。二郎神一眼看破：「哪有旗杆立在庙后面的道理！」这一细节既幽默，又说明伪装要「处处到位」，一个破绽就可能前功尽弃。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "太上老君献出法宝______，从空中丢下击中悟空天灵盖，使其被擒。",
+                    "answer": "金刚琢",
+                    "analysis": "太上老君在悟空与二郎神缠斗时，从天上丢下「金刚琢」（又叫金刚镯）打中悟空天灵盖，悟空站立不稳，被二郎神的哮天犬咬住腿肚子，这才被擒。金刚琢后来在青牛精那一难又出场，是书中有名的法宝之一。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "悟空被追得走投无路时，变作______的模样闯进灌江口庙宇戏弄鬼判。",
+                    "answer": "二郎神",
+                    "analysis": "悟空被追得走投无路，索性变作二郎神的模样，大摇大摆闯进灌江口的二郎神庙，坐在神位上受用供奉，还戏弄鬼判。这个「以其人之道还治其人之身」的调皮举动，既写出悟空的机灵，也写出他「天不怕地不怕」的性子。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "悟空最后变作“至贱至淫”的______，使二郎神无法以鸟形应对，只能改用弹弓攻击。",
+                    "answer": "花鸨",
+                    "analysis": "花鸨是一种鸟，古人认为它「至贱至淫」。悟空变作花鸨，二郎神作为「高贵」的神仙，自然不肯跟着变这种下贱的鸟，于是现出真身用弹弓打他。悟空用「自降身段」的办法反将一军，让人哭笑不得，也显出他的狡黠。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于团队的力量】悟空单打独斗能打败巨灵神、哪吒、惠岸行者，却因“寡不敌众、队友不力”而落败；二郎神则因有梅山六兄弟和草头神支援而取胜。请结合学习或生活中的例子，谈谈团队合作与单打独斗的区别，为什么说“一个好汉三个帮”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>团队的力量：</strong> 悟空个人能力虽强，但猴群一溃散便孤掌难鸣；二郎神有兄弟和草头神配合，能形成整体优势。个人再强，也难敌分工协作的团队。</p>\n                        <p class=\"mt-2\"><strong>生活例子：</strong> 一场拔河比赛，一个人力气再大也赢不了十个配合默契的人；班级大扫除、运动会接力，都需要每个人各司其职、互相配合。学会与人合作、信任队友，是一种重要能力。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于遇事灵活变通】悟空与二郎神斗法，不断“见招拆招”：变麻雀被识破就变大鹚，变鱼被盯上就变花鸨。请谈谈：面对变化和困难时，“灵活变通”为什么比“一条道走到黑”更好？你能举一个学习中需要变通的例子吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>灵活变通的价值：</strong> 悟空每一次变化都根据对手的反应及时调整，体现了“随机应变”的智慧。死守一种方法，往往会在环境变化时碰壁。</p>\n                        <p class=\"mt-2\"><strong>学习中的例子：</strong> 做数学题用常规方法解不出来时，换一种思路（画图、列方程、逆向推理）也许就豁然开朗；背诵课文记不住，可以改用编口诀、画思维导图等不同方法。遇到挫折不钻牛角尖，学会“换个角度再出发”。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于成败与气概】悟空虽被擒，却给人“虽败犹荣”的印象：他失败是因为寡不敌众，而且身处险境仍不忘戏弄二郎神。请谈谈：什么是真正的“强者气概”？失败了还能保持风度、赢得尊重，比赢了更重要吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>强者气概：</strong> 真正的强者不是从不失败，而是面对失败不气馁、不失尊严、不被击垮。悟空被围追时还能乐观地变花鸨、戏弄对手，这种从容与生命力就是气概。</p>\n                        <p class=\"mt-2\"><strong>联系自己：</strong> 考试失利、比赛落败时，能平静接受、总结教训、继续努力的人，往往比赢了就得意、输了就崩溃的人走得更远。败而不馁、胜而不骄，才是可贵的品质。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于观察与破绽】悟空变作土地庙，只因“尾巴变旗杆竖在庙后”就被二郎神识破。请谈谈：为什么细节决定成败？在学习中，我们该如何养成细心观察、不放过细节的好习惯？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>细节决定成败：</strong> 一个微小的破绽足以让完美的伪装前功尽弃。二郎神正是凭借对生活常识（旗杆应在庙前）的细心观察识破了悟空。</p>\n                        <p class=\"mt-2\"><strong>养成细心习惯：</strong> ①做题时认真审题，不放过题目中的每个条件；②写作业后检查，注意标点、单位、错别字；③观察生活，多问“为什么”，积累常识。粗心不是小毛病，关键时刻会带来大问题。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于借助外力】二郎神单靠自己也难擒悟空，最终是太上老君的金刚琢帮了忙。请谈谈：承认“自己不是万能的、需要别人帮助”是不是软弱？在什么情况下，借助外力/求助他人是明智的选择？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>不是软弱：</strong> 一个人不可能样样精通，懂得在关键时刻求助，是一种智慧而不是软弱。二郎神借助金刚琢擒住悟空，正是“善用资源”的体现。</p>\n                        <p class=\"mt-2\"><strong>明智求助的场景：</strong> 遇到自己确实无法解决的难题（如超出能力范围的题目、生活中的危险），及时向老师、家长、同学求助，比硬撑更有效。当然，能自己解决的还是应该先自己努力，避免养成依赖。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于趣味与创意】作者把一场生死大战写得像“打牌游戏”一样好玩，用“一物降一物”的循环替代血腥搏杀。请谈谈：为什么《西游记》这样写战斗反而更吸引人？这对我们的写作有什么启发？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>更吸引人的原因：</strong> 游戏化的写法增加了趣味性和悬念，读者会期待“下一次悟空变成什么、二郎神又怎么破”，让战斗充满想象力的乐趣，而不是单调的砍杀。</p>\n                        <p class=\"mt-2\"><strong>写作启发：</strong> ①写故事要避免千篇一律，同类情节用不同方式处理（如每场战斗各有特点）；②可以加入幽默和巧思，让紧张的场面也生动有趣；③用创意和细节打动读者，而不是堆砌形容词。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于大局观】观音赴会时，即使蟠桃会被破坏成残局，她依然“按礼数询问”玉帝。请谈谈：为什么越是有本事的人，越要注意礼数、尊重他人？联系悟空因“不守礼数、目中无人”而引发的一系列冲突，说说你的体会。",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>礼数的重要性：</strong> 观音地位尊崇却依然守礼，体现的是对他人的尊重与处事的周全。真正强大的人懂得“有理有节”，而不是仗势失礼。</p>\n                        <p class=\"mt-2\"><strong>对比悟空：</strong> 悟空本领虽强，却因不守礼数、藐视权威而四处树敌，冲突不断。当然，他敢于反抗压迫的一面值得肯定，但“尊重别人”与“维护尊严”并不矛盾。学会既挺直腰杆，又彬彬有礼，才能在集体中既得到尊重又收获友谊。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

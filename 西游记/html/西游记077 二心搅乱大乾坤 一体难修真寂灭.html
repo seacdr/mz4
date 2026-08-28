@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第五十八回精读：二心之患与心魔自灭</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第五十八回精读：二心之患与心魔自灭</h1>
+            <p class="text-lg text-gray-700 serif">“二心搅乱大乾坤，一体难修真寂灭”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">真假难辨</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">谛听指路</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">如来道破</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">心魔自灭</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 真假难辨 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">从花果山打到天宫：谁真谁假？</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    真假悟空打得难解难分：先到花果山，再打到南海观音处，紧箍咒一念，两个一齐喊疼；又打到南天门凌霄殿，照妖镜里竟现出两个孙悟空——连神仙也分不出真假。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">沙僧的疑心</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">藏头露尾？</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            沙僧扯住悟空：“不必这等藏头露尾，先去安排，带小弟与你一块儿走。”——他还信不过悟空。<strong>从花果山到天宫，这一难从头到尾都笼罩着“猜忌”二字</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">观音验真假</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">暗念紧箍咒</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            观音让木叉、善财<strong>一人帮一只猴</strong>，自己<strong>暗中念紧箍咒</strong>：谁疼谁是真的。结果<strong>两个猴子一齐喊疼</strong>，抱着头打滚——这招在乌鸡国辨真假唐僧时管用，如今却失灵了。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c03')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">照妖镜失效</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c03-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">镜中两个孙悟空</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c03-back">
+                        <p class="text-gray-700 text-left">
+                            玉帝传旨请<strong>托塔李天王取照妖镜</strong>来照，结果镜中<strong>“乃是两个孙悟空的影子，金箍衣服毫发不差”</strong>——照妖镜也照不出真假，天宫辨假失败。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">“查不出的”才最危险</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    观音的咒、玉帝的镜，能照出天下妖邪，却照不出“二心”——因为它不是外来的妖怪，而是<strong>人心里的杂念</strong>。外部的工具再厉害，也照不出内心的分裂。<strong>真正的敌人，往往不在对面，而在自己心里</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 谛听指路 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">地府无解：谛听知而不言</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    两猴又打到森罗宝殿查生死簿，判官查遍猴类名录也找不到“假悟空”。地藏菩萨的神兽谛听趴地一听便知真相，却说“不能当面说破”，只指点：去雷音寺找如来。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">生死簿无果</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">找不着这个假猴子的名</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            悟空当年大闹地府，已把猴类名目<strong>“尽皆勾销”</strong>。判官从头查看，找不到假猴子的名号，只能对行者说“我这儿也没有”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">谛听知真假</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">怪名虽有，不能当面说破</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            谛听趴地一听，心里雪亮，却道：“<strong>怪名虽有，但不能当面说破，也不能助力擒拿</strong>。”它担心当面说破会让妖怪“搔扰宝殿，令阴府不安”——<strong>能辨出真相是一回事，敢不敢说、能不能搞定，又是另一回事</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">“识破”不等于“降伏”</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    谛听知道答案，却不敢出手，因为它“法力不及”。它把难题指给如来——<strong>要降伏这颗“二心”，必须找能看透它、又能制住它的力量</strong>。生活中也一样：发现问题之后，还得找对能解决问题的人和办法。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 如来道破 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">六耳猕猴：一颗“另生”的心</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    如来开口点破：“汝等俱是一心，且看二心竞斗而来。”原来假悟空是“四猴混世”之一的六耳猕猴——善聆音、能察理、知前后，与悟空“同音同相”，本相却正是人心的“二心”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">四猴混世</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">灵明石猴·六耳猕猴</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            如来说假悟空非五仙五虫，乃“<strong>四猴混世</strong>”之一：灵明石猴（即悟空）、赤尻马猴、通臂猿猴、<strong>六耳猕猴</strong>。六耳猕猴“善聆音，能察理，知前后，万物皆明”，与悟空一般无二。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">此间更无六耳</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“六耳”从哪里来？</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            悟空当年拜菩提祖师学艺，祖师问：“<strong>此间更无六耳</strong>？”意思是只有你我，没有第三人旁听。如今“六耳猕猴”出现，正是<strong>人心不再纯粹、出现了“第三方”的杂念与猜忌</strong>——前后呼应，意味深长。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">“六耳”就是心中的杂念</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    六耳猕猴不是天上掉下来的妖怪，它是<strong>取经队伍里积攒的委屈、不平、猜忌外化成的形象</strong>。正如诗偈所云：“人有二心生祸灾，天涯海角致疑猜。”——<strong>一旦生了二心，灾难就跟着来了</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 心魔自灭 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">悟空亲毙六耳：心魔要靠自己除</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    六耳猕猴要变蜜蜂逃走，被如来用钵盂罩住。如来不让悟空动手，可悟空忍不住抡棒一下打死——“至今绝此一种”。心魔只能由自己亲手了断，这正是本难的点睛之笔。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">钵盂罩妖</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">妖精未走，正在钵盂之下</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            六耳猕猴摇身变作蜜蜂往上一飞，被如来<strong>用钵盂撇起盖住</strong>。众神以为它逃了，如来笑道：“妖精未走，正在我这钵盂之下。”揭开一看，果然是一只<strong>六耳猕猴</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">亲手除魔</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">至今绝此一种</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            孙大圣“忍不住抡起铁棒，劈头一下打死”，<strong>六耳猕猴“至今绝此一种”</strong>。为什么必须悟空亲自动手？因为<strong>“二心”这个心魔，外界只能帮你认清，最终只能靠你自己了断</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c33')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">洗冤解怒</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c33-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">同心合意</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c33-back">
+                        <p class="text-gray-700 text-left">
+                            观音送悟空回队，说明“打你的是假行者”，并叮嘱“<strong>魔障未消，必得他保护才能到灵山</strong>”。八戒也取回了包袱、打死了假唐僧假八戒。师徒“<strong>洗冤解怒，同心合意</strong>”，重新上路。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">除掉心魔，只能靠自己</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    如来能罩住六耳猕猴，却把“最后一棒”留给悟空——<strong>外界的帮助只能指路，真正的“放下”与“战胜自己”，还得自己来完成</strong>。这一难结束，师徒的心重新合在一起，取经队伍反而比从前更团结。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第五十八回“二心搅乱大乾坤，一体难修真寂灭”讲的是真假美猴王的结局：观音、天宫、地府都辨不出真假，如来道破“六耳猕猴”真身，悟空亲手打死心魔，师徒洗冤解怒同心西行。这一回让我们看到：真正的敌人常在心里、识破不等于降伏、心魔要靠自己除、一心一意才能走远。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第五十八回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "假悟空在花果山上做了什么？",
+                    "options": {"A": "扫地","B": "高坐石台，与群猴饮酒作乐","C": "睡觉","D": "念经"},
+                    "correct": "B",
+                    "analysis": "沙僧到花果山，见一个“行者”高坐石台之上，与群猴饮酒作乐，模样、衣着、兵器与真悟空一般无二。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "观音菩萨第一次验真假，用了什么办法？",
+                    "options": {"A": "照妖镜","B": "暗中念紧箍咒，谁疼谁是假的","C": "问唐僧","D": "算卦"},
+                    "correct": "B",
+                    "analysis": "观音让木叉、善财一人帮一只猴，自己暗中念紧箍咒，看谁疼。结果两个猴子一齐喊疼，分不出来。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "玉帝派谁用照妖镜辨真假？",
+                    "options": {"A": "二郎神","B": "托塔李天王","C": "哪吒","D": "太上老君"},
+                    "correct": "B",
+                    "analysis": "玉帝传旨宣托塔李天王取照妖镜来照，可镜中现出两个孙悟空，“金箍衣服毫发不差”，照不出来。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "照妖镜照出的结果是？",
+                    "options": {"A": "照出一个真一个假","B": "镜中是两个孙悟空的影子","C": "什么都没照到","D": "照出妖怪原形"},
+                    "correct": "B",
+                    "analysis": "镜中“乃是两个孙悟空的影子”，模样全同，照妖镜彻底失灵——这说明假悟空非同一般的妖魔。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "两猴到地府查生死簿，为什么查不到假悟空？",
+                    "options": {"A": "判官偷懒","B": "悟空当年大闹地府，已把猴类名目尽皆勾销","C": "假悟空没有名字","D": "生死簿被烧了"},
+                    "correct": "B",
+                    "analysis": "悟空当年在地府把所有猴类（含“有名者”）都勾了，所以判官从头查也找不到“假猴子”的名号。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "谛听知道真假，为什么不当面说破？",
+                    "options": {"A": "它不知道","B": "怕当面说出，妖精骚扰宝殿，令阴府不安","C": "它不敢得罪如来","D": "它睡着了"},
+                    "correct": "B",
+                    "analysis": "谛听说“怪名虽有，但不能当面说破，也不能助力擒拿”——担心说了会让妖怪闹地府，自己法力不及。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "谛听为两猴指了哪条路？",
+                    "options": {"A": "去找观音","B": "去找太上老君","C": "“佛法无边”，去雷音寺找释迦如来","D": "回花果山"},
+                    "correct": "C",
+                    "analysis": "谛听说“佛法无边”，唯有雷音寺的释迦如来既能辨明、又能降伏，于是两猴打到灵山。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "如来点破两猴时说的那句话是？",
+                    "options": {"A": "“两个都是真的”","B": "“汝等俱是一心，且看二心竞斗而来”","C": "“打吧打吧”","D": "“你们回去吧”"},
+                    "correct": "B",
+                    "analysis": "如来说“你们都是一心人，且看二心竞斗而来”——一语道破：这场真假之争，其实是“二心”之争。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "假悟空的真实身份是什么？",
+                    "options": {"A": "赤尻马猴","B": "六耳猕猴","C": "通臂猿猴","D": "灵明石猴"},
+                    "correct": "B",
+                    "analysis": "如来说假悟空是“四猴混世”之一的六耳猕猴，“善聆音，能察理，知前后，万物皆明”。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "“此间更无六耳”这句话，是谁在何时说过的？",
+                    "options": {"A": "如来对悟空","B": "菩提祖师在悟空学艺时","C": "观音对唐僧","D": "唐僧对八戒"},
+                    "correct": "B",
+                    "analysis": "悟空当年拜菩提祖师学艺，祖师问“此间更无六耳”，意思是只有你我。如今“六耳猕猴”出现，象征人心起了杂念与“第三方”猜忌。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "六耳猕猴想逃走时变成了什么？",
+                    "options": {"A": "苍蝇","B": "蜜蜂","C": "蚊子","D": "蝴蝶"},
+                    "correct": "B",
+                    "analysis": "六耳猕猴“摇身一变，变成蜜蜂往上飞”，被如来用钵盂撇起盖住，最终现出原形。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "是谁把六耳猕猴打死的？",
+                    "options": {"A": "如来","B": "孙悟空（亲手一棒打死）","C": "八戒","D": "观音"},
+                    "correct": "B",
+                    "analysis": "孙大圣忍不住抡起铁棒，劈头一下把六耳猕猴打死，“至今绝此一种”——心魔要靠自己亲手除掉。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "为什么必须由悟空亲手打死六耳猕猴？",
+                    "options": {"A": "因为别人打不过","B": "“二心”这个心魔，最终只能靠自己的觉悟和决断来克服","C": "如来的命令","D": "巧合"},
+                    "correct": "B",
+                    "analysis": "如来能罩住它，却把最后一棒留给悟空：心魔是内心分裂的象征，外界的帮助只能认清它，真正的了断只能靠自己。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "这一难之后，师徒之间的关系变成怎样？",
+                    "options": {"A": "更疏远了","B": "“洗冤解怒，同心合意”，重新团结","C": "散伙了","D": "互相不说话"},
+                    "correct": "B",
+                    "analysis": "观音说明真相，八戒取回包袱，师徒放下冤屈与怒气，“洗冤解怒，同心合意”，继续西行。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "诗偈“人有二心生祸灾，天涯海角致疑猜”告诉我们什么道理？",
+                    "options": {"A": "人生来就有灾祸","B": "一旦生了二心（杂念、猜忌），就会招来灾祸","C": "不要出远门","D": "怀疑别人是对的"},
+                    "correct": "B",
+                    "analysis": "这句诗是这一难的核心：心生二意，便生猜忌；猜忌一生，灾祸就来。守住一心一意，才能平安前行。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "“禅门要学无心诀，静养婴儿结圣胎”中的“婴儿”指什么？",
+                    "options": {"A": "小孩子","B": "与生俱来、天真纯洁的初心","C": "人参果","D": "金蝉子"},
+                    "correct": "B",
+                    "analysis": "“婴儿”指那颗像婴儿一样天真无邪的初心（菩提祖师曾解释“孙”字正合婴儿之本论）。静养初心、不生杂念，才能修成正果。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "观音让弟子一人帮一只猴，自己暗中念______咒来验真假。",
+                    "answer": "紧箍",
+                    "analysis": "紧箍咒会让悟空头疼，观音想用“谁疼谁真”来分辨。但两个猴子一齐喊疼，证明这招失灵——说明假悟空的“假”已渗透到骨子里。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "玉帝命托塔李天王取______镜照真假，结果照出两个孙悟空。",
+                    "answer": "照妖",
+                    "analysis": "照妖镜本是专照妖怪的法宝，可假悟空与真悟空“毫发不差”，镜中现出两个影子——它已经不是普通妖怪，而是人心的“二心”。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "地藏菩萨座下的神兽______趴地一听便知真假，却不敢说破。",
+                    "answer": "谛听",
+                    "analysis": "谛听能听出天下一切真假，但它“不能当面说破”，怕妖怪骚扰宝殿。它把难题指向“佛法无边”的如来。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "如来说假悟空是“四猴混世”之一的______猕猴。",
+                    "answer": "六耳",
+                    "analysis": "“六耳”指三个人（每人两耳），象征除了“我”“你”之外的第三重杂念与猜忌。六耳猕猴正是“二心”的化身。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "菩提祖师当年问悟空：“此间更无______？”",
+                    "answer": "六耳",
+                    "analysis": "祖师的意思是“这里没有第三个人偷听”，强调心传秘授。如今“六耳猕猴”现身，正对应内心不再纯粹、起了杂念——前后呼应，含义深刻。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "六耳猕猴要变蜜蜂逃走，被如来用______盂罩住。",
+                    "answer": "钵",
+                    "analysis": "“钵盂”是佛门食器，也是如来的法宝。如来随手撇起钵盂，就把要逃的六耳猕猴罩住，众神还以为它逃了。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "孙大圣抡起铁棒，把六耳猕猴打死，“至今绝此一______”。",
+                    "answer": "种",
+                    "analysis": "“至今绝此一种”既交代了六耳猕猴从此绝迹，也说明悟空亲手除掉了“二心”这个心魔——心魔必须自灭。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "师徒化解误会后，“洗冤解怒，同______合意”。",
+                    "answer": "心",
+                    "analysis": "“同心合意”与前面的“面是背非”形成对照：经历了真假美猴王一难，师徒重新把心合在一起，取经队伍更团结了。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“真正的敌人常在心里”】六耳猕猴不是外来的妖怪，而是师徒猜忌时“二心”的化身。请谈谈：为什么“打败别人”容易、“战胜自己”难？你心里有过“六耳猕猴”吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>外敌可见，心魔难防：</strong> 妖怪来了看得见、打得着；可“委屈、嫉妒、想放弃”这些念头藏在心里，常常连自己都没察觉，等你发现时，它已经像“假悟空”一样能和你“势均力敌”了。</p>\n                        <p class=\"mt-2\"><strong>赶走心里的“六耳猕猴”：</strong> ①看到别人得奖，先祝福再努力，别让嫉妒发芽；②遇到困难想放弃时，问问自己“当初为什么开始”；③心里有气，及时说出来、写出来，不积压；④把“别人有的我没有”换成“我有的我要珍惜”；⑤每天给自己一个“一心一意”的时间（读书、练字、运动）。<strong>管住心里的杂念，就守住了自己的“真身”</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“识破不等于降伏”】谛听知道真相，却不敢说破，只能把难题交给如来。请谈谈：为什么“发现问题”和“解决问题”是两回事？遇到难题，你如何既“识破”又“降伏”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>知道答案，不一定能搞定：</strong> 谛听一耳就听出真假，可它法力不够、怕惹祸，只能指路。就像考试时“这道题我好像会”，但真要完整做出来又卡壳——<strong>“看懂了”和“做对了”之间，还差着练习和勇气</strong>。</p>\n                        <p class=\"mt-2\"><strong>从“识破”到“降伏”：</strong> ①找出问题后，马上想“我能做什么”，别停在抱怨；②向“能解决的人”请教（如老师、更懂的同学）；③把大难题拆成小步骤，一步步做；④承认自己“现在不行”，再一点点练到行；⑤必要时借助“更大的力量”（工具、团队、方法）。<strong>看清问题，是解决的一半；另一半，是动手去做</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“心魔要靠自己除”】如来能罩住六耳猕猴，却把最后一棒留给悟空。请谈谈：为什么“别人帮得了忙，替不了成长”？你有哪些“必须自己扛过去”的经历？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>成长无法代劳：</strong> 老师能讲题，可“弄懂”只能靠你自己；父母能安慰你，可“振作起来”只能靠你自己。如来能降住六耳猕猴，但悟空心里的“二心”，只有悟空自己能了断。<strong>别人的帮助是“拐杖”，走路还得靠自己</strong>。</p>\n                        <p class=\"mt-2\"><strong>勇敢“自己扛”：</strong> ①第一次独自上台、第一次独立完成作业、第一次承认错误——都是“自己扛”的时刻；②遇到挫折，先试着自己想办法，再求助；③把“我做不到”改成“我先试试”；④每次靠自己解决一件事，就长大一点；⑤也记住：<strong>靠自己，不等于不需要别人；而是别人扶你一把后，你要自己站稳</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“一心一意”】诗偈说“人有二心生祸灾”。请谈谈：为什么“专注”和“专一”能带来好运？学习时，你如何打败自己的“二心”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>二心招祸，一心成事：</strong> 师徒三心二意，就冒出“假悟空”捣乱；一旦“同心合意”，取经队伍又所向披靡。<strong>心不在焉，做什么都容易出错；心无旁骛，力量才能集中</strong>。</p>\n                        <p class=\"mt-2\"><strong>打败学习中的“二心”：</strong> ①做作业前，把手机、玩具放到看不见的地方；②给自己定“小目标+计时”（如25分钟只做一件事）；③走神时，轻轻把注意力“拉回来”，不责备自己；④一次只做一件事，做完再换；⑤把“我要专注”变成每天练习的“肌肉记忆”。<strong>专注，是给梦想开的最省油的车</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“与过去的自己呼应”】“此间更无六耳”与“六耳猕猴”前后呼应。请谈谈：为什么好故事喜欢“前后照应”？你写作文时如何做到“首尾呼应”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>照应让故事“圆”起来：</strong> 菩提祖师当年的“此间更无六耳”，到如今“六耳猕猴”作怪——同一个词，两种心境，读者读到最后恍然大悟，故事的深度一下子出来了。<strong>好的照应，就像把首尾扣成一个环</strong>。</p>\n                        <p class=\"mt-2\"><strong>写作文的照应技巧：</strong> ①开头埋一个“细节”，结尾让它“回响”（如开头写一枚旧邮票，结尾写它寄到了哪里）；②用“同一个词”开头结尾，含义却不同；③人物说过的话，后文要“兑现”或“打脸”；④结尾回答开头提出的问题；⑤照应要自然，别硬凑。记住：<strong>好文章不是线，是环</strong>——首尾呼应，回味无穷。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“团队的和解”】一难过后，师徒“洗冤解怒，同心合意”。请谈谈：为什么“经历过误会又和好”的团队，往往更坚固？你怎样看待朋友之间的“吵架—和好”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>吵过才知珍惜：</strong> 师徒经历了“猜忌—打架—查明真相”这一整套过程，才真正明白彼此的重要。误会化解后的信任，比一帆风顺时的信任更牢靠——因为它<strong>经过了考验</strong>。</p>\n                        <p class=\"mt-2\"><strong>正确看待吵架和好：</strong> ①朋友之间闹矛盾很正常，重要的是“和好”不是“记仇”；②吵完架，先冷静，再主动说“对不起”或“我们聊聊”；③把误会的原因说清楚，下次避免；④和好后，关系往往比以前更深；⑤也学会“求同存异”——不是所有问题都要分出对错。<strong>真正的朋友，不是从不吵架，而是吵完还能一起走</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

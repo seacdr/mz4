@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第二十九回精读：意马忆心猿</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第二十九回精读：意马忆心猿</h1>
+            <p class="text-lg text-gray-700 serif">“邪魔入朝侵正法，意马垂泪忆心猿”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-capture')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-capture">第一章：兄弟被擒</button>
+                <button onclick="NavigationModule.switchTab('section-court')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-court">第二章：邪魔入朝</button>
+                <button onclick="NavigationModule.switchTab('section-tiger')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-tiger">第三章：唐僧变虎</button>
+                <button onclick="NavigationModule.switchTab('section-horse')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-horse">第四章：意马请心猿</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Capture -->
+        <section id="section-capture" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">救人失败：八戒、沙僧双双被擒</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    八戒、沙僧领命去波月洞救公主，却根本不是黄袍怪的对手。点击翻转卡片，看看这场“救人”是如何失败的。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">八戒先败</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“妖怪厉害！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c1-back">
+                        <p class="text-gray-700 text-left">
+                            八戒赶到波月洞，与黄袍怪大战，<strong>渐渐不支，败下阵来</strong>。沙僧上前接战，<strong>也被黄袍怪生擒</strong>。没有悟空在，八戒、沙僧<strong>联手也斗不过</strong>这位“奎木狼星”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">黄袍怪大怒</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“公主传信！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c2-back">
+                        <p class="text-gray-700 text-left">
+                            黄袍怪从沙僧口中得知<strong>公主偷偷传书回国</strong>，<strong>勃然大怒</strong>，恨公主“吃里扒外”。盛怒之下，他决定<strong>亲自出洞入朝</strong>，去“讨个公道”——一场更大的风波，正在酝酿。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：没有“孙悟空”的团队会怎样？</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    八戒、沙僧<strong class="text-amber-900">虽勇却寡不敌众</strong>，救人不成反被擒。这再次印证：<strong class="text-amber-900">一个团队的核心战力与“定海神针”</strong>，不是可有可无的。少了悟空的队伍，<strong class="text-amber-900">连“救人”都变成“送人头”</strong>。这也为“必须请回悟空”积蓄了强烈的势能。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Court -->
+        <section id="section-court" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">邪魔入朝：妖怪闯进“朝堂”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    黄袍怪变作一个俊俏的“驸马”，大摇大摆进了宝象国朝堂。他先发制人，恶人先告状。点击翻转卡片，看看妖怪如何“反客为主”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-u1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">变作“驸马”</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-u1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“人模人样”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-u1-back">
+                        <p class="text-gray-700 text-left">
+                            黄袍怪<strong>变化成一位俊俏公子</strong>，自称是<strong>宝象国的驸马</strong>，来到朝堂。妖怪<strong>混进“正法”之地</strong>，满朝文武<strong>竟无人识破</strong>——<strong>当妖魔鬼怪披上“人皮”，才是最危险的时候</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-u2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">恶人先告状</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-u2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“反咬一口”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-u2-back">
+                        <p class="text-gray-700 text-left">
+                            黄袍怪<strong>反咬一口</strong>：谎称自己才是“驸马”，而<strong>唐僧是妖怪变的，故意来害他和公主</strong>。他把<strong>黑的说成白的</strong>，利用国王的信任，<strong>颠倒黑白、嫁祸于人</strong>——这就是“邪魔入侵正法”的可怕。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“伪装”与“真话”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    黄袍怪把真话说成“妖言”，把假话说成“真相”——当<strong class="text-amber-900">谎言比真话更动听、伪装比真相更像真的</strong>，善良的人就会<strong class="text-amber-900">被蒙蔽、被冤枉</strong>。这提醒我们：<strong class="text-amber-900">不要只听“谁说得动听”，更要看“证据”和“事实”</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Tiger -->
+        <section id="section-tiger" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">唐僧变虎：正法蒙尘</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    黄袍怪当众施展妖法，把唐僧变成一只猛虎，还栽赃说“这就是妖怪的真身”。点击翻转卡片，看看唐僧如何蒙冤，以及白龙马的悲愤。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">唐僧变虎</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“和尚是妖！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t1-back">
+                        <p class="text-gray-700 text-left">
+                            黄袍怪<strong>使个“移星换斗”的法术</strong>，把唐僧<strong>变成一只斑斓猛虎</strong>，囚在铁笼里，还对国王说：“这和尚才是妖怪！”<strong>真唐僧成了“妖”，真妖怪成了“驸马”</strong>——正法颠倒，黑白不分。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">白龙马垂泪</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“意马”思“心猿”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t2-back">
+                        <p class="text-gray-700 text-left">
+                            马厩里的<strong>白龙马</strong>，眼见师父蒙冤，<strong>垂泪不已</strong>。它想：“若是大师兄（悟空）在，师父何至于被变成虎！”<strong>“意马垂泪忆心猿”</strong>——连这匹“马”都深深怀念起了悟空。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“蒙冤”与“怀念”</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    唐僧被冤枉，才让整个团队<strong class="text-amber-900">真切怀念悟空</strong>。之前<strong class="text-amber-900">“有眼无珠”赶走悟空</strong>的错，此刻<strong class="text-amber-900">用“血的教训”来偿还</strong>。这告诉我们：<strong class="text-amber-900">冤枉一个忠心的人，代价往往巨大</strong>——做决定要<strong class="text-amber-900">慎重、清醒</strong>，不要被一时的情绪蒙蔽。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Horse -->
+        <section id="section-horse" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">意马请心猿：绝境中的“一线生机”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    白龙马不甘坐以待毙，化作宫女去刺杀黄袍怪，却受了伤。它逃回后，力劝八戒去花果山请回悟空。点击翻转卡片，看看这匹“马”如何成为救师的关键。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-h1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">龙马出战</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-h1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“舍命一搏”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-h1-back">
+                        <p class="text-gray-700 text-left">
+                            白龙马<strong>化作宫女</strong>，趁夜去行刺黄袍怪，想救师父。可惜<strong>道行不足，被黄袍怪打伤</strong>，逃回马厩。但它<strong>明知不敌，仍舍命一试</strong>——这份“护主之心”，令人动容。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-h2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">八戒请悟空</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-h2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“唯有大师兄能救”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-h2-back">
+                        <p class="text-gray-700 text-left">
+                            白龙马劝八戒：“如今只有<strong>大师兄悟空</strong>能降住黄袍怪，<strong>你去花果山把他请回来吧</strong>！”八戒被<strong>逼到绝路</strong>，只好放下脸面，去请悟空——下一回，<strong>“猪八戒义激猴王”</strong>即将上演。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“放下面子，才能救急”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    八戒平时最爱面子、常跟悟空斗嘴，如今却要<strong class="text-amber-900">“低三下四”去请悟空</strong>。真正成熟的团队，懂得在危急关头<strong class="text-amber-900">放下成见、放下脸面，一切以“大局”为重</strong>。请回悟空，不是“认输”，而是<strong class="text-amber-900">为了救师父、救队伍</strong>——这叫“识大体”。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第二十九回“邪魔入朝侵正法，意马垂泪忆心猿”把“赶走悟空”的后果推到了顶点：兄弟被擒、师父蒙冤变虎、连白龙马都垂泪怀念悟空。请认真作答，思考“失去”“蒙冤”“救急”与“放下面子”。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第二十九回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "八戒、沙僧去波月洞救公主，结果如何？",
+                    "options": {
+                        "A": "成功救回公主",
+                        "B": "八戒败阵、沙僧被擒，双双失利",
+                        "C": "与黄袍怪结盟",
+                        "D": "救出了唐僧"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒与黄袍怪大战渐渐不支，沙僧上前接战也被生擒。没有悟空，兄弟俩联手也斗不过奎木狼星。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "黄袍怪得知公主传信回国后，做了什么？",
+                    "options": {
+                        "A": "原谅了公主",
+                        "B": "勃然大怒，决定亲自入朝“讨公道”",
+                        "C": "放了唐僧",
+                        "D": "躲进深山"
+                    },
+                    "correct": "B",
+                    "analysis": "黄袍怪从沙僧口中得知公主传书，勃然大怒，决定亲自变化入朝，掀起更大风波。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "黄袍怪入朝时，变作什么模样？",
+                    "options": {
+                        "A": "一位俊俏公子（自称驸马）",
+                        "B": "一位老和尚",
+                        "C": "一位将军",
+                        "D": "国王本人"
+                    },
+                    "correct": "A",
+                    "analysis": "黄袍怪变成俊俏公子，自称是宝象国驸马，混进朝堂，满朝文武竟无人识破。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "黄袍怪在朝堂上“恶人先告状”的内容是：",
+                    "options": {
+                        "A": "承认自己是妖怪",
+                        "B": "诬陷唐僧是妖怪变的，是来害他和公主的",
+                        "C": "夸唐僧是好人",
+                        "D": "请国王捉拿悟空"
+                    },
+                    "correct": "B",
+                    "analysis": "黄袍怪颠倒黑白，谎称唐僧才是妖怪，把自己打扮成受害者，利用国王的信任嫁祸于人。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "黄袍怪对唐僧施了什么法术？",
+                    "options": {
+                        "A": "把唐僧变成一只猛虎",
+                        "B": "把唐僧变回金蝉子",
+                        "C": "把唐僧变成石头",
+                        "D": "把唐僧变成白龙马"
+                    },
+                    "correct": "A",
+                    "analysis": "黄袍怪使“移星换斗”之法，把唐僧变成一只斑斓猛虎，囚在铁笼里，还栽赃说“这和尚才是妖怪”。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "“意马垂泪忆心猿”中的“意马”指的是：",
+                    "options": {
+                        "A": "八戒",
+                        "B": "白龙马",
+                        "C": "沙僧",
+                        "D": "唐僧"
+                    },
+                    "correct": "B",
+                    "analysis": "“意马”指白龙马，“心猿”指孙悟空。白龙马见师父蒙冤，垂泪怀念悟空——连马都知道悟空的重要性。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "白龙马为了救唐僧，做了什么？",
+                    "options": {
+                        "A": "去请观音",
+                        "B": "化作宫女去行刺黄袍怪，但被打伤",
+                        "C": "直接驮着唐僧逃走",
+                        "D": "去花果山叫悟空"
+                    },
+                    "correct": "B",
+                    "analysis": "白龙马化作宫女，趁夜行刺黄袍怪，可惜道行不足被打伤，逃回马厩。它明知不敌仍舍命一试，护主之心令人动容。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "白龙马受伤后，力劝谁去请悟空？",
+                    "options": {
+                        "A": "沙僧",
+                        "B": "八戒",
+                        "C": "国王",
+                        "D": "唐僧"
+                    },
+                    "correct": "B",
+                    "analysis": "白龙马劝八戒去花果山请悟空回来，因为“唯有大师兄能降住黄袍怪”。八戒被逼到绝路，只好去请悟空。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "本回标题“邪魔入朝侵正法”中，“正法”指的是：",
+                    "options": {
+                        "A": "佛法",
+                        "B": "朝廷的法度与公道",
+                        "C": "取经大业",
+                        "D": "唐僧的法术"
+                    },
+                    "correct": "B",
+                    "analysis": "妖怪混进朝堂、颠倒黑白、把唐僧变成虎，是“邪魔”侵犯了“朝廷的法度与公道”，正法蒙尘。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "“当妖魔鬼怪披上‘人皮’，才是最危险的时候”，这句话的意思是：",
+                    "options": {
+                        "A": "妖怪都会变身",
+                        "B": "坏人伪装成好人、谎言伪装成真相时，最容易害人，也最难防范",
+                        "C": "人皮很危险",
+                        "D": "妖怪不可怕"
+                    },
+                    "correct": "B",
+                    "analysis": "黄袍怪以“驸马”的身份行骗，满朝无人识破。伪装与谎言比明刀明枪更危险，要格外警惕“看起来很好”的假象。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "唐僧蒙冤变虎，白龙马垂泪，最想表达的情感是：",
+                    "options": {
+                        "A": "对妖怪的恐惧",
+                        "B": "对悟空的深切怀念——失去才知他的重要",
+                        "C": "对八戒的责怪",
+                        "D": "对国王的怨恨"
+                    },
+                    "correct": "B",
+                    "analysis": "团队被逼入绝境，才真正体会到悟空的不可或缺。“意马垂泪忆心猿”，是对“失去才知可贵”最动人的表达。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "八戒一向爱面子、常与悟空斗嘴，如今却要去请悟空。精读认为这体现了：",
+                    "options": {
+                        "A": "八戒没骨气",
+                        "B": "危急关头放下成见、放下脸面、以大局为重，叫“识大体”",
+                        "C": "八戒怕悟空",
+                        "D": "八戒想偷懒"
+                    },
+                    "correct": "B",
+                    "analysis": "为了救师父和队伍，八戒放下个人面子和成见去请悟空。这是成熟的团队智慧——大局比脸面重要。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "黄袍怪在朝堂上“把黑的说成白的”，给我们的警示是：",
+                    "options": {
+                        "A": "妖怪很会说话",
+                        "B": "不要只听“谁说得动听”，更要看证据与事实",
+                        "C": "说话要有技巧",
+                        "D": "国王太笨"
+                    },
+                    "correct": "B",
+                    "analysis": "黄袍怪的话比真话更“像真的”，国王就信了。判断对错不能只看“谁会说”，要看证据、看事实、多方核实。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "本回中，白龙马身上最值得称赞的品质是：",
+                    "options": {
+                        "A": "跑得快",
+                        "B": "明知不敌仍舍命护主，还保持清醒、为救师出谋划策",
+                        "C": "会变身",
+                        "D": "听唐僧的话"
+                    },
+                    "correct": "B",
+                    "analysis": "白龙马既敢舍命一搏，又冷静分析“只有悟空能救”，既有勇气又有智慧，是关键时刻的“清醒者”。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "“请回悟空”意味着取经团队承认了什么？",
+                    "options": {
+                        "A": "悟空最厉害",
+                        "B": "此前赶走悟空是错误，团队需要每一个人，尤其需要悟空的担当",
+                        "C": "八戒不行",
+                        "D": "唐僧错了就对了"
+                    },
+                    "correct": "B",
+                    "analysis": "经历惨痛教训，团队承认了错误、看清了悟空的价值。承认错误不可耻，及时纠正、把人请回来，才是真智慧。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "八戒与黄袍怪大战不支，______上前接战也被生擒。",
+                    "answer": "沙僧",
+                    "analysis": "八戒与黄袍怪大战，渐渐不支，沙僧上前接战，也被黄袍怪「生擒」。八戒、沙僧接连被擒，说明黄袍怪实力很强，也说明——没有悟空这个「王牌」，取经队伍「后继无人」。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "黄袍怪变作俊俏______，混进了宝象国朝堂。",
+                    "answer": "驸马",
+                    "analysis": "黄袍怪变作一个「俊俏驸马」的模样，混进宝象国朝堂，骗过了国王和满朝文武。他「反客为主」：明明是妖怪，却装成「驸马」，还要「护驾」——伪装得越像，越是危险。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "黄袍怪______一口，诬陷唐僧才是妖怪变的。",
+                    "answer": "反咬",
+                    "analysis": "黄袍怪在朝堂上「反咬一口」，说唐僧才是妖怪变的（虎精），把「白的说成黑的」。国王信了妖怪的话，把唐僧变成老虎关起来。这就是「颠倒黑白」——正义被诬陷，假象占了上风。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "黄袍怪把唐僧变成一只______，囚在铁笼里。",
+                    "answer": "猛虎",
+                    "analysis": "黄袍怪施法把唐僧变成一只「猛虎」，囚在铁笼里。堂堂取经人成了「老虎」，还被当成「妖怪」示众——邪魔入侵「朝堂」，正法被「歪曲」，这正是回目「邪魔入朝侵正法」的写照。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "“意马垂泪忆______”，指白龙马深切怀念悟空。",
+                    "answer": "心猿",
+                    "analysis": "「意马垂泪忆心猿」：白龙马（意马）见师父被冤枉、变成老虎，急得流泪，深切怀念悟空（心猿）。「意」与「心」本是一体——悟空被赶走，队伍「心」都没了，「意」自然慌乱。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "白龙马化作______去行刺黄袍怪，却被______伤。",
+                    "answer": "宫女|打",
+                    "analysis": "白龙马化作「宫女」去行刺黄袍怪，想救师父，结果武功不济，被黄袍怪「打伤」了后腿。连白龙马都敢「行刺」，可见队伍已经「拼了」；但实力不够，还是救不了人——「心有余而力不足」。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "白龙马力劝______去花果山请回悟空。",
+                    "answer": "八戒",
+                    "analysis": "白龙马力劝八戒：「你去花果山请大师兄回来吧！」八戒起初怕丢面子、怕被悟空笑话，不肯去。可形势逼人，最后他还是放下「面子」去请悟空——关键时刻，「面子」再大，也没有「师父」大。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "危急关头，八戒放下______，决定去请悟空救师。",
+                    "answer": "面子",
+                    "analysis": "八戒放下「面子」，去花果山请悟空。这是八戒的高光时刻：他平时爱面子、爱耍滑，但到了师父生死存亡的关头，他能「放下身段」去求人。有时候，敢于「低头」，才是真正的「担当」。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“失去才知可贵”】白龙马“垂泪忆心猿”，团队被逼入绝境才想起悟空的好。请谈谈：为什么人常常要“吃到苦头”才明白别人的重要？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>苦头是最好的“教材”：</strong> 唐僧只有被变作虎，才真正后悔赶走悟空。顺境里，我们容易把别人的付出当成理所当然；吃了苦头，才懂得珍惜。</p>\n                        <p class=\"mt-2\"><strong>避免“失去才懂”：</strong> ①经常主动回想“别人为我做了什么”，心存感激；②平时就表达感谢，不憋在心里；③珍惜“拥有”，不要等失去才补救。与其“吃一堑长一智”，不如“吃之前就明白”——学会感恩，是成长的必修课。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“伪装与真相”】黄袍怪把假话说得像真的，国王就信了。请谈谈：为什么“花言巧语”能骗到人？如何练就一双“识人辨真”的眼睛？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>花言巧语为什么骗人：</strong> 因为它专挑人想听的（如“我是受害者”“我委屈”）说，先博取信任和同情，再颠倒黑白。情绪一上来，理性就下去了。</p>\n                        <p class=\"mt-2\"><strong>练就火眼金睛：</strong> ①先冷静，不被情绪带走；②看“证据”——有没有事实支撑；③听“多方”——不只听一面之词；④看“长期”——一时表演骗不了人，久处见人心；⑤拿不准时请教可信赖的人。多思考一步，就能少被骗一步。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“蒙冤与真相”】唐僧被冤枉成“妖怪”，有口难辩。请谈谈：当一个人被冤枉时，最需要的是什么？我们该怎样避免“冤枉好人”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>被冤枉最需要：</strong> 需要有人愿意听完解释、需要公正的调查、需要时间的检验。唐僧在铁笼里无法自证，只能等悟空来救。</p>\n                        <p class=\"mt-2\"><strong>避免冤枉好人：</strong> ①“证据不足先不下结论”，不凭猜疑定罪；②听双方陈述，兼听则明；③别被“看起来像”迷惑，追查事实；④发现冤枉了人，要敢于道歉纠错。把“先问清、再判断”变成习惯，就能少很多冤案。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“放下面子”】八戒爱面子，危急关头却放下脸面去请悟空。请谈谈：为什么说“面子”在“大局”面前不值一提？你经历过“放下面子反而更好”的事吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>大局大于面子：</strong> 八戒放下面子，救的是师父和整个取经团队。死要面子，往往会误了正事、害了自己人。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> 比如作业不会，放下面子问同学，成绩上去了；和好朋友闹别扭，先低头说和，友谊回来了；上台紧张，鼓起勇气报名，胆量练大了。“放下面子”不是丢人，而是把更重要的事（成长、友谊、解决问题）放在前面。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“勇气与清醒”】白龙马既敢舍命一搏，又清醒地想到“该请悟空”。请谈谈：为什么说“关键时刻，光有勇气不够，还要有清醒的判断”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>勇气+判断才可靠：</strong> 白龙马有勇气行刺，可单靠它打不过黄袍怪；它清醒地判断出“唯有悟空能救”，才找到了正确出路。有勇无谋，可能白送；有勇有谋，才能破局。</p>\n                        <p class=\"mt-2\"><strong>联系学习生活：</strong> 遇到困难，既要敢闯，也要先想“哪种方法最有效”“该找谁帮忙”。比如题目不会，光“死磕”不换思路效率低，先分析题型再请教老师，才是聪明做法。勇气让你敢做，判断让你做对。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“团队的不可替代性”】少了悟空，队伍连“救人”都变成“送人头”。请谈谈：为什么一个团队里总有“不可替代”的人？如何让更多人成为“团队需要的人”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>不可替代的人：</strong> 往往是有独特本领、又能扛事、关键时刻靠得住的人（如悟空能识妖降妖）。团队缺了他，很多事就办不成。</p>\n                        <p class=\"mt-2\"><strong>成为团队需要的人：</strong> ①练就“一招鲜”的过硬本领（学习、技能、特长）；②培养责任感——交给我的事一定做好；③学会与团队配合，不单打独斗；④关键时刻敢站出来。人人都努力成为“靠谱的人”，团队就更强大了。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“承认错误与重聚”】取经团队经历了惨痛教训，才承认“赶走悟空是错的”。请谈谈：承认错误、把人请回来，为什么是“勇敢”而不是“丢脸”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>认错是勇气：</strong> 承认“我错了”需要勇气，因为要面对自己的失误和难堪。但正是这种勇气，能及时止损、挽回局面、重新凝聚团队。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> 错怪了朋友，主动道歉，友谊还在；误会了同学，说声“对不起”，关系不裂；团队决策失误，及时调整，比硬撑到底强。真正的强者，不是永远正确，而是错了敢认、认了能改、改了能重新出发。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

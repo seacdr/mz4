@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第八十九回精读：守法与知足</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第八十九回精读：守法与知足</h1>
+            <p class="text-lg text-gray-700 serif">“黄狮精设钉钯会，金木土闹豹头山”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">神兵失窃</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">守法妖怪</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">变化夺宝</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">九灵元圣</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 神兵失窃 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">一夜之间，三般神兵不翼而飞</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    铁匠们一早醒来，发现放在作坊里当样子的三般神兵全不见了！八戒急得跳起来：“我的耙在吗？”悟空一想：普通人根本拿不动几千上万斤的兵器，偷兵器的必是妖怪。一问王子，城北七十里有座豹头山、山中有虎口洞——传言有仙有怪，一直没探明。悟空断定：就是他们偷的。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">神兵失窃</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">凡人拿不动，必是妖怪</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            金箍棒13500斤、钉耙和宝杖各5048斤——凡人根本拿不动。悟空自省：<strong>“还是我们的不是……为了显摆”</strong>，才招来妖怪。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">豹头山虎口洞</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">传言有仙有怪</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            王子说：城北七十里<strong>豹头山虎口洞</strong>，有人言洞内有仙、又言有虎狼妖怪——只因这妖怪平时不作恶，连是仙是怪都无人知晓。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">反省，是最好的成长</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    兵器被偷，悟空先怪自己“为了显摆”。<strong>出了问题先找自己的原因，而不是一味怪别人——懂得自省的人，进步最快</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 守法妖怪 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">一群“守法好妖”：买猪羊还付银子</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空变蝴蝶偷听两个巡山小妖说话——一个叫“刁钻古怪”、一个叫“古怪刁钻”，正拿二十两银子去买猪羊，还想吃回扣、攒二两银子买件棉衣过冬。原来妖怪们“连日侥幸”：得了美人和三般神兵，明天要开“钉耙会”！悟空暗喜：这妖怪竟拿钱买猪羊，是群守法好妖。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">守法好妖</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">二十两银子买猪羊</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            两个狼头怪拿<strong>二十两银子去买猪羊</strong>，还盘算吃回扣攒二两银子<strong>买件棉衣过冬</strong>——想吃猪羊都花钱买，这豹头山的妖怪“小日子过得朴素”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">钉耙会</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">以八戒的耙命名</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            妖怪要开“<strong>钉耙会</strong>”——三般兵器里他最爱猪八戒的九齿钉耙，竟以它命名宴席。八戒一听特有面子：“我的宝贝好，才显我身材好！”
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">守规矩的“好”，值得尊重</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    妖怪想吃猪羊，不是去抢，而是拿银子买。<strong>哪怕力量再大，也不欺软怕硬、不偷不抢——守规矩，是无论强弱都要守的底线</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 变化夺宝 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">八戒变刁钻古怪，沙僧扮卖猪羊客</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空定身两个小妖，搜出二十两银子和两块粉牌。他定计：八戒变“刁钻古怪”、自己变“古怪刁钻”、沙僧变卖猪羊的客人，赶着猪羊混进虎口洞。洞里正中间安着九齿钉耙、东头靠金箍棒、西头靠降妖杖。八戒一见耙子忍不住抢起来现了本相——三人夺回神兵，黄狮精持四明铲大战不敌，纵风逃走。悟空烧了妖洞，得胜回城。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">变化混入</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">刁钻古怪与古怪刁钻</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            悟空使<strong>定身法</strong>捉住两个狼头怪，搜出二十两银子和写有“<strong>刁钻古怪、古怪刁钻</strong>”的粉牌——八戒、悟空变化成二怪，沙僧扮卖猪羊客，赶着猪羊混进洞。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">夺宝烧洞</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">物见其主，必定会取</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            八戒一进洞看见钉耙就抢，现了本相；行者沙僧也各取神兵现形。黄狮精持<strong>四明铲</strong>大战不敌，纵风逃往东南；三人杀尽小妖、<strong>一把火烧了虎口洞</strong>，携猪羊细软得胜回城。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">将计就计，事半功倍</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空不硬闯，而是变成妖怪的样子“送货上门”。<strong>正面硬来常常费劲，学会“顺势而为、将计就计”，往往更省力</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 九灵元圣 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">狮群复仇：九灵元圣兵临城下</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    黄狮精逃到竹节山九曲盘桓洞，向祖翁九灵元圣哭诉。九灵元圣一听“长嘴大耳、毛脸雷公嘴”，立刻知道是猪八戒、沙僧和五百年前大闹天宫的齐天大圣孙悟空——十万天兵都拿不住他，还敢去！他点起猱狮、雪狮、狻猊、白泽、伏狸、抟象等一群狮子，狂风黑雾直扑玉华州。悟空让老王守城，带八戒沙僧出城迎敌。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">九灵元圣</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">点起一群狮子精</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            黄狮精请来祖翁<strong>九灵元圣</strong>，他点起<strong>猱狮、雪狮、狻猊、白泽、伏狸、抟象</strong>——全是狮子别名。“好为人师”的玉华州，偏偏惹出一群“狮子精”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">识得大圣</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">十万天兵拿他不住</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            九灵元圣一听“毛脸雷公嘴”，便知是<strong>五百年前大闹天宫的齐天大圣</strong>——他明知悟空厉害还敢来，说明这老妖本事极大，<strong>必是天上下来的</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">打了小的，来了老的</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空打败黄狮精，却招来了更厉害的九灵元圣。<strong>做事要想到“后果和后续”——赢了眼前这一仗，还要防备后面的“援兵”</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第八十九回“黄狮精设钉钯会，金木土闹豹头山”讲的是玉华州神兵失窃：兵器因“显摆”被豹头山虎口洞妖怪偷走；悟空发现这是群“守法好妖”，用二十两银子买猪羊、还要开“钉耙会”；悟空将计就计，变化混入洞中夺回神兵、火烧妖洞；黄狮精请来祖翁九灵元圣，狮群兵临城下。这一回让我们看到：反省是最好的成长、守规矩是底线的底线、将计就计事半功倍、打了小的来了老的。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第八十九回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "三般神兵一夜之间不见了，悟空怎么判断是妖怪偷的？",
+                    "options": {"A": "看到黑影","B": "凡人根本拿不动几千上万斤的兵器，必是妖怪","C": "铁匠说的","D": "八戒猜的"},
+                    "correct": "B",
+                    "analysis": "金箍棒13500斤、钉耙宝杖各5048斤——悟空说“有百千人也弄不动”，普通人偷不了，必是妖怪。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "悟空反思兵器被偷，觉得错在自己哪一点？",
+                    "options": {"A": "没锁门","B": "“为了显摆”（好为人师、炫耀神兵）","C": "睡太早","D": "信错人"},
+                    "correct": "B",
+                    "analysis": "悟空暗恨“还是我们的不是……还不是为了显摆吗”——玉华州这一难，正是“好为人师、爱显摆”惹出来的。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "两个巡山小妖叫什么名字？",
+                    "options": {"A": "精细鬼、伶俐虫","B": "刁钻古怪、古怪刁钻","C": "奔波儿灞、灞波儿奔","D": "有来有去"},
+                    "correct": "B",
+                    "analysis": "两个狼头怪腰间粉牌分别写着“刁钻古怪”和“古怪刁钻”——名字滑稽有趣。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "两个小妖拿银子去干什么？",
+                    "options": {"A": "买酒","B": "拿二十两银子买猪羊，给钉耙会准备宴席","C": "买兵器","D": "赎人"},
+                    "correct": "B",
+                    "analysis": "两个小妖奉大王之命拿二十两银子买猪羊——还盘算吃回扣攒钱买棉衣过冬，十分朴素。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "妖怪把明天要开的宴席叫什么名字？",
+                    "options": {"A": "金箍棒会","B": "钉耙会（以八戒的九齿钉耙命名）","C": "降妖杖会","D": "狮子会"},
+                    "correct": "B",
+                    "analysis": "妖怪觉得三般兵器里猪八戒的钉耙最值钱——所以宴席叫“钉耙会”，八戒听了还特有面子。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "悟空用什么办法捉住两个狼头怪的？",
+                    "options": {"A": "打死","B": "吹一口法拓、念咒语使定身法","C": "放倒","D": "迷魂"},
+                    "correct": "B",
+                    "analysis": "悟空“吹了一口法拓，念了一声咒语，再使一个定身法”——两个狼头精直挺挺站住，被搜走银子和粉牌。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "悟空定计夺宝，三人的“角色”是什么？",
+                    "options": {"A": "行者变古怪刁钻、八戒变刁钻古怪、沙僧变卖猪羊客","B": "都变妖怪","C": "直接打进去","D": "变商贩"},
+                    "correct": "A",
+                    "analysis": "悟空让八戒变“刁钻古怪”、自己变“古怪刁钻”、沙僧变卖猪羊的客人——赶着猪羊混进虎口洞。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "沙僧送请帖的小妖要去请谁？",
+                    "options": {"A": "牛魔王","B": "竹节山的九灵元圣（老大王）","C": "如来","D": "玉帝"},
+                    "correct": "B",
+                    "analysis": "青脸红毛小妖带着请书匣，要去竹节山请“九灵元圣老大人”赴钉耙会——请帖上写“门下孙黄狮顿首百拜”。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "八戒听说“金毛狮子精”为什么高兴？",
+                    "options": {"A": "爱吃狮子","B": "“癞母猪专赶金毛狮子”——他是猪，是狮子的天敌","C": "认识它","D": "想交朋友"},
+                    "correct": "B",
+                    "analysis": "八戒笑道“古人云癞母猪专赶金毛狮子”——我是猪、它是狮子，正好是我的“货”，我能对付它。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "三人进洞后，三般兵器分别放在哪里？",
+                    "options": {"A": "都挂墙上","B": "九齿钉耙居中、金箍棒靠东、降妖杖靠西","C": "藏在地窖","D": "都在箱子里"},
+                    "correct": "B",
+                    "analysis": "洞里二层厅“正中间安着九齿钉耙，东山头靠着金箍棒，西山头靠着降妖杖”——钉耙居中，正是“钉耙会”的主角。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "黄狮精的兵器是什么？",
+                    "options": {"A": "四明铲","B": "月牙铲","C": "大刀","D": "狼牙棒"},
+                    "correct": "A",
+                    "analysis": "黄狮精取出自己的武器“四明铲”，与三僧斗了多时——虽打不过，勇气可嘉。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "黄狮精打不过，往哪个方向逃了？",
+                    "options": {"A": "西北","B": "东南巽宫（巽为风）","C": "正南","D": "正北"},
+                    "correct": "B",
+                    "analysis": "黄狮精“往东南巽宫上纵风逃去”——巽卦主风，他借着风逃跑。悟空说“穷寇莫追，只断他归路”。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "悟空为什么放走黄狮精不去追？",
+                    "options": {"A": "追不上","B": "“穷寇莫追，只断他的归路”","C": "怕他","D": "想放他一马"},
+                    "correct": "B",
+                    "analysis": "悟空说“让他跑嘛，穷寇莫追，只断他的归路”——先夺回兵器、烧掉巢穴，才是要紧事。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "九灵元圣住在哪里？",
+                    "options": {"A": "豹头山虎口洞","B": "竹节山九曲盘桓洞","C": "狮驼岭","D": "陷空山"},
+                    "correct": "B",
+                    "analysis": "黄狮精奔到竹节山“九曲盘桓洞”，见到祖翁九灵元圣——这位才是真正的“老大王”。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "九灵元圣是怎么认出取经团队的？",
+                    "options": {"A": "见过面","B": "听描述：长嘴大耳是八戒、晦气色脸是沙僧、毛脸雷公嘴是五百年前大闹天宫的孙悟空","C": "猜的","D": "问出来的"},
+                    "correct": "B",
+                    "analysis": "九灵元圣听“长嘴大耳、毛脸雷公嘴”便知是取经团队——还知道“十万天兵拿他不住”，可见他必是天上下来的。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "九灵元圣点起的狮群都包括哪些？",
+                    "options": {"A": "青狮、白象、大鹏","B": "猱狮、雪狮、狻猊、白泽、伏狸、抟象","C": "黑熊、黄狮","D": "金毛吼"},
+                    "correct": "B",
+                    "analysis": "九灵元圣点起猱狮、雪狮、狻猊、白泽、伏狸、抟象——全是狮子别名，“好为人师”惹出一群狮子精。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "妖怪们住在豹______山虎口洞。",
+                    "answer": "头",
+                    "analysis": "“豹头山”是山名——山名豹头、洞名虎口，与“玉华州”只隔七十里，妖怪却一直未被查明。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "两个狼头怪叫“刁钻古怪”和“古怪______”。",
+                    "answer": "刁钻",
+                    "analysis": "“刁钻古怪”与“古怪刁钻”名字互为倒装——正是西游记给小妖怪起名的俏皮风格。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "妖怪明天要开“______耙会”，以八戒的钉耙命名。",
+                    "answer": "钉",
+                    "analysis": "“钉耙会”以九齿钉耙命名——妖怪认为钉耙是三般兵器里最值钱的，八戒因此得意洋洋。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "黄狮精的兵器是四______铲。",
+                    "answer": "明",
+                    "analysis": "“四明铲”是黄狮精的武器——他持铲大战三僧，本事虽不大，胆量不小。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "悟空说“穷寇莫追，只断他的______路”。",
+                    "answer": "归",
+                    "analysis": "“断归路”指堵住敌人回家的路——悟空放走黄狮精，回头烧洞、夺宝，才是正事。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "黄狮精请帖上写“门下孙黄______顿首百拜”。",
+                    "answer": "狮",
+                    "analysis": "“黄狮”即金毛狮子精——沙僧因此推断：“黄狮应该就是一个金毛狮子精”。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "九灵元圣住在竹节山九曲______桓洞。",
+                    "answer": "盘",
+                    "analysis": "“九曲盘桓洞”的“九”与“九灵元圣”呼应——洞名曲折盘桓，暗示老妖不简单。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "八戒说“癞______猪专赶金毛狮子”。",
+                    "answer": "母",
+                    "analysis": "“癞母猪专赶金毛狮子”是古人俏皮话——八戒说自己是猪、是狮子的天敌，专克黄狮精。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“反省自己”】兵器被偷，悟空先说“还是我们的不是，为了显摆”。请谈谈：为什么“出了问题先反省自己”是成熟的表现？你如何做到“遇事向内找原因”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>怨天尤人，不如反求诸己：</strong> 悟空不怪铁匠、不怪别人，先反省“是我们显摆惹的祸”——<strong>把责任推给别人容易，反省自己才难，也才最有用</strong>。</p>\n                        <p class=\"mt-2\"><strong>向内找原因：</strong> ①考试失利，先想“我哪没复习好”，别只怪题目难；②和朋友闹矛盾，先想“我有没有错”；③事情没做好，先想“我能改什么”；④把“都怪他”换成“我也可以改进”；⑤每次反省，都是给自己“升级”。<strong>能反省的人，错的每一件事都成了成长</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“守规矩”】妖怪想吃猪羊，竟拿银子去买。请谈谈：为什么“守规矩”无论强弱都是底线？你如何理解“能力越大，越要自律”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>强者守规矩，才配称强者：</strong> 妖怪有本事抢，却老老实实拿钱买——<strong>守规矩不是“怕”，是“自重”</strong>。</p>\n                        <p class=\"mt-2\"><strong>能力与自律：</strong> ①力气大，不用来欺负人；②成绩好，不嘲笑同学；③权力再小，也不滥用；④越有本事，越要守住分寸；⑤把“守规矩”当成习惯，不因强弱改变。<strong>守规矩的人，赢了也不让人讨厌</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“知足常乐”】小妖们想攒二两银子买棉衣就心满意足。请谈谈：为什么“知足”能让人快乐？你如何做到“珍惜已有、不过分贪求”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>贪心不足蛇吞象：</strong> 小妖能攒钱买棉衣就很满足；而贪心的国王、妖怪，都因“想要更多”栽了跟头——<strong>知足的人，天天开心；贪心的人，永不满足</strong>。</p>\n                        <p class=\"mt-2\"><strong>知足不贪：</strong> ①珍惜已有的东西，别总盯着别人有而你没有的；②“想要”可以，但要在合理范围内；③不攀比：别人有什么，不代表你也必须有什么；④把注意力放在“我拥有什么”上；⑤感恩当下，就是最好的知足。<strong>知足不是不努力，是不为“贪”所累</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“将计就计”】悟空不硬闯，而是变成妖怪送货上门。请谈谈：为什么“顺势而为”常常比“硬碰硬”更有效？你如何运用“巧劲”解决问题？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>四两拨千斤：</strong> 悟空借“买猪羊”的名义混进洞——<strong>顺着对方的安排走，比正面硬闯省力得多</strong>。</p>\n                        <p class=\"mt-2\"><strong>用巧劲：</strong> ①遇到难题，先想“有没有更省力的方法”；②借势：利用现有的条件、资源；③把自己放到“对方没想到”的位置；④正面解决不了，就侧面突破；⑤多问“如果换个角度呢”。<strong>会借力的人，四两也能拨千斤</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“有始有终”】悟空说“一定给你赶尽杀绝方才起行，否则我们走了你们对付不了”。请谈谈：为什么“做事要有始有终、不留后患”？你如何做到“善始善终”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>帮人帮到底，送佛送到西：</strong> 悟空不解决九灵元圣就不走——<strong>留下“尾巴”就走，等于没帮</strong>。</p>\n                        <p class=\"mt-2\"><strong>善始善终：</strong> ①做事前想“怎么才算彻底完成”；②做完主体，检查“还有没有隐患”；③答应别人的事，负责到底；④发现问题及时补，不拖到“以后再说”；⑤把“差不多”换成“真正做好”。<strong>有始有终，才值得托付</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“知己知彼”】九灵元圣一听描述就知道是取经团队。请谈谈：为什么“了解对手”是取胜的前提？你如何做到“知己知彼”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>知彼知己，百战不殆：</strong> 九灵元圣听“毛脸雷公嘴”便知是齐天大圣——<strong>对对手了解得越透，越不容易吃暗亏</strong>。</p>\n                        <p class=\"mt-2\"><strong>知己知彼：</strong> ①考试前，先搞清“考什么、怎么考”；②比赛前，研究对手的打法和强项；③了解自己的优势和短板，扬长避短；④多观察、多收集信息，不凭感觉；⑤把“了解别人”和“了解自己”一起做。<strong>信息掌握得越多，你越从容</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

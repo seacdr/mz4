@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第五十七回精读：二心之患与沟通之桥</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第五十七回精读：二心之患与沟通之桥</h1>
+            <p class="text-lg text-gray-700 serif">“行者落伽山诉苦，假猴水帘洞誊文”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">诉苦南海</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">假猴现身</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">沙僧请还</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">真假初现</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 诉苦南海 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">悟空落泪：委屈第一次压垮了心猿</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空被唐僧赶走，回花果山怕人耻笑，回头求情又遭紧箍咒，满腹委屈涌向南海珞珈山——在菩萨面前“泪如泉涌，放声大哭”，还要菩萨念个不存在的“松箍咒”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">进退两难</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">恼恼闷闷起在空中</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            悟空想回花果山，“又怕本洞的小妖见笑”；回来见唐僧，话没说完就被<strong>紧箍咒咒倒在地</strong>。悟空喊冤：“我是有处过日子的，只怕你<strong>无我去不得西天</strong>。”——师徒俩都认定了“自己有理”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">泪如泉涌</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">孙悟空也会哭</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            悟空在菩萨面前“<strong>泪如泉涌，放声大哭</strong>”，说“我当年那是响当当的人物，哪受过这种气”。他甚至要菩萨念个<strong>“松箍咒”</strong>退下金箍，回水帘洞去——他并不是真想走，只是想<strong>找人评评理、出头撑腰</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c03')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">菩萨预言</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c03-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">顷刻之间就有伤身之难</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c03-back">
+                        <p class="text-gray-700 text-left">
+                            菩萨<strong>运心三界</strong>，望见未来，说：“你那师傅<strong>顷刻之间就有伤身之难</strong>，不久便来寻你。”她让悟空在南海等着，等唐僧受完这一难，再让他来请悟空同行——<strong>取经的每一难都是命中注定，少一难也到不了西天</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">委屈需要“出口”</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空一路上天不怕地不怕，却在菩萨面前哭得像个孩子——<strong>再强大的人，受了委屈也需要倾诉和安慰</strong>。把委屈说出来、有人听一听，心结就解开了一半。学会倾诉，是情绪健康的重要一课。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 假猴现身 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">打师抢包袱：三个“不对劲”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    八戒、沙僧先后去化斋取水，唐僧孤身坐在路边。一个“行者”突然跪在路旁献水，被拒后竟抡起铁棒打倒唐僧，抢走两个青毡包袱扬长而去。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">孤身遇袭</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">没有老孙，你连水都喝不上</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            唐僧又饥又渴之际，一个“行者”双手捧水跪在路旁。唐僧不领情，那“行者”变脸喝骂，<strong>抡起铁棒朝着唐僧背上压了一下</strong>，唐僧昏晕在地，两个<strong>青毡包袱</strong>也被提走。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">三个疑点</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">是悟空，又不像悟空</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            读者和八戒、沙僧都觉出不对劲：<strong>①悟空明明在南海菩萨处，不该出现在这里；②悟空从不真动手打师傅，这次却直接下棒；③包袱里没有金银，悟空为何要抢它？</strong>——处处暗示：此“悟空”非彼悟空。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">看穿“不对劲”</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    作者连用三个“不符合悟空性格”的细节，让我们和八戒、沙僧一样起疑。<strong>判断一个人、一件事，不能只看“名头”，要看“行为是否符合他一贯的本性”</strong>——细节，往往藏着真相。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 沙僧请还 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">会说话的沙僧：一趟高情商的“讨包之旅”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    唐僧派“会说话”的沙僧去花果山讨行李。沙僧见了石台上的“行者”，先认错、再夸、后提恩情、给两全方案——一番话进退有度，把求人的艺术说到极致。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">唐僧点将</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">八戒不会说话，让悟净去</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            八戒主动请缨讨行李，唐僧不放心：“猴子原来又与你不和，你又不会说话……<strong>让悟净去吧</strong>。”并叮嘱：若肯还包袱就“假谢拿过来”；不肯就<strong>直接去菩萨处告状</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">说话的艺术</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">师傅错怪了师兄</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            沙僧见“行者”不认自己，先<strong>把错揽到师傅身上</strong>：“前者实是师傅性急，错怪了师兄”；再<strong>美化对方</strong>：“师兄好意复来”；又提<strong>解脱之恩</strong>（五行山相救）；最后给<strong>两全方案</strong>——同行共成正果，或还包袱各走各路。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">高情商沟通的范本</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    沙僧这番话：<strong>先“软”（认错、夸赞），再“情”（提恩情），后“路”（给选择）</strong>，句句替对方着想。同样是求人，八戒直来直去，沙僧绵里藏针——<strong>会说话，往往比会动手更能解决问题</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 真假初现 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">花果山“另立门户”：二心已生</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    “行者”自称要把文牒读熟，“我独立成功，万代传名”，还牵出假的唐僧、八戒、沙僧要自行取经。沙僧打死假沙僧，逃到南海，与真悟空当面——真相渐渐浮出。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">独立成功</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">我要自己去拜佛求经</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            “行者”冷笑：“我现在把<strong>碟文读熟了</strong>，我要<strong>自己去拜佛求经，送上东土，我独立成功</strong>，叫那南赡部洲人利我为祖，万代传名。”——他嫌“妖怪都是我打的，凭什么唐僧成正果”，起了<strong>二心</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">真假对质</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">悟空到此已经四天了</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            沙僧误认真悟空为凶手，举宝杖劈头就打。菩萨喝止：“悟净别冤枉人，悟空到此已经四天了，我没放他走过。”——<strong>真悟空一直没离开南海</strong>，那花果山里的“孙行者”又是谁？真假美猴王的大戏即将开场。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">“二心”的隐喻</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    假悟空不是天上掉下来的，而是<strong>在师徒“面是背非”、你猜我忌、互不服气的时候出现的</strong>——它就是人心的“<strong>二心</strong>”：委屈、不平、想单干的念头。修行路上<strong>一旦生了二心，就会“冒出个假悟空”</strong>，与你本领相当、真假难辨。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第五十七回“行者落伽山诉苦，假猴水帘洞誊文”讲的是真假美猴王的开端：悟空诉苦南海、假悟空打师抢包袱、沙僧讨包袱、花果山另立门户。这一回让我们看到：委屈需要出口、细节藏着真相、会说话是本事、生了二心最危险。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第五十七回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "悟空被唐僧赶走后，先去了哪里？",
+                    "options": {"A": "花果山","B": "南海珞珈山观音菩萨处","C": "灵山如来处","D": "龙宫"},
+                    "correct": "B",
+                    "analysis": "悟空满腹委屈，想到“这和尚负了我心”，决定去找“执行导演”观音菩萨告状评理，于是径赴南海珞珈山。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "悟空在菩萨面前做了什么前所未有的举动？",
+                    "options": {"A": "念经","B": "泪如泉涌，放声大哭","C": "变法术","D": "要糖吃"},
+                    "correct": "B",
+                    "analysis": "悟空在菩萨面前“泪如泉涌，放声大哭”，这是他以往从没有过的表现，说明他心里的委屈到了极点。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "悟空说的“松箍咒”是什么？",
+                    "options": {"A": "真实存在的咒语","B": "悟空自己想象出来的、能把金箍取下来的咒语","C": "观音念的咒","D": "紧箍咒的别名"},
+                    "correct": "B",
+                    "analysis": "只有“紧箍咒”（越念越紧），并没有“松箍咒”。悟空是借这个不存在的咒语，表达“我不想干了、把箍退下来”的气话。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "菩萨对唐僧遭遇的预言是？",
+                    "options": {"A": "他会一直平安","B": "他顷刻之间就有伤身之难，不久便来寻悟空","C": "他会回大唐","D": "他会遇到更多妖怪"},
+                    "correct": "B",
+                    "analysis": "菩萨运心三界后说“你那师傅顷刻之间就有伤身之难，不久便来寻你”，让悟空在南海等候。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "八戒去化斋时，变成了什么模样？",
+                    "options": {"A": "小和尚","B": "食痨病的黄胖和尚","C": "老人","D": "美女"},
+                    "correct": "B",
+                    "analysis": "八戒自知嘴脸吓人化不到斋，便变成“食痨病的黄胖和尚”，装可怜讨到剩饭锅巴——这回他倒真的化到斋了。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "唐僧孤身时，献水的“行者”被拒绝后做了什么？",
+                    "options": {"A": "跪地求饶","B": "抡起铁棒打了唐僧一棒，抢走两个青毡包袱","C": "回花果山","D": "变回原形"},
+                    "correct": "B",
+                    "analysis": "那“行者”变脸喝骂，抡起铁棒朝着唐僧背上压了一下，唐僧昏晕在地，两个青毡包袱被提走。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "下列哪一项是读者看出“假悟空”不对劲的疑点？",
+                    "options": {"A": "悟空不该出现在这里，他一直在南海","B": "悟空从不真动手打师傅","C": "悟空走时还抢走了没金没银的包袱","D": "以上三项都是"},
+                    "correct": "D",
+                    "analysis": "三个疑点齐备：人不在场却出现、动手打师傅、抢无用的包袱——处处不符合孙悟空的本性，暗示这是“冒牌货”。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "唐僧为什么派沙僧而不是八戒去讨行李？",
+                    "options": {"A": "沙僧武功高","B": "八戒不会说话，怕激化矛盾；沙僧会说话","C": "八戒受伤了","D": "沙僧会变法术"},
+                    "correct": "B",
+                    "analysis": "唐僧说“猴子原来又与你不和，你又不会说话……让悟净去吧”——派会沟通的沙僧去，更能稳妥办成事。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "唐僧叮嘱沙僧：如果“行者”不肯还包袱，就去哪里告状？",
+                    "options": {"A": "天庭","B": "观音菩萨处","C": "如来处","D": "地府"},
+                    "correct": "B",
+                    "analysis": "唐僧说若他不肯还，就别争，“直接去菩萨那，将此情告诉菩萨，让菩萨问他要”。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "沙僧劝“行者”时，把过错主要揽在了谁身上？",
+                    "options": {"A": "自己","B": "师傅唐僧（“师傅性急，错怪了师兄”）","C": "八戒","D": "妖怪"},
+                    "correct": "B",
+                    "analysis": "沙僧很会说话，先把错揽到师傅身上，说“师傅性急错怪了师兄”，再夸师兄“好意复来”，给对方台阶下。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "“行者”宣称要自己去取经，他的理由是？",
+                    "options": {"A": "唐僧太笨","B": "“妖怪都是我打的，凭什么唐僧成正果，我要独立成功”","C": "花果山缺人","D": "菩萨让他去"},
+                    "correct": "B",
+                    "analysis": "假悟空说“我要自己去拜佛求经，送上东土，我独立成功，万代传名”——他不服唐僧独享取经功名，这正是“二心”的表现。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "沙僧打死“假沙僧”后，假沙僧现出了什么原形？",
+                    "options": {"A": "木头","B": "猴精","C": "石头","D": "妖怪"},
+                    "correct": "B",
+                    "analysis": "沙僧一宝杖把假沙僧“劈头打死”，原来是一只猴精变的——进一步暗示整个“取经团队”都是假的。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "“行者”在花果山牵出的“取经团队”不包括谁？",
+                    "options": {"A": "假唐僧","B": "假八戒","C": "假观音","D": "假沙僧"},
+                    "correct": "C",
+                    "analysis": "假悟空牵出假唐僧、假八戒、假沙僧和白马，要“另组取经队伍”，唯独不可能变出菩萨来。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "沙僧到南海告状时，见到真悟空在场，他的反应是？",
+                    "options": {"A": "很高兴","B": "误认为悟空是凶手，举宝杖劈头便打","C": "跪下道歉","D": "转身就走"},
+                    "correct": "B",
+                    "analysis": "沙僧以为孙悟空先到一步骗了菩萨，气得举宝杖劈头就打；悟空不还手侧身躲过，还是菩萨喝止了误会。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "菩萨为真悟空作证说：",
+                    "options": {"A": "悟空刚离开","B": "“悟空到此已经四天了，我没放他走过”","C": "悟空在花果山","D": "悟空在睡觉"},
+                    "correct": "B",
+                    "analysis": "菩萨证明悟空已在南海四天（沙僧去花果山三天、再回南海一天），没离开过，所以花果山的“孙行者”必是假的。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "假悟空出现的时机说明了什么？",
+                    "options": {"A": "妖怪恰好在此时来","B": "在师徒“面是背非”、相互猜忌时，人心的“二心”生了出来","C": "菩萨安排的","D": "悟空自己变的"},
+                    "correct": "B",
+                    "analysis": "假悟空不是外来的妖怪那么简单，它是师徒离心时“二心”的化身——内心的怨气、不平、想单干，化成了与真悟空一般无二的假悟空。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "悟空到南海珞珈山见菩萨，在宝莲座下“泪如泉涌，放声大______”。",
+                    "answer": "哭",
+                    "analysis": "“放声大哭”写的是悟空情绪彻底崩溃——他向来乐观坚强，这次却像受了天大委屈的孩子，说明“委屈”会击垮再硬的心。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "悟空请求菩萨念一个不存在的“______箍咒”，退下金箍。",
+                    "answer": "松",
+                    "analysis": "只有“紧箍咒”，没有“松箍咒”。悟空用这个杜撰的咒语说气话：既然没人理解我，就把箍取下来，我不干了。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "八戒化斋时，变作一个食______病的黄胖和尚。",
+                    "answer": "痨",
+                    "analysis": "八戒知道自己长相吓人化不到斋，便装成“食痨病”的黄胖和尚博取同情，果然讨到了剩饭锅巴——这回他长了本事。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "假悟空提走了两个______包袱，这也是疑点之一。",
+                    "answer": "青毡",
+                    "analysis": "青毡包袱里装的不过是些普通衣物和通关文牒，没金没银。真悟空不会去抢它，这个细节暗示来者并非悟空本人。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "唐僧派“会说话”的______去花果山讨行李。",
+                    "answer": "沙僧",
+                    "analysis": "唐僧说八戒不会说话，怕激化矛盾，改派沙僧。沙僧一开口就把错揽到师傅身上，进退有度，堪称沟通范本。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "假悟空要把碟文读熟，自己去拜佛求经，“我独立成______”。",
+                    "answer": "功",
+                    "analysis": "“独立成功”是假悟空的核心诉求——他嫌唐僧独享取经功名，想撇开师傅自己干。这正是“二心”的体现。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "沙僧一宝杖打死“假沙僧”，发现它原来是一只______精变的。",
+                    "answer": "猴",
+                    "analysis": "假沙僧现出猴精原形，说明整个“取经团队”都是猴子变的——为“真假美猴王”的真相埋下伏笔。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "菩萨为悟空作证：“悟空到此已经______天了，我没放他走过。”",
+                    "answer": "四",
+                    "analysis": "悟空在南海待了四天（沙僧去花果山三天、再到南海一天），从未离开。这就戳穿了“花果山孙行者”是假的。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“委屈需要出口”】孙悟空这样天不怕地不怕的人物，也在菩萨面前放声大哭。请谈谈：为什么“把委屈说出来”对身心健康很重要？你有情绪时，如何找到自己的“南海菩萨”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>憋着委屈最伤身：</strong> 悟空一路忍耐，越想越气，一旦哭出来、说出来，心里的结才解开。心理学家也说：<strong>情绪积压久了会“爆炸”</strong>，说出来、被听见，就是最好的减压。</p>\n                        <p class=\"mt-2\"><strong>找到你的“倾诉出口”：</strong> ①和信任的父母、老师、朋友聊一聊；②写日记，把委屈“倒”在纸上；③运动、画画、唱歌，让情绪“流”出来；④告诉自己“有情绪很正常”，不丢人；⑤也学会当别人的“倾听者”。<strong>会倾诉、会倾听，才是真正的心灵强者</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“细节藏着真相”】假悟空做得再像，也会露出“不认识沙僧”“抢没用的包袱”等破绽。请谈谈：为什么判断一个人要“看细节、看本性”而非“看外表”？生活中如何做到“透过现象看本质”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>细节不骗人：</strong> 假悟空外表、本领都像真的，可他一不认识沙僧、二打师傅、三抢包袱——<strong>细节暴露了本性</strong>。判断一个人，不能只看“名头”和“样子”。</p>\n                        <p class=\"mt-2\"><strong>看本质的方法：</strong> ①交朋友，看他怎么对待家人、弱者；②判断一件事，看“前因后果”而非只听一面之词；③多观察“小动作、小细节”，往往最真实；④不轻易给人贴标签，用行动检验；⑤“路遥知马力，日久见人心”，重要的事多花时间验证。学会看本质，才不会“以貌取人”被表象骗了。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“会说话是本事”】沙僧讨包袱，先认错、再夸人、后提恩情、给两全方案，一番话办成了事。请谈谈：为什么“好好说话”比“大喊大叫”更有效？你有哪些“说话让人舒服”的小技巧？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>会说话能成事：</strong> 八戒直来直去容易把话说僵，沙僧却句句替对方着想，先给对方台阶下，再讲道理、给选择——同样一件事，说话的方式不同，结果天差地别。</p>\n                        <p class=\"mt-2\"><strong>说话小技巧：</strong> ①先听对方说完，再开口；②批评之前先肯定（“你做得很好，要是再……就更好”）；③多用“我觉得”“能不能”，少用“你必须”；④提出请求时，给对方一个“选择”；⑤生气时先闭嘴，冷静后再沟通。<strong>良言一句三冬暖</strong>，会说话，是终身受用的本领。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“二心之患”】假悟空是师徒离心时“二心”的化身。请谈谈：为什么“三心二意”最容易坏事？我们如何保持“一心一意”、不让“第二个自己”跑出来？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>二心最危险：</strong> 师徒们心里各有各的委屈和不平，谁也不服谁，于是“冒出个假悟空”——本领和真悟空一般大，专门捣乱。<strong>人心一旦分裂，做起事来就内耗、就出错</strong>。</p>\n                        <p class=\"mt-2\"><strong>保持一心一意：</strong> ①学习时把手机、杂念放一边，专心致志；②定下目标就坚持，不今天想这个、明天想那个；③遇到委屈和不平，及时沟通化解，不让怨气积压；④想放弃时，回想自己“为什么出发”；⑤一个时间只做一件事，把它做好。<strong>一心一意，才有力气走完取经路</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“功名与缘法”】假悟空不服“妖怪都是我打的，凭什么唐僧成正果”。沙僧劝他：取经人本是有缘人，强求不得。请谈谈：为什么“不属于自己的东西，抢也抢不来”？你如何看待“别人的成功”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>强求不得：</strong> 取经的“正果”属于唐僧（金蝉子转世），悟空、八戒、沙僧各有自己的位置。假悟空硬要“独立成功”，只会把自己变成“妖怪”，反而不被认可。<strong>不属于你的位置，硬抢只会失去更多</strong>。</p>\n                        <p class=\"mt-2\"><strong>看待别人的成功：</strong> ①别人的奖状、成绩，先看到“他付出了什么”；②不嫉妒，把“他行，我也要努力”当动力；③认清自己的“赛道”和“位置”，在自己的位置上发光；④学会为别人高兴，也为自己加油；⑤成功不只有一种，做好自己就是成功。<strong>与其抢别人的“经”，不如修好自己的“行”</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“团队的信任”】师徒离心，妖怪（假悟空）就趁虚而入。请谈谈：为什么“信任”是团队最坚固的城墙？当队友之间有了误会，第一步应该做什么？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>信任是城墙：</strong> 师徒一心时，再厉害的妖怪也动摇不了取经队伍；一旦“面是背非”、互相猜忌，连“假悟空”都能搅得天翻地覆。<strong>团队最强的防线，不是武力，而是信任</strong>。</p>\n                        <p class=\"mt-2\"><strong>化解误会的第一步：</strong> ①第一时间<strong>当面说清楚</strong>，不猜来猜去；②先别急着怪对方，先问“当时你为什么会那样做”；③把“我生气”说出来，而不是憋着；④请第三方（老师、朋友）居中调解；⑤主动先道歉，不是认输，是珍惜。<strong>误会像绳子上的结，越拖越紧；及时解开，队伍才能继续往前走</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

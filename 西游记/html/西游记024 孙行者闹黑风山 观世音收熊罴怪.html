@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第十七回精读：观音收熊</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第十七回精读：观音收熊</h1>
+            <p class="text-lg text-gray-700 serif">“孙行者闹黑风山，观世音收伏熊罴怪”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-return')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-return">第一章：再上黑风山</button>
+                <button onclick="NavigationModule.switchTab('section-disguise')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-disguise">第二章：变作长老</button>
+                <button onclick="NavigationModule.switchTab('section-trick')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-trick">第三章：观音妙计</button>
+                <button onclick="NavigationModule.switchTab('section-keep')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-keep">第四章：收服归正</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Return -->
+        <section id="section-return" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">索宝黑风山：一波三折</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空发现袈裟被熊罴怪偷走，急忙寻到黑风山。他先是找到黑风洞，与熊罴怪一场大战，又趁对方进洞时，变成了一个“小妖”混入其中。点击下方卡片，回顾悟空索宝的三次尝试。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>第一次：正面叫阵</h3>
+                    <p class="text-sm text-gray-600">悟空来到黑风洞叫阵，与熊罴怪大战一场。双方打得难解难分，熊罴怪退回洞中，悟空一时无计。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>第二次：变妖混入</h3>
+                    <p class="text-sm text-gray-600">悟空变作小妖，混入洞中，正撞见熊罴怪与两个妖怪密谋“佛衣会”，得知袈裟确实在它手中。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>第三次：变作长老赴会</h3>
+                    <p class="text-sm text-gray-600">悟空得知熊罴怪请金池长老来赴“佛衣会”，便变作金池长老的模样，大摇大摆去赴会。</p>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：悟空的“百变智慧”</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    面对武艺高强的熊罴怪，悟空没有一味硬拼，而是<strong class="text-amber-900">“变身潜入、智取情报”</strong>：变小妖打听消息，变长老深入虎穴。这正是“七十二变”背后真正的智慧——<strong class="text-amber-900">能屈能伸、随机应变</strong>，打得过就硬打，打不过就智取。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Disguise -->
+        <section id="section-disguise" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">假长老赴会：一次“翻车”的潜入</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空变作金池长老去赴佛衣会，却因为一个小细节露了馅，被熊罴怪识破，双方再次大打出手。点击翻转卡片，看看悟空败露在哪一步。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-d1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">身份败露</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-d1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“你不是金池！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-d1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空虽变作金池长老的模样，却<strong>不懂老长老的言行习惯</strong>，被熊罴怪看出破绽，当场识破。悟空见骗不过，现出本相，与熊罴怪再战一场。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-d2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">“伪装”的启示</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-d2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">细节藏不住</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-d2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空“形似”却“神不似”，终被识破。这告诉我们：伪装终究是伪装，<strong class="text-amber-900">真正的改变在于“心”而不在于“形”</strong>。想靠表面功夫蒙混过关，往往经不起时间的检验。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">强攻不成，悟空求助</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    熊罴怪确实了得，悟空硬打、智取都未能立刻得手，于是<strong class="text-amber-900">果断去南海请观音菩萨</strong>。这不是“认输”，而是<strong class="text-amber-900">懂得借助更大的力量</strong>——就像学习中遇到超纲难题，及时请教老师，是聪明的做法。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Trick -->
+        <section id="section-trick" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">观音妙计：一个“金丹”的圈套</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    观音并不与熊罴怪硬拼，而是布下了一个巧妙的“局”：她变作妖怪凌虚子，悟空变作一颗“金丹”，献给熊罴怪服用。点击翻转卡片，看这场“引熊入瓮”的妙计如何收网。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">化“金丹”</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">悟空变金丹</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t1-back">
+                        <p class="text-gray-700 text-left">
+                            观音变作<strong>凌虚子</strong>（苍狼精），悟空变作一颗<strong>“金丹”</strong>，装成是给熊罴怪“献药祝寿”的礼物。熊罴怪贪“长生”，果然上当，把“金丹”一口吞下。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">里应外合</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“熊肚里的悟空”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空在熊肚里<strong>翻跟头、捣乱</strong>，熊罴怪痛得满地打滚。观音现出真身，让熊罴怪交出袈裟、皈依佛门，否则就让它“肚里开花”。熊罴怪只得求饶服软。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“以柔克刚”的智慧</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    观音没有动用武力，而是<strong class="text-amber-900">利用熊罴怪的“贪”</strong>（贪长生），布下圈套、以智取胜。这说明：面对强者，抓住对方的<strong class="text-amber-900">弱点</strong>、运用<strong class="text-amber-900">巧劲</strong>，往往比硬碰硬更有效——这就是“四两拨千斤”的智慧。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Keep -->
+        <section id="section-keep" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">禁箍与守山大神：收服而非消灭</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    观音收服熊罴怪后，没有杀它，而是给它戴上“禁箍”，收为南海普陀山的“守山大神”。点击翻转卡片，理解“收服而非消灭”的深意。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-k1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">三个箍的分配</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-k1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">紧箍 · 禁箍</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-k1-back">
+                        <p class="text-gray-700 text-left">
+                            如来给了观音三个箍：<strong>金、紧、禁</strong>。后来：<strong>紧箍</strong>给了悟空（战斗系，需管束）；<strong>禁箍</strong>给了熊罴怪（收为守山大神）。黑熊精成了<strong>普陀山守山大神</strong>，从“妖”变成了“神”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-k2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">收服的意义</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-k2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“放下屠刀，立地成佛”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-k2-back">
+                        <p class="text-gray-700 text-left">
+                            观音为何不杀熊罴怪？因为它虽有错，却也<strong>有些道行与慧根</strong>。给他一个<strong>改过的机会</strong>，让他为善、守山护法，比消灭他更有意义。<strong>惩罚的目的不是毁灭，而是让人改过向善</strong>——这是佛教“慈悲”精神的体现。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“妖”与“神”的距离</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    熊罴怪原是<strong class="text-amber-900">“妖”</strong>，皈依后成了<strong class="text-amber-900">“神”</strong>——两者的差别不在出身，而在<strong class="text-amber-900">是否愿意改过向善、守正归正</strong>。这也告诉我们：任何人都有“改过自新”的可能，只要愿意放下贪念、走上正路，就能迎来新的人生。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第十七回“孙行者闹黑风山，观世音收伏熊罴怪”是“黑风山”故事的完结。这一回让我们看到：面对强者，智慧比蛮力更管用；面对犯错的人，给他改过的机会比一味惩罚更有意义；而“妖”与“神”的距离，往往只在一念之间。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第十七回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "悟空发现袈裟被偷后，是如何找到黑风山来的？",
+                    "options": {
+                        "A": "让唐僧念咒定位",
+                        "B": "一路追踪熊罴怪的行踪，寻到黑风山黑风洞",
+                        "C": "找土地神询问",
+                        "D": "瞎走碰巧找到"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空见袈裟不见，循着踪迹一路追到黑风山，找到熊罴怪的老巢黑风洞。这也体现了他“心猿归正”后认真负责的态度。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "悟空与熊罴怪初次交战后，采取了什么策略？",
+                    "options": {
+                        "A": "退避三舍，放弃索宝",
+                        "B": "变身潜入，变作小妖混入洞中打探消息",
+                        "C": "放火烧山",
+                        "D": "请唐僧念咒降服"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空与熊罴怪大战难分胜负，对方退回洞中。悟空便变作小妖混入洞中，探知熊罴怪要开“佛衣会”，从而掌握情报。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "悟空得知熊罴怪要开“佛衣会”后，变作谁的模样去赴会？",
+                    "options": {
+                        "A": "观音菩萨",
+                        "B": "金池长老",
+                        "C": "广智和尚",
+                        "D": "太白金星"
+                    },
+                    "correct": "B",
+                    "analysis": "熊罴怪请金池长老来赴佛衣会，悟空便变作金池长老的模样去赴会，想借机拿回袈裟。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "悟空变作金池长老后，为何会被识破？",
+                    "options": {
+                        "A": "容貌不像",
+                        "B": "只是“形似”而“神不似”，言行习惯露出破绽，被熊罴怪识破",
+                        "C": "身上味道不像",
+                        "D": "熊罴怪有火眼金睛"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空虽变作金池长老的容貌，却不懂老长老的言行习惯，被熊罴怪看出破绽。这告诉我们：伪装只是“形似”，真正的改变在于“心”。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空硬打、智取都未能得手后，他的选择是：",
+                    "options": {
+                        "A": "放弃取经，回花果山",
+                        "B": "去南海请观音菩萨相助",
+                        "C": "继续单打独斗直到取胜",
+                        "D": "让唐僧绕道而行"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空果断去南海请观音相助。这不是认输，而是懂得借助更大的力量——就像学习中遇到超纲难题，及时请教老师是聪明的做法。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "观音降服熊罴怪时，变作了谁的模样？",
+                    "options": {
+                        "A": "金池长老",
+                        "B": "凌虚子（苍狼精）",
+                        "C": "黑风山土地",
+                        "D": "白象精"
+                    },
+                    "correct": "B",
+                    "analysis": "观音变作熊罴怪的朋友凌虚子（苍狼精），与悟空商量好计策，悟空变作“金丹”作为礼物，让熊罴怪吞下。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "悟空变作“金丹”被熊罴怪吞下后，在熊肚子里做什么？",
+                    "options": {
+                        "A": "安静等待观音发落",
+                        "B": "翻跟头、耍金箍棒，闹得熊罴怪痛不欲生",
+                        "C": "劝说熊罴怪皈依",
+                        "D": "在肚里睡觉"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空在熊肚里翻跟头、弄棒，闹得熊罴怪满地打滚、痛不欲生，只得向观音求饶，交出袈裟、皈依佛门。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "观音降服熊罴怪后，给它戴上的是哪个箍？收它做什么？",
+                    "options": {
+                        "A": "紧箍，收为取经人徒弟",
+                        "B": "禁箍，收为南海普陀山守山大神",
+                        "C": "金箍，收为坐骑",
+                        "D": "不戴箍，直接放生"
+                    },
+                    "correct": "B",
+                    "analysis": "观音给熊罴怪戴上“禁箍”，收为普陀山的“守山大神”。黑熊精从“妖”变成了“神”，皈依佛门、守山护法。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "观音不杀熊罴怪、而是收服它的原因，精读强调的是：",
+                    "options": {
+                        "A": "观音打不过它",
+                        "B": "熊罴怪有些道行与慧根，给其改过的机会，比消灭更有意义",
+                        "C": "熊罴怪是西海龙王的亲戚",
+                        "D": "杀了它会得罪妖怪界"
+                    },
+                    "correct": "B",
+                    "analysis": "观音见熊罴怪有些道行与慧根，便给它改过的机会，让它为善守山。这体现“慈悲”精神：惩罚的目的不是毁灭，而是让人改过向善。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "“妖”与“神”的差别，本回告诉我们主要在于：",
+                    "options": {
+                        "A": "出身血统",
+                        "B": "法力高低",
+                        "C": "是否愿意改过向善、守正归正",
+                        "D": "长得好看与否"
+                    },
+                    "correct": "C",
+                    "analysis": "熊罴怪由“妖”变“神”，靠的不是出身和法力，而是愿意皈依向善。这说明任何人都有改过自新的可能，只要放下贪念、走上正路。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "观音降服熊罴怪的过程中，体现了怎样的智慧？",
+                    "options": {
+                        "A": "以暴制暴，用武力镇压",
+                        "B": "抓住熊罴怪“贪长生”的弱点，以智取胜、四两拨千斤",
+                        "C": "靠人多势众取胜",
+                        "D": "靠念咒语直接制服"
+                    },
+                    "correct": "B",
+                    "analysis": "观音利用熊罴怪贪图长生的弱点，用“金丹”做饵布下圈套，不费大力便收服了它。这体现了“以柔克刚、四两拨千斤”的智慧。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "如来给观音的三个箍分别是：",
+                    "options": {
+                        "A": "金、紧、禁",
+                        "B": "金、银、铜",
+                        "C": "大、中、小",
+                        "D": "紧、松、空"
+                    },
+                    "correct": "A",
+                    "analysis": "如来赐给观音金、紧、禁三个箍。后来紧箍给了悟空，禁箍给了熊罴怪，金箍在后面的故事中另有安排。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "本回中，悟空的变化术在实战中起了重要作用，但最终还是靠观音才收服熊罴怪。这说明：",
+                    "options": {
+                        "A": "悟空的本领毫无用处",
+                        "B": "团队/多方协作比单打独斗更有效，各展所长才能解决问题",
+                        "C": "观音比悟空厉害一百倍",
+                        "D": "悟空应该完全依赖观音"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空变身潜入提供了情报，观音布计收服了妖怪，两者配合才解决问题。这告诉我们：面对难题，学会合作、各展所长，比单打独斗更有效。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "熊罴怪“佛衣会”这个名字，讽刺的是它：",
+                    "options": {
+                        "A": "虔诚礼佛",
+                        "B": "偷来的东西还要大张旗鼓炫耀，把“窃”当成“雅事”",
+                        "C": "想请唐僧讲经",
+                        "D": "想还给袈裟"
+                    },
+                    "correct": "B",
+                    "analysis": "熊罴怪偷了袈裟，还要开“佛衣会”大办宴席炫耀，把偷窃美化成“雅集”。这讽刺了它外表风雅、内心贪婪的本质。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "从“黑风山”故事的完整脉络看，这场风波的根源可以追溯到：",
+                    "options": {
+                        "A": "唐僧走得太快",
+                        "B": "悟空炫耀袈裟引发金池长老贪念，一系列贪念与盗窃环环相扣",
+                        "C": "观音故意考验悟空",
+                        "D": "黑熊精与金池长老有仇"
+                    },
+                    "correct": "B",
+                    "analysis": "从悟空炫耀→金池长老贪→众僧害人→烧寺→黑熊窃宝，一切环环相扣。根源在于“贪”——贪念引发了连锁反应，最终靠观音慈悲化解。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "悟空得知熊罴怪要开“______会”，便变作金池长老的模样去赴会。",
+                    "answer": "佛衣",
+                    "analysis": "悟空得知熊罴怪要开「佛衣会」（展览袈裟的聚会），就变作金池长老的模样去「赴宴」，想趁机夺回袈裟。可惜他「形似神不似」，被妖怪识破，反被嘲笑。从这里开始，悟空和熊罴怪斗智斗勇。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "悟空变作金池长老因“形似神不似”被识破，说明真正的改变在于“______”。",
+                    "answer": "心",
+                    "analysis": "悟空变作金池长老，外形像了，可一开口就露馅——妖怪说他「不是那个烧窑的和尚」，悟空不会说「禅话」，被识破。这说明：真正的改变不在外表，而在「心」。学习做人也是一样，光模仿样子没用，要真的从心里改变。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "观音降服熊罴怪时变作______（苍狼精），悟空变作一颗______。",
+                    "answer": "凌虚子|金丹",
+                    "analysis": "观音菩萨为了收服熊罴怪，变作「凌虚子」（苍狼精），悟空变作一颗金丹，由「凌虚子」献给熊罴怪。熊罴怪贪吃长生药，一口吞下，悟空在它肚子里翻跟头，把它折腾得死去活来——以「贪」制「贪」，对症下药。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "悟空变作的金丹被熊罴怪吞下后，在它______里翻跟头捣乱。",
+                    "answer": "肚子",
+                    "analysis": "悟空变成的金丹被熊罴怪吞进肚子后，他在里面「翻跟头、竖蜻蜓」，疼得妖怪满地打滚，连连求饶。这是全书有名的「钻肚子」战术之一，后来对付铁扇公主也用过——「以柔克刚、里应外合」的妙计。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "观音给熊罴怪戴上______箍，收为南海______的守山大神。",
+                    "answer": "禁|普陀山",
+                    "analysis": "观音给熊罴怪戴上「禁箍」（三个箍之一），收他做南海普陀山的「守山大神」。从「偷袈裟的妖怪」到「守山的护法」，熊罴怪也算「洗白上岸」——愿意悔改，就有出路。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "如来赐给观音的三个箍是金、______、禁。",
+                    "answer": "紧",
+                    "analysis": "如来给了观音三个箍：金箍、紧箍、禁箍。金箍后来给了红孩儿，紧箍给了悟空，禁箍给了熊罴怪。三个箍，套住三个「厉害角色」，是观音「管理团队」的三大法宝——管住本领大的，要靠规则和约束。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "观音降服熊罴怪，利用了它______长生的弱点，以智取胜。",
+                    "answer": "贪",
+                    "analysis": "观音降服熊罴怪，正是利用了他「贪图长生」的弱点：用「金丹」作诱饵，让悟空钻进他肚子里。这就像对付「贪吃」的孩子，用美食做陷阱最有效。知己知彼，抓住对方的「弱点」，才能出奇制胜。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "“妖”与“神”的差别不在于出身，而在于是否愿意改过向善、______。",
+                    "answer": "守正归正",
+                    "analysis": "「妖」与「神」的区别，不在于出身，而在于是否愿意「改过向善、守正归正」。熊罴怪偷过东西，但最终皈依佛门、做了守山大神；同样，一个人过去犯过错不要紧，只要愿意改，就能重新开始。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“智取”】悟空硬打不过熊罴怪，便变身潜入、打探情报；观音更是用“金丹”设局、四两拨千斤。请谈谈：为什么说“善用智慧”往往比“硬拼蛮力”更重要？你能举一个用巧劲解决问题的例子吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>智取胜蛮力：</strong> 熊罴怪武艺高强，硬拼难分胜负；观音抓住它贪长生的弱点设局，轻松收服。懂得观察、用对方法，往往事半功倍。</p>\n                        <p class=\"mt-2\"><strong>生活例子：</strong> 整理书包时按“课本、作业本、文具”分类放，比乱塞一通高效；跟同学意见不合，用“石头剪刀布”或商量折中办法，比吵架强；背单词用联想记忆，比死记硬背记得牢。办法总比困难多，关键要多动脑。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“求助”】悟空硬攻智取都不顺，便果断去请观音。请谈谈：为什么“及时求助”是一种能力而不是丢脸？我们该在什么情况下主动求助？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>求助是能力：</strong> 一个人的精力、能力有限，遇到超出自己范围的问题，及时向更有经验的人求助，能少走很多弯路。悟空请观音，是成熟的选择。</p>\n                        <p class=\"mt-2\"><strong>该求助的情况：</strong> ①题目确实想不出、反复思考无果时；②身体不舒服、遇到危险时；③团队任务一个人搞不定时；④拿不准对错、需要他人把关时。当然，能自己解决的先自己尝试，避免养成依赖。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“改过的机会”】观音不杀熊罴怪，而是给它戴禁箍、收为守山大神。请谈谈：为什么“给犯错的人一次改过的机会”比“直接否定”更有意义？这对我们对待同学、对待自己有怎样的启发？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>给改过的机会：</strong> 观音给熊罴怪机会，它便从“妖”变成“神”。人一旦被彻底否定，就容易破罐子破摔；给了希望，才会努力变好。</p>\n                        <p class=\"mt-2\"><strong>启发：</strong> 同学犯了错，不要一辈子贴“坏孩子”标签，帮助ta改正；自己犯了错，也不要自暴自弃，相信“改正了就还是好样的”。当然，给机会不等于纵容，改过要见行动。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“外在与内在”】悟空变作金池长老只是“形似”，终被识破。请谈谈：为什么“表面功夫”靠不住？做人做事，如何做到“表里如一”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>表面功夫靠不住：</strong> 装扮得再像，一开口、一行事就会露出马脚。内在的修养、习惯、品性是装不出来的。</p>\n                        <p class=\"mt-2\"><strong>如何表里如一：</strong> ①不装样子，人前背后一个样；②诚实做人，做的和说的一致；③注重内在积累（读书、修养、真才实学），而不是只做表面文章；④接受真实的自己，坦诚地改进不足。真正的“好看”，是内外一致的底气。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“弱点”】观音利用熊罴怪“贪长生”的弱点成功收服它。请谈谈：了解自己的“弱点”为什么很重要？我们该如何正视并改进自己的弱点？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>了解弱点的重要：</strong> 熊罴怪不知道自己“贪”会带来灾祸，所以中了圈套。知道自己的弱点，才能防患于未然；同时也知道别人会利用什么来“钓”你。</p>\n                        <p class=\"mt-2\"><strong>改进弱点：</strong> ①诚实地面对自己，问问“我最大的毛病是什么”；②针对弱点定对策（比如贪玩就定时间表）；③请信任的人提醒监督；④不要一次求完美，一点点改。弱点不可怕，可怕的是对它一无所知、听之任之。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“合作”】悟空提供情报、观音布局收妖，两人配合才解决黑风山之难。请谈谈：取经路上“师徒+神佛”的合作模式给了我们什么启发？在班级里，怎样的合作最有效率？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>合作模式启发：</strong> 每个人都有擅长和不擅长的事，悟空擅长潜入打探，观音擅长布局谋划，各展所长、互相补位，才能攻克难关。</p>\n                        <p class=\"mt-2\"><strong>班级合作：</strong> 做小组任务时，让擅长绘画的画图、擅长写作的执笔、擅长查资料的找资料、擅长演讲的汇报，分工明确、配合默契，效率最高。合作不是“大家一起做同一件事”，而是“各做最擅长的事，朝同一个目标”。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“慈悲与正义”】观音收服熊罴怪展现“慈悲”，悟空此前火烧观音院则偏“刚烈”。请谈谈：在维护正义时，如何做到“既有原则，又有温度”？这对我们处理人际矛盾有什么启发？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>原则与温度并重：</strong> 对错误不能纵容（有原则），但对犯错的人可以给机会、给引导（有温度）。观音既给熊罴怪戴上禁箍约束它，又收它当守山大神给它出路。</p>\n                        <p class=\"mt-2\"><strong>处理矛盾：</strong> 同学犯了错，批评要就事论事（不扩大、不羞辱），同时帮助ta想办法改正；自己犯错被批评时，理解别人是“对事不对人”。真正的强大，是既有底线，又懂得给人留出路。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

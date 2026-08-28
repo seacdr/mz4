@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第十六回精读：贪念的代价</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第十六回精读：贪念的代价</h1>
+            <p class="text-lg text-gray-700 serif">“观音院僧谋宝贝，黑风山怪窃袈裟”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-abbot')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-abbot">第一章：金池长老</button>
+                <button onclick="NavigationModule.switchTab('section-plot')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-plot">第二章：谋宝阴谋</button>
+                <button onclick="NavigationModule.switchTab('section-fire')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-fire">第三章：火烧禅院</button>
+                <button onclick="NavigationModule.switchTab('section-bear')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-bear">第四章：黑熊窃宝</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Abbot -->
+        <section id="section-abbot" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">金池长老：被“贪”毁掉的老僧</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    师徒借宿观音禅院，年高德劭的老院主金池长老热情款待。可当悟空炫耀锦襕袈裟时，这位修行两百七十年的老僧，却动了邪念。点击翻转卡片，看“贪”如何腐蚀一位老修行者。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-a1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">炫耀的祸端</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-a1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“让老院主开开眼界”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-a1-back">
+                        <p class="text-gray-700 text-left">
+                            金池长老夸耀自己有七八百件袈裟，悟空不服，拿出<strong>锦襕袈裟</strong>炫耀。袈裟“红光满室、彩气盈庭”，老院主看后<strong>动了贪念</strong>，竟想占为己有。——<strong class="text-red-700">炫耀</strong>，常常会招来祸患。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-a2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">老僧的堕落</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-a2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“看得流口水”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-a2-back">
+                        <p class="text-gray-700 text-left">
+                            金池长老修行二百七十岁，本是受人尊敬的老僧。可一件袈裟，就让他<strong>“垂泪而泣”“相思成疾”</strong>，甚至为了得到它不惜<strong>杀人放火</strong>。贪念一起，多年的修行瞬间崩塌。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：贪，是心魔的开始</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    “贪”是佛教所说的<strong class="text-amber-900">“三毒”（贪嗔痴）之首</strong>。金池长老的故事警示我们：一个修行了两百七十年的老僧，也会因“贪”而晚节不保。贪念一旦滋生，就会一步步把人拖向深渊——<strong class="text-amber-900">克制欲望，是一生的功课</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Plot -->
+        <section id="section-plot" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">放火烧寺：罪恶的“馊主意”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    金池长老想得到袈裟，找两个徒弟广智、广谋商量。两人出的“主意”，一个比一个狠。点击下方卡片，看清这场阴谋的层层升级。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>广智的“毒计”</h3>
+                    <p class="text-sm text-gray-600 mb-4">广智献计：</p>
+                    <div class="bg-red-50 p-4 rounded border border-red-200">
+                        <p class="text-sm text-red-800">
+                            “不如<strong>拿刀弄枪</strong>，趁夜把唐僧师徒<strong>结果了</strong>，袈裟就是我们的了！”——这是赤裸裸的<strong>谋财害命</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>广谋的“高招”</h3>
+                    <p class="text-sm text-gray-600 mb-4">广谋更“高明”：</p>
+                    <div class="bg-red-50 p-4 rounded border border-red-200">
+                        <p class="text-sm text-red-800">
+                            “不用动刀枪，只消在房外<strong>放一把火</strong>，连人带袈裟一起烧了，只说是失火，神不知鬼不觉！”——他自以为“天衣无缝”，其实是<strong>更恶毒的杀人放火</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“和尚”为何会起“杀心”？</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    观音院的僧人本应慈悲为怀，却因一件袈裟<strong class="text-amber-900">集体动了杀心</strong>。这极具讽刺意味：<strong class="text-amber-900">外在的身份（和尚）与内在的心性（贪恶）脱节</strong>。它提醒我们：真正决定一个人品行的，不是“头衔”“身份”，而是面对诱惑时，他<strong class="text-amber-900">守不守得住本心</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Fire -->
+        <section id="section-fire" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">火烧观音院：聪明反被聪明误</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    僧人们放火烧房，却不知悟空早有防备——他向广目天王借来“避火罩”，罩住唐僧。这火烧起来了，却烧出了一场更大的闹剧。点击翻转卡片，看这场“烧自己的院”的讽刺戏。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-f1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">避火罩护师</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-f1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“悟空捣鬼放火”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-f1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空识破奸计，先向<strong>广目天王</strong>借来<strong>避火罩</strong>，罩住唐僧和白马。众僧放火后，悟空又<strong>刮起风来助火</strong>，让大火烧得更旺——想害人者，最终<strong>烧了自己的寺院</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-f2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">自食恶果</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-f2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“自家的火烧自家的庙”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-f2-back">
+                        <p class="text-gray-700 text-left">
+                            大火烧毁了<strong>观音禅院</strong>，众僧哭喊逃命。金池长老<strong>羞愧难当，撞树身亡</strong>。想害别人的人，最终害了自己——<strong class="text-amber-900">“恶有恶报”</strong>，正是这一回的鲜明主题。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">悟空“放火”该不该？</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    悟空借风助火，看似“以暴制暴”，却也提醒我们思考：<strong class="text-amber-900">面对别人的恶意，用什么方式回应才恰当？</strong>惩恶是必要的，但也要把握好分寸。这一回，悟空的行事风格，与唐僧的慈悲形成了又一次对照。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Bear -->
+        <section id="section-bear" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">黑风山熊罴怪：渔翁得利</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    观音院大火惊动了黑风山的熊罴怪。它本想去救火，见到锦襕袈裟却动了贼心，趁乱偷走袈裟。悟空发现袈裟不见，上门索宝，一场新的争斗由此展开。点击翻转卡片，认识这位“文化人”妖怪。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-b1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">“文化人”妖怪</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-b1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">黑风山的“雅贼”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-b1-back">
+                        <p class="text-gray-700 text-left">
+                            熊罴怪是黑风山的<strong>黑熊精</strong>，与别的妖怪不同——它<strong>懂文化、爱风雅</strong>，还准备开“佛衣会”庆贺得到袈裟。但这<strong>“雅”是假的</strong>，偷东西时照样贪得无厌。再“文雅”的外表，也掩盖不了“窃贼”的本质。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-b2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">争斗开始</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-b2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“妖怪看袈裟”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-b2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空发现袈裟被偷，循踪来到黑风山，与熊罴怪<strong>大战一场</strong>。这个熊罴怪<strong>武艺高强</strong>，悟空一时难以取胜——也为下一回“孙行者大闹黑风山，观世音收伏熊罴怪”埋下了伏笔。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“环环相扣”的叙事</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    本回的“失袈裟”不是孤立事件：<strong class="text-amber-900">炫耀→动贪→谋害→放火→失宝→争斗</strong>，一步引一步，环环相扣。这正是《西游记》叙事的高明之处：每一个“因”，都在为后面的“果”铺路。它也在提醒我们：生活中许多大麻烦，往往都起源于最初的一念之差。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第十六回“观音院僧谋宝贝，黑风山怪窃袈裟”是一场由“贪念”引发的大祸。这一回告诉我们：炫耀会招祸、贪念毁人心、害人终害己。也让我们思考：一个人的品行，不在于身份名头，而在于能否守住本心。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第十六回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "师徒借宿的“观音禅院”老院主是：",
+                    "options": {
+                        "A": "金池长老——修行二百七十年的老僧",
+                        "B": "广智长老",
+                        "C": "广谋长老",
+                        "D": "法明长老"
+                    },
+                    "correct": "A",
+                    "analysis": "观音禅院的老院主是金池长老，修行二百七十年，本是一位德高望重的老僧，却因贪图锦襕袈裟而晚节不保。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "金池长老对唐僧师徒炫耀自己有七八百件袈裟，悟空为争一口气，拿出了：",
+                    "options": {
+                        "A": "九环锡杖",
+                        "B": "锦襕袈裟",
+                        "C": "金箍棒",
+                        "D": "紫金钵盂"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空不服老院主炫耀，拿出如来赐予的锦襕袈裟展示。袈裟红光满室、彩气盈庭，正是这份炫耀，让金池长老动了贪念，埋下祸根。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "金池长老看完锦襕袈裟后的反应是：",
+                    "options": {
+                        "A": "真心赞叹，归还袈裟",
+                        "B": "动了贪念，垂泪而泣、相思成疾，想据为己有",
+                        "C": "不屑一顾，说不如自己的袈裟",
+                        "D": "当场买下袈裟"
+                    },
+                    "correct": "B",
+                    "analysis": "金池长老见到袈裟后动了贪念，又哭又愁，竟相思成病，想尽办法要把袈裟据为己有。贪念一起，多年的修行瞬间崩塌。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "金池长老的两个徒弟为帮他得到袈裟，出的主意分别是：",
+                    "options": {
+                        "A": "广智建议偷，广谋建议抢",
+                        "B": "广智建议杀人夺宝，广谋建议放火烧死师徒，更为“周密”",
+                        "C": "广智建议报官，广谋建议谈判",
+                        "D": "广智建议下毒，广谋建议勒索"
+                    },
+                    "correct": "B",
+                    "analysis": "广智建议拿刀弄枪害死唐僧师徒；广谋更“高明”，建议放火把人和袈裟一起烧了，只说是失火。两人一个比一个恶毒，但都逃不过“恶有恶报”。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空中了谁的道，反而借来什么保护了唐僧？",
+                    "options": {
+                        "A": "识破奸计，向广目天王借来避火罩护住唐僧",
+                        "B": "毫无防备，差点被烧死",
+                        "C": "向观音借来净瓶灭火",
+                        "D": "带唐僧连夜逃走"
+                    },
+                    "correct": "A",
+                    "analysis": "悟空早已识破众僧放火的奸计，向广目天王借来“避火罩”，罩住唐僧和白马，使其安然无恙。这是“魔高一尺，道高一丈”。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "悟空面对众僧放火，采取的回应是：",
+                    "options": {
+                        "A": "念咒语让火自动熄灭",
+                        "B": "刮起风来助火势，让大火烧毁观音院，使想害人者自食其果",
+                        "C": "带着唐僧离开禅院",
+                        "D": "与金池长老理论"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空不但不救火，反而刮风助火，让火烧得更旺，最终烧毁了观音禅院。想放火烧人者，最终烧了自己的寺院——这就是“聪明反被聪明误”。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "金池长老的最终结局是：",
+                    "options": {
+                        "A": "被悟空打死",
+                        "B": "羞愧难当，撞树身亡",
+                        "C": "被唐僧感化皈依",
+                        "D": "被烧死在火中"
+                    },
+                    "correct": "B",
+                    "analysis": "观音院被大火烧毁，金池长老因贪念害人而害了自己，羞愧难当，撞树身亡。这正是“贪”的恶果。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "趁火势偷走锦襕袈裟的是：",
+                    "options": {
+                        "A": "黑风山的熊罴怪（黑熊精）",
+                        "B": "双叉岭的老虎精",
+                        "C": "黄风怪",
+                        "D": "蜘蛛精"
+                    },
+                    "correct": "A",
+                    "analysis": "观音院大火惊动黑风山的熊罴怪，它本想救火，见到锦襕袈裟却起了贼心，趁乱偷走袈裟，准备开“佛衣会”庆贺。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "精读指出，熊罴怪这个妖怪的特点之一是：",
+                    "options": {
+                        "A": "又凶又笨，只会蛮力",
+                        "B": "懂文化、爱风雅，但“雅”是假的，偷东西时照样贪得无厌",
+                        "C": "胆小怕事，见人就跑",
+                        "D": "心地善良，从不害人"
+                    },
+                    "correct": "B",
+                    "analysis": "熊罴怪是个“文化人”妖怪，会吟诗、讲佛事，准备开佛衣会。但再“文雅”的外表，也掩盖不了它偷窃的本质——外表与文化不是品行的保证。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "悟空与熊罴怪的交战结果是：",
+                    "options": {
+                        "A": "悟空一棒将其打死",
+                        "B": "熊罴怪武艺高强，悟空一时难以取胜，为下回收熊埋下伏笔",
+                        "C": "熊罴怪主动投降",
+                        "D": "两人和解，结为朋友"
+                    },
+                    "correct": "B",
+                    "analysis": "熊罴怪武艺高强，悟空与之大战一时难分胜负。这一回只写到争斗开始，为下一回“孙行者大闹黑风山，观世音收伏熊罴怪”埋下伏笔。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "本回中“观音院的和尚”想害人，这个情节的讽刺之处在于：",
+                    "options": {
+                        "A": "和尚本应慈悲，却因贪念动了杀心，身份与心性严重脱节",
+                        "B": "和尚没有武功，打不过唐僧",
+                        "C": "观音院供奉的是假观音",
+                        "D": "和尚们太穷，才起歹心"
+                    },
+                    "correct": "A",
+                    "analysis": "观音院的僧人本应慈悲为怀，却集体合谋杀人放火，极具讽刺。它提醒我们：决定一个人品行的不是“头衔身份”，而是面对诱惑时能否守住本心。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "“贪”在佛教中被称为“三毒”之首。下列不属于“三毒”的是：",
+                    "options": {
+                        "A": "贪",
+                        "B": "嗔（愤怒）",
+                        "C": "痴（愚昧）",
+                        "D": "勇（勇敢）"
+                    },
+                    "correct": "D",
+                    "analysis": "佛教“三毒”指贪、嗔、痴，是一切烦恼的根源。本回金池长老因“贪”而堕落，“勇”不属于三毒。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "本回故事发展的因果链条，排列正确的是：",
+                    "options": {
+                        "A": "失宝→炫耀→动贪→放火→争斗",
+                        "B": "炫耀→动贪→谋害→放火→失宝→争斗",
+                        "C": "动贪→炫耀→失宝→放火→争斗",
+                        "D": "放火→炫耀→动贪→失宝→争斗"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空炫耀袈裟→金池长老动贪念→师徒合谋害人→放火烧寺→熊罴怪趁乱窃宝→悟空索宝争斗。一步引一步，环环相扣，体现《西游记》严密的叙事结构。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "“炫耀”在本回中起了什么作用？",
+                    "options": {
+                        "A": "让金池长老增长了见识，是一件好事",
+                        "B": "炫耀招致了祸患——轻易露财露宝，容易引来觊觎与灾祸",
+                        "C": "炫耀让悟空赢得了尊重",
+                        "D": "炫耀是佛祖的安排"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空炫耀锦襕袈裟，直接引发了金池长老的贪念和一连串灾祸。它提醒我们：做人要低调谦逊，轻易炫耀财富、才能，容易招来麻烦。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "下列对“恶有恶报”这一主题的体现，最准确的是：",
+                    "options": {
+                        "A": "金池长老想放火烧人，结果烧了自己的寺院，自己也羞愧身亡",
+                        "B": "熊罴怪偷走袈裟后安然无恙",
+                        "C": "广智广谋逃脱了惩罚",
+                        "D": "唐僧受了一点伤"
+                    },
+                    "correct": "A",
+                    "analysis": "众僧放火烧人，反被悟空借风助火烧毁自家寺院；金池长老羞愧撞树身亡。害人者终害己，正是本回“恶有恶报”主题的鲜明体现。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "观音禅院的老院主是______长老，修行了二百七十岁。",
+                    "answer": "金池",
+                    "analysis": "观音禅院的老院主法号「金池」，修行了二百七十岁，是个德高望重的「老僧」。可他一见锦襕袈裟就动了贪心，二百七十年的修行，抵不过一件宝贝的诱惑。可见「贪」不分年龄资历，一旦起了贪念，老修行也把持不住。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "悟空拿出______袈裟炫耀，老院主看后动了贪念。",
+                    "answer": "锦襕",
+                    "analysis": "悟空在观音禅院炫耀唐僧的「锦襕袈裟」——这是如来赐的宝贝，金光闪闪。金池长老看得「爱不释手」，起了据为己有的心。一个「炫」字，招来了后面的「火烧观音院、丢袈裟」——炫耀惹祸的典型。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "金池长老的两个徒弟______、______建议放火烧死唐僧师徒。",
+                    "answer": "广智|广谋",
+                    "analysis": "金池长老的两个徒弟，一个叫「广智」（有智谋），一个叫「广谋」（善谋划）。可这「智谋」全用在歪门邪道上：他俩出主意放火烧死唐僧师徒，好独吞袈裟。名字好听，行的却是恶事——「智慧」用错了地方，比愚蠢更可怕。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "悟空向______天王借来避火罩，罩住唐僧和白马。",
+                    "answer": "广目",
+                    "analysis": "悟空察觉有人放火，一个筋斗到天庭，向广目天王借来「避火罩」，罩住唐僧和白马，自己却坐在房顶看热闹。这一借一罩，保住了唐僧，也让观音禅院被烧得精光——「害人者终害己」。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "金池长老因寺院被烧、羞愧难当，______身亡。",
+                    "answer": "撞树",
+                    "analysis": "金池长老看到寺院被烧成白地，又想到袈裟也丢了、罪过难逃，又羞又愧又怕，一头撞在树上死了。二百七十年的修行，落得个「撞树自尽」的结局。可见贪念不但害人，最终也会要了自己的命。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "趁火偷走锦襕袈裟的是黑风山的______，它准备开“______”庆贺。",
+                    "answer": "熊罴怪|佛衣会",
+                    "analysis": "趁火打劫偷走锦襕袈裟的，是黑风山的熊罴怪。他偷到袈裟后喜不自胜，准备广邀妖怪开「佛衣会」庆贺。悟空打上门讨要，才有了后面「孙行者闹黑风山、观世音收熊罴怪」的精彩故事。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "佛教“三毒”指贪、______、痴。",
+                    "answer": "嗔",
+                    "analysis": "佛教把「贪、嗔、痴」称为三毒，是众生的三大烦恼：贪是贪得无厌，嗔是愤怒怨恨，痴是愚昧不明。金池长老「贪」袈裟，放火是「嗔」心发作；熊罴怪偷宝，也是「贪」字当头。这一回就是「贪嗔痴」活生生的表演。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "本回告诉我们：______会招祸、贪念毁人心、害人终害己。",
+                    "answer": "炫耀",
+                    "analysis": "这一回告诉我们：炫耀会招祸、贪念毁人心、害人终害己。悟空炫耀袈裟，招来贼眼；金池贪心纵火，烧死自己；熊罴偷宝，最终被收为守山神。做人低调、戒贪向善，才是真正的智慧。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“炫耀”】悟空一时炫耀锦襕袈裟，引发了一场大祸。请谈谈：为什么“低调”是一种智慧？你有过因为炫耀（成绩、玩具、才艺）而带来麻烦的经历吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>低调的智慧：</strong> 炫耀容易引来嫉妒和觊觎，就像露出的宝藏招来小偷。悟空炫耀袈裟，直接点燃了金池长老的贪念。</p>\n                        <p class=\"mt-2\"><strong>联系自己：</strong> 考了好成绩到处炫耀，可能让同学疏远你；带了贵重玩具到学校，可能被偷或引来麻烦。真正的实力不需要靠炫耀来证明，低调谦逊的人反而更受人尊重。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“贪念”】金池长老修行二百七十年，却因贪图一件袈裟而晚节不保。请谈谈：为什么说“贪”是最难战胜的心魔？我们在生活中该如何克制“贪”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>贪最难战胜：</strong> 贪会让人永不满足——得到了还想更多，从贪一件袈裟到贪别人的性命。贪念一起，理智和道德都会被淹没。</p>\n                        <p class=\"mt-2\"><strong>如何克制：</strong> ①知足常乐，珍惜已有的；②分清“需要”和“想要”，不盲目攀比；③对诱惑保持警惕，想想贪心的后果；④培养兴趣爱好，让生活充实，减少对物质的执着。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“害人终害己”】观音院的僧人想放火烧死唐僧师徒，结果烧了自己的寺院。请谈谈：为什么用伤害别人的方式谋利，最终往往害了自己？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>害人终害己：</strong> 用不正当手段获得的利益，早晚要付出代价。众僧害人不成反被火烧，金池长老更是羞愧而死。道德败坏的人，终将众叛亲离、自食恶果。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> 考试作弊或许一时得了高分，却失去了诚信，最终在真正检验实力时露馅；为了赢而伤害朋友，赢了比赛却输了友情。做事要守底线，走正路，才能行得稳、走得远。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“身份与品行”】观音院的“和尚”本应慈悲，却动了杀心。请谈谈：为什么说“头衔和身份”不能代表一个人的品行？我们该如何看人、如何做人？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>身份不等于品行：</strong> 穿上袈裟的不一定是真和尚，顶着“优秀”头衔的不一定真善良。看人要看他做了什么，而不是他自称什么。</p>\n                        <p class=\"mt-2\"><strong>如何看人做人：</strong> ①看行动，不听空话；②看他在利益面前的抉择；③自己则要言行一致，表里如一。做人做事对得起良心，比任何头衔都重要。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“惩恶的分寸”】悟空识破奸计后用“借风助火”的方式回应，虽惩了恶，却也烧毁了整个寺院。请谈谈：面对恶行，该如何把握“惩恶”的分寸？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>惩恶的分寸：</strong> 对恶行不能纵容，但反击也应适度。悟空让众僧自食其果，方向没错，但手段是否过了头、是否殃及无辜，值得思考。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> 同学欺负人，要制止和报告老师，而不是用暴力回击造成更大的伤害；发现有人作弊，要指出错误，而不是跟着一起作弊或当众羞辱。惩恶要有理有节，目的应是“纠正”而非“毁灭”。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“守心”】金池长老修行多年，却在诱惑面前败下阵来。请谈谈：为什么“修行/好习惯”需要日积月累地坚持，才能抵得住诱惑？你有过“差点没守住原则”的时刻吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>守心靠平时：</strong> 金池长老平时或许也持戒，但关键诱惑一来就崩溃了。好的品德像肌肉，需要平时不断锻炼，关键时刻才有力气“扛住”。</p>\n                        <p class=\"mt-2\"><strong>联系自己：</strong> 答应自己“今天不玩手机”，可拿到手机就忍不住了——这时就需要平时的自律训练。可以从小事练起：说好不看就坚决不看、说好几点睡就几点睡。一次次守住小原则，才能守住大原则。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“一件小事引发大祸”】本回的一切灾祸，都源于悟空的一次炫耀、老僧的一次贪念。请谈谈：为什么说“细节决定成败”“一念之差，天壤之别”？我们该如何警惕生活中的“小恶”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>一念之差：</strong> 一次炫耀、一念贪心，看似小事，却引发火烧寺院、命案、失宝等连锁大祸。许多大错的起点，都是不起眼的“小恶”。</p>\n                        <p class=\"mt-2\"><strong>警惕小恶：</strong> ①不抱侥幸心理，“就这一次”往往是堕落的开始；②小的不诚实、小的贪小便宜，要及时纠正；③每日反思自己，警惕欲望的苗头；④“勿以善小而不为，勿以恶小而为之”。守住每一个“小”，才能守住整个人生。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

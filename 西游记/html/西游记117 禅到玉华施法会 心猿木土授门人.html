@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第八十八回精读：谦逊与炫耀</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第八十八回精读：谦逊与炫耀</h1>
+            <p class="text-lg text-gray-700 serif">“禅到玉华施法会，心猿木土授门人”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">玉华州</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">耀武扬威</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">拜师学艺</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">神兵被盗</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 玉华州 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">繁华的玉华州，百姓没见过“绛猪服猴”的和尚</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    师徒来到天竺国下郡玉华州——城主是天竺皇帝宗室、封御华王，贤能敬僧，城里买卖兴隆、人烟稠密。街上百姓都来围观奇形怪状的师徒，喊道：“我们这里只有降龙伏虎的高僧，还没见过绛猪服猴的和尚！”八戒把嘴一撅：“你们可曾见过降猪王的和尚？”师徒一路笑闹着进了王府。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">玉华州</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">天竺国下郡，御华王的地盘</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            玉华州是<strong>天竺国下郡</strong>，城主为天竺皇帝宗室、封<strong>御华王</strong>——此王贤能、专敬僧道，城中繁华，与大唐无异。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">绛猪服猴</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">降龙伏虎常见，绛猪服猴没见过</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            百姓笑道：“我们这里只有<strong>降龙伏虎的高僧，还没见过绛猪服猴的和尚</strong>。”八戒把嘴一撅：“你们可曾见过降猪王的和尚？”——满街哄笑。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">别人的眼光，别太当回事</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    师徒长相奇特，被满城人围观取笑，可他们并不在意。<strong>长得奇不奇怪是天生，心里善不善良是自己选的——别活在别人的目光里</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 耀武扬威 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">三个小王子，撞上三个“老祖宗”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    三个小王子好武好强，听说来了三个“丑和尚”，拿起齐眉棍、九齿耙、乌油棒就来挑战。谁知八戒取出钉耙“金光万道”，悟空金箍棒往地上一倒“倒了三尺深”，沙僧降妖宝杖“声光纷纷”。三人又飞到半空演武——棍似锦上添花、耙呼呼风响、杖使丹凤朝阳。满城百姓念佛磕头，惊为神仙。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">以武会友</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">八戒面前耍钉耙</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            二王子抡九齿耙对八戒，八戒笑道“你这耙只好给我这耙做孙子”——取出钉耙“<strong>金光万道、瑞气千条</strong>”，吓得二王子手软筋麻。<strong>关公面前耍大刀，八戒面前耍钉耙</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">空中演武</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">耀武扬威</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            悟空踏五色祥云、棍似锦上添花；八戒架风舞耙、呼呼风响；沙僧抡杖使“<strong>丹凤朝阳、饿虎扑食</strong>”——三人半空演武，满城礼拜。<strong>“耀武扬威”四个字，正是这场难的根源</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">半桶水，最容易晃</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    三个小王子以为自己天下无敌，碰上真高手才傻了眼。<strong>真正有本事的人不炫耀，爱炫耀的人，往往刚够“半桶水”</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 拜师学艺 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">倾国之资拜师，一口气吹出“神力”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    三个小王子回宫，非要拜师学艺。老王亲自倒身下拜，愿以“倾国之资”作学费。悟空笑道：出家人不图财物，你们诚心向善，以情相处便可。于是悟空收大王子、八戒收二王子、沙僧收三王子。悟空在钢斗中画罡斗，让三人瞑目凝神、吹口仙气——三人脱胎换骨，竟拿得动金箍棒、九齿耙、降妖杖！
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">神兵重量</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">5048斤与13500斤</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            八戒钉耙<strong>5048斤</strong>（一藏之数）、沙僧宝杖也是<strong>5048斤</strong>；悟空金箍棒却重<strong>13500斤</strong>——大禹治水所铸、镇东海之宝，比两位师弟的兵器重得多。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">传神力</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">画罡斗，吹仙气</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            悟空在庭后<strong>画罡斗</strong>，让三个小王子瞑目凝神，<strong>吹口仙气</strong>——三人各受“万千之履历”，脱胎换骨、骨壮筋强，大王子竟拿得动13500斤的金箍棒！
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">先有实力，再谈技巧</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空教徒弟的第一步不是招式，而是“先把力气练起来”——<strong>没有基本功，再花哨的技巧都是空中楼阁</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 神兵被盗 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">打造山寨兵器，引来七十里外的妖怪</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    三个小王子虽然拿得动神兵，却“运转艰难”，请求照样打造轻便的“山寨版”。师徒同意，把原版神兵放在作坊当样子，昼夜赶工。可神兵霞光万丈，被七十里外豹头山虎口洞的妖怪看见——妖怪又喜又爱，一阵风把金箍棒、九齿耙、降妖杖全卷走了！
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">山寨版</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">原版当样子，昼夜赶工</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            小王子们“运转艰难”，请求打造轻便版——师徒把<strong>原版神兵放在作坊当样子</strong>，昼夜赶工铸造山寨版。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">豹头山虎口洞</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">霞光万丈，引来妖怪</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            神兵本是“随身之宝、一刻不可离”，放了几日<strong>霞光万丈</strong>——七十里外<strong>豹头山虎口洞</strong>的妖怪夜间看见，又喜又爱，一阵风把三般兵器全卷走了。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">炫耀，是灾祸的引子</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    本来盖了章就该走，偏要演武、收徒、打兵器——神兵一露光，妖怪就来了。<strong>爱炫耀，等于把自己的“宝贝”亮给坏人看——低调，才是保护自己</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第八十八回“禅到玉华施法会，心猿木土授门人”讲的是玉华州之难的开始：师徒倒换官文，三个小王子不服，比试后拜师学艺；悟空传神力，三个小王子竟拿得动神兵；为打造“山寨版”兵器，原版神兵霞光外露，引来豹头山虎口洞的妖怪把金箍棒、九齿耙、降妖杖全卷走了。这一回让我们看到：别人的眼光别太当回事、真正有本事的人不炫耀、先有实力再谈技巧、炫耀是灾祸的引子。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第八十八回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "玉华州的城主是什么身份？",
+                    "options": {"A": "郡侯","B": "天竺国皇帝宗室，封御华王","C": "县令","D": "将军"},
+                    "correct": "B",
+                    "analysis": "玉华州是“天竺国下郡”，城主是天竺皇帝宗室、封御华王——是个贤能敬僧的王。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "街上百姓看到师徒，说了一句什么俏皮话？",
+                    "options": {"A": "“和尚来了”","B": "“我们这里只有降龙伏虎的高僧，还没见过绛猪服猴的和尚”","C": "“妖怪来了”","D": "“快跑”"},
+                    "correct": "B",
+                    "analysis": "百姓笑道：“降龙伏虎的高僧常见，绛猪服猴的和尚没见过”——拿师徒的长相打趣。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "三个小王子各拿什么兵器来挑战？",
+                    "options": {"A": "剑、刀、枪","B": "齐眉棍、九齿耙、乌油黑棒子","C": "锤、斧、鞭","D": "弓、弩、矛"},
+                    "correct": "B",
+                    "analysis": "大王子拿齐眉棍、二王子拿九齿耙、三王子拿乌油黑棒子——恰与悟空、八戒、沙僧的兵器“配套”。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "二王子举耙对八戒，八戒怎么回应的？",
+                    "options": {"A": "夸奖他","B": "“你这耙只好给我这耙做孙子”，取出钉耙金光万道","C": "让他","D": "逃"},
+                    "correct": "B",
+                    "analysis": "八戒是使耙的“老祖宗”——他说二王子的耙“只配做孙子”，取出钉耙金光万道，吓得对方手软筋麻。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空把金箍棒往地上一倒，发生了什么？",
+                    "options": {"A": "断了","B": "倒了三尺深浅，大王子拔都拔不动","C": "着火了","D": "变小了"},
+                    "correct": "B",
+                    "analysis": "悟空把金箍棒“一晃碗来粗细、丈二长短，朝地上一倒，倒了三尺的深浅”竖在那里——大王子丢了自己的棍去拔，纹丝不动。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "沙僧的降妖宝杖出场时是什么样子？",
+                    "options": {"A": "金光万道","B": "“验验声光，纷纷霞亮”，吓得当官的呆呆怔怔","C": "毫无动静","D": "冒烟"},
+                    "correct": "B",
+                    "analysis": "沙僧“取出降妖宝杖，掂一掂验验声光，纷纷霞亮”——吓得殿上官一个个口不能言。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "三个徒弟半空演武，作者用哪四个字概括这场难的根源？",
+                    "options": {"A": "大显身手","B": "耀武扬威","C": "出尽风头","D": "声名远扬"},
+                    "correct": "B",
+                    "analysis": "三人半空“耀武扬威，好为人师”——这四个字正是这场难的根源，显摆惹来了麻烦。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "老王想请三位高徒教三个儿子，愿出什么报酬？",
+                    "options": {"A": "一顿饭","B": "倾国之资（把整个国家财富献上）","C": "一匹马","D": "一座城"},
+                    "correct": "B",
+                    "analysis": "老王说“愿以倾国之资奉献”——这个“培训班学费”贵得吓人。悟空却笑道：出家人不图财物。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "悟空怎么回答老王的“倾国之资”？",
+                    "options": {"A": "嫌少","B": "“出家人还巴不得传几个徒弟呢……不要讲学费的事，以情相处就可以”","C": "收了","D": "拒绝了"},
+                    "correct": "B",
+                    "analysis": "悟空笑道：我们出家人不图财物，令郎有从善之心，以情相处便可——分文不取。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "八戒的九齿钉耙有多重？",
+                    "options": {"A": "5048斤（一藏之数）","B": "13500斤","C": "1000斤","D": "500斤"},
+                    "correct": "A",
+                    "analysis": "八戒说自己的耙“只有一藏之数，5048斤”——三藏真经5048卷，一藏之数正合这个数字。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "沙僧的降妖宝杖多重？",
+                    "options": {"A": "5048斤","B": "13500斤","C": "1000斤","D": "800斤"},
+                    "correct": "A",
+                    "analysis": "沙僧笑道“也是5048斤”——与八戒一样都是一藏之数；只有悟空的棒子比他们重得多。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "金箍棒的来历是什么？",
+                    "options": {"A": "太上老君炼的","B": "大禹治水所铸，安在东洋大海镇海宫，重13500斤","C": "如来赐的","D": "悟空自己打的"},
+                    "correct": "B",
+                    "analysis": "悟空说：“我这棒不是凡间之物……大禹亲手打造，安在东洋大海镇着海宫”，重13500斤，能粗能细、变化无穷。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "悟空传授本事先教什么？",
+                    "options": {"A": "轻功","B": "先把力气练起来（传神力）","C": "法术","D": "变化"},
+                    "correct": "B",
+                    "analysis": "悟空说“你们没有力气，拿不了我们的兵器”——他画罡斗、吹仙气，先让三人脱胎换骨、力气大增。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "悟空用什么方法让三个小王子力气变大？",
+                    "options": {"A": "吃药","B": "画罡斗、让三人瞑目凝神，吹口仙气","C": "打坐","D": "举重"},
+                    "correct": "B",
+                    "analysis": "悟空在庭后画了罡斗，让三个小王子趴在里面瞑目凝神，吹口仙气——三人“各受得万千之履历”，脱胎换骨。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "三个小王子为什么还要打造“山寨版”兵器？",
+                    "options": {"A": "原版太丑","B": "虽拿得动神兵，却“运转艰难”，想要轻便好练的","C": "原版丢了","D": "想卖掉"},
+                    "correct": "B",
+                    "analysis": "小王子们“转换艰难”，请求照原样打造轻便版本——师徒把原版当样子，昼夜赶工。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "三般神兵被谁盗走了？",
+                    "options": {"A": "牛魔王","B": "七十里外豹头山虎口洞的妖怪","C": "黄袍怪","D": "狮子精"},
+                    "correct": "B",
+                    "analysis": "神兵霞光万丈，被七十里外“豹头山虎口洞”的妖怪看见——他弄起威风，把金箍棒、九齿耙、降妖杖一股脑卷走。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "玉华州属“天竺国下______”，城主封御华王。",
+                    "answer": "郡",
+                    "analysis": "“天竺国下郡”比凤仙郡的“外郡”更靠近天竺核心——越往西，离灵山越近。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "百姓说“降龙伏虎的高僧常见，______猪服猴的没见过”。",
+                    "answer": "绛",
+                    "analysis": "“绛猪服猴”是“降龙伏虎”的俏皮改编——拿师徒的猪猴长相打趣，妙趣横生。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "二王子拿的是九齿______。",
+                    "answer": "耙",
+                    "analysis": "“九齿耙”正是猪八戒的兵器——二王子拿耙对八戒，纯属“班门弄斧”。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "八戒的钉耙重5048斤，是“一______之数”。",
+                    "answer": "藏",
+                    "analysis": "“一藏之数”5048——三藏真经共15144卷，一藏正好5048，钉耙的重量就取这个数字。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "金箍棒是大______治水所铸，重13500斤。",
+                    "answer": "禹",
+                    "analysis": "“大禹治水”时打造金箍棒（如意金箍棒原为定海神针）——所以它镇着东海海宫，绝非凡间之物。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "悟空画______斗，吹口仙气给三个小王子传神力。",
+                    "answer": "罡",
+                    "analysis": "“罡斗”是道家的法坛图案——悟空画罡斗施法，让三人瞑目凝神、脱胎换骨。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "三人半空演武，“耀______扬威”四个字是这场难的根源。",
+                    "answer": "武",
+                    "analysis": "“耀武扬威”指炫耀武力、显摆威风——一显摆，神兵一亮相，妖怪就盯上了。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "盗走三般兵器的妖怪住在豹头山______口洞。",
+                    "answer": "虎",
+                    "analysis": "“豹头山虎口洞”——山名豹头、洞名虎口，光听名字就知道洞里住着凶猛的妖怪。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“炫耀的代价”】师徒本来盖了章就能走，偏要演武收徒，结果神兵被妖怪盯上。请谈谈：为什么“爱炫耀”容易惹祸？你如何做到“有本事也不张扬”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>满瓶不响，半瓶晃荡：</strong> 师徒半空演武“耀武扬威”，神兵霞光外露，立刻引来妖怪——<strong>越显摆，越容易被坏人盯上</strong>。</p>\n                        <p class=\"mt-2\"><strong>有本事不张扬：</strong> ①考了好成绩，高兴但不炫耀；②有好东西，不必逢人就说；③把“显摆”换成“分享”，把“炫耀”换成“踏实”；④低调是保护自己，也是尊重别人；⑤让成绩替自己说话。<strong>低调，是最牛的炫耀</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“先练基本功”】悟空教徒弟，第一步不是招式而是“练力气”。请谈谈：为什么“基本功”比“花架子”更重要？你如何打牢自己的学习基本功？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>万丈高楼平地起：</strong> 小王子们连神兵都拿不动，谈何招式——<strong>没有力气这个“地基”，再好的招式都是空中楼阁</strong>。</p>\n                        <p class=\"mt-2\"><strong>打牢基本功：</strong> ①口算、背诵这些“笨功夫”不可省；②字词、公式先记牢，再谈巧方法；③每天练一点，比突击强百倍；④别眼高手低：先把基础的做对；⑤难题不会，回到基础找根因。<strong>基本功扎实的人，越走越稳</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“以貌取人”】老王先因徒弟“丑”而轻视，看到本事后又道歉拜师。请谈谈：为什么“以貌取人”会看走眼？你如何做到“不以长相论英雄”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>人不可貌相：</strong> 老王先嫌徒弟丑、不够尊重，见了真本事才连忙道歉——<strong>长相是天生的，本事和人品是后天的</strong>。</p>\n                        <p class=\"mt-2\"><strong>不以貌取人：</strong> ①交朋友先看“合不合得来、是否善良”；②新同学长得普通，可能特别优秀；③别用“好看/难看”给人打分；④多观察别人的“行为”，少看“外表”；⑤自己也别因长相自卑——品德和实力才最长久。<strong>好看的脸会老，好的心不会</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“虚心学习”】三个小王子本来觉得自己很厉害，见到真高手立刻下拜求师。请谈谈：为什么“承认自己不如人”也是一种勇气？你如何做到“虚心向别人学习”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>敢于低头，是为了更好地抬头：</strong> 小王子们发现“天外有天”，马上跪下拜师——<strong>承认自己不足，才有进步的机会</strong>。</p>\n                        <p class=\"mt-2\"><strong>虚心学习：</strong> ①遇到比自己强的人，真诚请教；②别怕“丢面子”，面子没有长进重要；③把“他凭什么比我强”换成“我要学他的方法”；④上课多举手、多提问；⑤把别人的优点，变成自己的本领。<strong>虚心的人，处处有老师</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“因材施教”】悟空教棍、八戒教耙、沙僧教杖，各收一徒。请谈谈：为什么“适合自己的方法”才是最好的？你如何找到适合自己的学习方法？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>一把钥匙开一把锁：</strong> 三个小王子各学各的兵器——<strong>学什么、怎么学，都要看“适合不适合自己”</strong>。</p>\n                        <p class=\"mt-2\"><strong>找自己的方法：</strong> ①试几种学习法，看哪个效率最高；②有人爱默写，有人爱朗读，找到你的；③“别人都在用”的不一定适合你；④学累了换换方式，别硬扛；⑤定期总结：哪招对自己最管用。<strong>方法对了，事半功倍；方法错了，事倍功半</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“宝物的价值”】神兵本是“随身之宝、一刻不可离”，离了身就出事。请谈谈：为什么“重要的东西要自己看护好”？你如何保管好自己的“重要之物”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>宝不离身，才最安全：</strong> 神兵一离身当“样子”，就被妖怪偷走——<strong>越重要的东西，越要自己上心看护</strong>。</p>\n                        <p class=\"mt-2\"><strong>看护重要之物：</strong> ①手机、钥匙、证件随身放好；②贵重物品不乱放、不乱借；③重要的书和笔记做好标记；④密码、隐私不轻易告诉人；⑤东西借出去要记着要回来。<strong>自己的宝贝自己疼，别指望别人替你操心</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

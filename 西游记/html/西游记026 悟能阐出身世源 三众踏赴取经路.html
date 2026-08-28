@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第十九回精读：三众西行</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第十九回精读：三众西行</h1>
+            <p class="text-lg text-gray-700 serif">“云栈洞悟空收八戒，浮屠山玄奘受心经”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-story')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-story">第一章：八戒身世自述</button>
+                <button onclick="NavigationModule.switchTab('section-disciple')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-disciple">第二章：正式收徒</button>
+                <button onclick="NavigationModule.switchTab('section-heart')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-heart">第三章：乌巢授心经</button>
+                <button onclick="NavigationModule.switchTab('section-journey')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-journey">第四章：踏上取经路</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Story -->
+        <section id="section-story" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">八戒自述：从“天蓬”到“皈依”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    收服八戒后，悟空把他押回高老庄。八戒拜唐僧为师，并一五一十讲出自己的身世。点击翻转卡片，回顾他跌宕起伏的人生三幕。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-s1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">第一幕：天庭高官</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-s1-front">
+                        <p class="text-2xl font-bold text-amber-900 mb-3 serif">天蓬元帅</p>
+                        <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-s1-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            八戒自述：他本是<strong>天庭天蓬元帅</strong>，掌管天河八万水军，手持九齿钉耙，威风八面、地位尊崇。那是他“风光的过去”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-s2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">第二幕：坠入凡尘</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-s2-front">
+                        <p class="text-2xl font-bold text-amber-900 mb-3 serif">错投猪胎</p>
+                        <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-s2-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            一次<strong>蟠桃会上醉酒调戏嫦娥</strong>，他被玉帝贬下凡间，投胎时<strong>错投猪胎</strong>，变成了猪头猪脑的猪妖。从云端跌入泥潭，一夜之间天翻地覆——这是他“堕落的现在”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-s3')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">第三幕：观音点化</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-s3-front">
+                        <p class="text-2xl font-bold text-amber-900 mb-3 serif">等取经人</p>
+                        <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-s3-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            他在福陵山吃人度日，后遇<strong>观音点化</strong>，不再吃人、持斋把素，观音嘱咐他<strong>“等取经人”</strong>。如今唐僧到来，正是他<strong>改过自新、赎罪修行</strong>的“新生”机会。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：每个人都能“重新出发”</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    八戒的人生经历了<strong class="text-amber-900">“高光—坠落—重生”</strong>三部曲。他曾站在云端，也曾跌入泥潭，但他抓住“取经人”这个机会，选择<strong class="text-amber-900">重新出发</strong>。这告诉我们：人生难免犯错、难免跌倒，但只要愿意改过、愿意上路，<strong class="text-amber-900">永远都有翻身的可能</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Disciple -->
+        <section id="section-disciple" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">剃度拜师：法名“悟能”，别称“八戒”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    八戒诚心皈依，唐僧为他剃度收徒。点击翻转卡片，理解“悟能”与“八戒”这两个名字背后的深意。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-d1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">法名“悟能”</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-d1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">同辈“悟”字</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-d1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空、悟能、悟净，三兄弟同用一个“<strong>悟</strong>”字，寓意<strong>“觉悟”</strong>。“悟能”，是希望他能<strong>觉悟自己的“本能”“欲望”</strong>，用佛性去约束人性中的贪念，明白“能”也需用在正道上。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-d2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">别称“八戒”</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-d2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">戒除八种毛病</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-d2-back">
+                        <p class="text-gray-700 text-left">
+                            “八戒”指<strong>戒除八种戒律毛病</strong>，例如戒杀生、戒偷盗、戒淫邪、戒妄语、戒饮酒、戒荤腥、戒贪嗔痴等。唐僧借此提醒八戒：<strong>法名是“悟”，日常靠“戒”</strong>——觉悟在内心，戒律在行动。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“悟”与“戒”：修行的两条腿</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    “悟”是内心明白道理，“戒”是行动上约束自己。<strong class="text-amber-900">光“悟”不“戒”，是空谈；光“戒”不“悟”，是盲从。</strong>两者结合，才是真正的修行。这就像学习：既要知道“为什么学”（悟），又要用纪律管住自己天天学（戒）。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Heart -->
+        <section id="section-heart" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">浮屠山乌巢禅师：一部《多心经》</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    师徒三人西行，路过浮屠山，遇到乌巢禅师。禅师不仅认出了取经人，还口授了一部《多心经》（即《心经》），并预言了取经路上的磨难。点击诗句，领悟经中的智慧。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-white rounded-xl shadow border border-gray-200 p-8">
+                    <h3 class="text-xl font-bold text-amber-900 mb-4 serif">《心经》名句 · 点击体会</h3>
+                    <div class="space-y-3">
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line1', this)">“色不异空，空不异色。”</p>
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line2', this)">“照见五蕴皆空，度一切苦厄。”</p>
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line3', this)">“心无挂碍，无挂碍故，无有恐怖。”</p>
+                    </div>
+                    <div class="mt-6 bg-amber-50 rounded-lg p-5" id="meaning-panel">
+                        <p class="text-sm text-gray-600 italic">点击上方诗句，查看其含义。</p>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-h1')">
+                        <div class="bg-gray-800 text-white p-3 text-center">
+                            <h3 class="text-lg font-bold serif">乌巢禅师是谁？</h3>
+                        </div>
+                        <div class="p-6 text-center" id="card-h1-front">
+                            <p class="text-2xl font-bold text-amber-900 mb-2 serif">神秘的高人</p>
+                            <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                        </div>
+                        <div class="p-6 text-center hidden bg-amber-50" id="card-h1-back">
+                            <p class="text-gray-700 text-left text-sm">
+                                乌巢禅师住在一棵大树的<strong>鸟巢</strong>上，却能一眼认出唐僧，还能预言未来，并授以《多心经》。在佛教传说中，他常被看作<strong>“禅宗早期祖师”</strong>或“<strong>心经的传授者</strong>”的化身，象征<strong>禅宗直指人心、不立文字</strong>的精神。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-h2')">
+                        <div class="bg-gray-800 text-white p-3 text-center">
+                            <h3 class="text-lg font-bold serif">禅师的预言</h3>
+                        </div>
+                        <div class="p-6 text-center" id="card-h2-front">
+                            <p class="text-2xl font-bold text-amber-900 mb-2 serif">“路途多艰险”</p>
+                            <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                        </div>
+                        <div class="p-6 text-center hidden bg-amber-50" id="card-h2-back">
+                            <p class="text-gray-700 text-left text-sm">
+                                乌巢禅师作诗预言取经路上将遇到<strong>“灵山远、魔障多”</strong>，也提到虎豹豺狼、妖魔鬼怪。悟空听了不服气，举起金箍棒打他，却<strong>打不着那鸟巢</strong>——暗示禅师是<strong>真高人</strong>，也说明“心”比“棍棒”更难得。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Section 4: Journey -->
+        <section id="section-journey" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">三众西行：取经团队正式启程</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    辞别乌巢禅师，唐僧、悟空、八戒三人正式踏上了取经之路。点击翻转卡片，看看这支“新团队”的构成与分工。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-j1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">唐僧</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-j1-front">
+                        <p class="text-2xl font-bold text-amber-900 mb-3 serif">取经人</p>
+                        <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-j1-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            团队的<strong>灵魂与方向</strong>，信念坚定、慈悲为怀，是取经的发起者与核心。他一路<strong>持《心经》</strong>，靠“定心”来应对千难万险。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-j2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">悟空</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-j2-front">
+                        <p class="text-2xl font-bold text-amber-900 mb-3 serif">开路先锋</p>
+                        <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-j2-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            团队<strong>最锋利的“矛”</strong>，负责降妖除魔、探路化缘，也是团队的“主心骨”与“军师”。他一路<strong>除“心猿”</strong>，从无法无天到逐渐懂得约束自己。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-j3')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">八戒</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-j3-front">
+                        <p class="text-2xl font-bold text-amber-900 mb-3 serif">挑担帮手</p>
+                        <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-j3-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            团队的<strong>“大力士”与“开心果”</strong>，负责挑担、干活、开路，也常闹出笑话调节气氛。他一路<strong>戒“八戒”</strong>，在与欲望的斗争中慢慢成长。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">一支“互补”的队伍</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    唐僧定方向，悟空主战斗，八戒管后勤——<strong class="text-amber-900">各有所长、互相补充</strong>。真正的团队，不是找一堆一模一样的人，而是让不同的人在同一个目标下各尽其能。从这里开始，取经团队才算真正成型。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第十九回“云栈洞悟空收八戒，浮屠山玄奘受心经”是一回承上启下的关键章节：取经团队正式集结，八戒完成皈依，唐僧获得了《多心经》——“心经”从此成为取经路上“定心”的法宝。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第十九回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const Page_DATA = {
+            "poemData": {
+                "line1": {
+                    "meaning": "“色”指我们看到的一切事物（物质世界），“空”指它们并非永恒不变。这句是说：世间的万事万物都在变化之中，没有永恒不变的东西，所以不必过分执著。",
+                    "life": "比如心爱的玩具坏了、考试偶尔失利，这些都是“会变化”的事，看淡一点，心就不会被困住。"
+                },
+                "line2": {
+                    "meaning": "“五蕴”指色、受、想、行、识，涵盖了一个人的身体与精神世界。若能看透这一切都“如幻如化”，就能摆脱痛苦与烦恼。",
+                    "life": "遇到困难时，提醒自己“这也会过去”，不把眼前的痛苦当成永恒，心就从容了。"
+                },
+                "line3": {
+                    "meaning": "心里没有牵挂、没有放不下的事，就不会有恐惧。这是《心经》最鼓励人的话：放下执念，内心才能安然。",
+                    "life": "考试前紧张，往往是因为太在意结果。只要努力过了，放平心态，恐惧自然就少了。"
+                }
+            }
+        };
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "八戒自述中，他原是天庭的什么官职？",
+                    "options": {
+                        "A": "卷帘大将",
+                        "B": "天蓬元帅，掌管天河八万水军",
+                        "C": "弼马温",
+                        "D": "御马监正堂管事"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒自称“本是天蓬元帅”，掌管天河八万水军，是威风八面的天庭大将，直到因醉酒调戏嫦娥被贬。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "八戒被贬下凡后，为什么变成猪妖？",
+                    "options": {
+                        "A": "因为吃了太多猪肉",
+                        "B": "投胎时错投了猪胎",
+                        "C": "观音故意把他变成猪",
+                        "D": "为了吓唬高家"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒自述被贬下凡时“错投了猪胎”，所以变成猪头猪脑的模样。这既是喜剧设定，也象征他从“高贵”到“卑贱”的坠落。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "八戒在福陵山吃人度日时，是谁点化了他？",
+                    "options": {
+                        "A": "乌巢禅师",
+                        "B": "观音菩萨",
+                        "C": "唐僧",
+                        "D": "太上老君"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒遇到观音，观音让他“持斋把素，不再吃人”，并嘱咐他“等取经人来”。八戒因此才在唐僧到来时皈依。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "唐僧给八戒起法名“悟能”，这个“悟”与谁相同？",
+                    "options": {
+                        "A": "悟空、悟净",
+                        "B": "悟道、悟心",
+                        "C": "六祖惠能",
+                        "D": "悟元、悟真"
+                    },
+                    "correct": "A",
+                    "analysis": "悟空、悟能、悟净三兄弟同用“悟”字，寓意“觉悟”。三人都是皈依佛门、走上觉悟之路的修行者。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "“八戒”这个别称的含义是：",
+                    "options": {
+                        "A": "只吃八碗饭",
+                        "B": "要戒除八种戒律毛病，提醒他约束自己",
+                        "C": "排行第八",
+                        "D": "只能去八个地方"
+                    },
+                    "correct": "B",
+                    "analysis": "“八戒”指戒除八种戒律与毛病（如杀、盗、淫、妄、酒、荤、贪等），既是法号，也是唐僧对八戒的提醒。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "“悟”与“戒”的关系，精读中强调是：",
+                    "options": {
+                        "A": "只要有“悟”就不需要“戒”",
+                        "B": "光“戒”就行，不用“悟”",
+                        "C": "“悟”在内心明白道理，“戒”在行动约束自己，两者结合才是真修行",
+                        "D": "两者毫无关系"
+                    },
+                    "correct": "C",
+                    "analysis": "光“悟”不“戒”是空谈，光“戒”不“悟”是盲从。内心觉悟加上行动自律，才是完整而踏实的修行。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "浮屠山的乌巢禅师住在哪里？",
+                    "options": {
+                        "A": "云栈洞里",
+                        "B": "一棵大树的鸟巢上",
+                        "C": "山洞中",
+                        "D": "庙宇里"
+                    },
+                    "correct": "B",
+                    "analysis": "乌巢禅师住在大树的鸟巢上，因此得名“乌巢禅师”。他生活简朴、无牵无挂，象征禅宗“直指人心”的精神。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "乌巢禅师口授给唐僧的是哪部经？",
+                    "options": {
+                        "A": "《金刚经》",
+                        "B": "《多心经》（即《心经》）",
+                        "C": "《法华经》",
+                        "D": "《楞严经》"
+                    },
+                    "correct": "B",
+                    "analysis": "乌巢禅师授给唐僧《多心经》（即《心经》），此后唐僧一路持诵，把它当作“定心”的法宝。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "“心无挂碍，无挂碍故，无有恐怖”这句经文的含义是：",
+                    "options": {
+                        "A": "心里没有牵挂、放不下的事，就不会有恐惧",
+                        "B": "心里什么都不能想",
+                        "C": "什么都不用努力",
+                        "D": "要害怕一切事情"
+                    },
+                    "correct": "A",
+                    "analysis": "这句是《心经》的名句：放下执念与牵挂，内心才能安然，不会患得患失、恐惧不安。这是面对困难时的一剂“安心药”。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "悟空用金箍棒打乌巢禅师，结果如何？",
+                    "options": {
+                        "A": "把禅师打跑了",
+                        "B": "把鸟巢打散了",
+                        "C": "怎么也打不着那鸟巢，证明禅师是真高人",
+                        "D": "把师父误伤了"
+                    },
+                    "correct": "C",
+                    "analysis": "悟空不服气举棒就打，却打不着那鸟巢。这暗示乌巢禅师境界高深，也说明“心”的修行不是靠棍棒能解决的。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "取经团队中，各自的分工大致是：",
+                    "options": {
+                        "A": "唐僧战斗、悟空定方向、八戒挑担",
+                        "B": "唐僧定方向、悟空降妖开路、八戒挑担干活",
+                        "C": "三人都做一样的事",
+                        "D": "八戒是师父"
+                    },
+                    "correct": "B",
+                    "analysis": "唐僧是信念与方向的核心，悟空是降妖除魔的开路先锋，八戒是挑担干活的后勤帮手。各展所长、互相补充。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "精读把八戒的人生概括为“高光—坠落—重生”三部曲，其中“重生”指的是：",
+                    "options": {
+                        "A": "重新投胎做人",
+                        "B": "皈依佛门、跟随取经人赎罪修行",
+                        "C": "回到天庭当元帅",
+                        "D": "变回天蓬的样子"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒抓住“取经人”这个机会，皈依佛门、护法西行，用行动赎罪，实现了从“妖”到“修行者”的重生。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "本回中，乌巢禅师象征的是：",
+                    "options": {
+                        "A": "凶恶的妖怪",
+                        "B": "禅宗直指人心、不立文字的智慧与心经的传授者",
+                        "C": "普通的过路僧人",
+                        "D": "天庭的卧底"
+                    },
+                    "correct": "B",
+                    "analysis": "乌巢禅师被看作禅宗早期祖师或“心经传授者”的化身，他授经、预言，象征禅宗注重“明心见性”的精神。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "《心经》在取经路上对唐僧最重要的作用是：",
+                    "options": {
+                        "A": "用来降妖除魔",
+                        "B": "当作“定心”的法宝，帮助他在恐惧磨难中安住内心",
+                        "C": "用来跟国王换通关文牒",
+                        "D": "用来背诵考试"
+                    },
+                    "correct": "B",
+                    "analysis": "唐僧一路持诵《心经》，在妖魔环伺、前途未卜时用经文安定内心。心定，才不会被恐惧和烦恼打败。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "精读认为，从本回开始取经团队“正式成型”，主要原因是：",
+                    "options": {
+                        "A": "人终于凑够了",
+                        "B": "唐僧、悟空、八戒三人形成“定方向—主战斗—管后勤”的互补结构",
+                        "C": "观音宣布团队成立",
+                        "D": "乌巢禅师加入了团队"
+                    },
+                    "correct": "B",
+                    "analysis": "三人各司其职、性格互补，团队有了明确的分工与配合，这才是“正式成型”的标志。真正的团队靠协作，而非人数。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "八戒自述原是天庭______元帅，掌管天河八万水军。",
+                    "answer": "天蓬",
+                    "analysis": "八戒在取经路上自我介绍：他原是天庭的天蓬元帅，掌管天河八万水军。老底一交代，「前世」的威风都成了「今生」的笑谈——曾经的元帅，如今的猪妖，命运的大起大落，提醒人「得意时别忘形」。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "八戒因在______会上醉酒调戏嫦娥，被贬下凡。",
+                    "answer": "蟠桃",
+                    "analysis": "八戒因在王母娘娘的蟠桃会上喝醉了酒，调戏嫦娥，被玉帝贬下凡间。蟠桃会本是盛大的宴会，却成了八戒「人生的转折点」——欢乐场合更要注意分寸，得意之时最容易失态。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "八戒投胎时错投______胎，所以变成猪妖。",
+                    "answer": "猪",
+                    "analysis": "八戒投胎时「慌慌张张」，错投了母猪胎，成了「猪妖」。一个「慌」字，写尽了他的性格：粗心大意、慌里慌张。这也是为什么他总闹笑话——性格决定命运，连投胎都「投错」。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "观音嘱咐八戒“等______人”，他才在唐僧到来时皈依。",
+                    "answer": "取经",
+                    "analysis": "观音点化八戒时，让他「持斋把素，等候取经人」。八戒于是放下屠刀，在福陵山等唐僧。一个「等」字说明：机会是留给有准备的人的，改过自新需要耐心等待。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "唐僧给八戒赐法名“______”，又叫他“______”。",
+                    "answer": "悟能|八戒",
+                    "analysis": "唐僧给八戒赐法名「悟能」，又因他不守五荤三厌的戒律，给他起个别号叫「八戒」。赐名是「接纳」——从妖怪变成徒弟；起别号是「提醒」——天天念着「要八戒」，管住自己的贪吃好色。名字背后，藏着师父的期许。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "乌巢禅师在______山口授给唐僧《多心经》。",
+                    "answer": "浮屠",
+                    "analysis": "乌巢禅师在浮屠山（山形如塔，故名浮屠）口授唐僧《多心经》（即《心经》），告诉他「路途虽远，终须有到之日」。这部心经后来成为唐僧师徒的精神支柱——身体走在取经路上，心也走在「修心」路上。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "《心经》中“心无______，无挂碍故，无有恐怖”是抚慰人心的名句。",
+                    "answer": "挂碍",
+                    "analysis": "《心经》名句：「心无挂碍，无挂碍故，无有恐怖，远离颠倒梦想。」意思是：心里没有牵挂、障碍，就不会害怕，就不会胡思乱想。考试前、上台前，很多人紧张，就是因为「心有所挂」——放下顾虑，反而能发挥好。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "取经团队中，唐僧定______，悟空主______，八戒管后勤。",
+                    "answer": "方向|战斗",
+                    "analysis": "取经团队分工：唐僧定「方向」（目标明确、信念坚定），悟空主「战斗」（降妖除魔、攻坚克难），八戒管「后勤」（挑担、喂马）。一个团队要成事，既要有领路人，也要有开路先锋，还要有后勤保障——缺一不可。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“重新出发”】八戒从天蓬元帅跌为猪妖，却抓住“取经人”的机会重新开始。请谈谈：为什么说“跌倒了不可怕，可怕的是不愿爬起来”？我们该如何面对失败与低谷？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>重新出发的力量：</strong> 八戒没有在自暴自弃中沉沦，而是抓住机会赎罪修行。失败不可怕，可怕的是因为一次失败就否定自己、再也不愿尝试。</p>\n                        <p class=\"mt-2\"><strong>面对失败：</strong> ①允许自己难过一阵，但不要一直陷在情绪里；②冷静分析失败原因（是方法不对还是努力不够）；③把失败当“学费”，总结教训再出发；④相信“低谷是上坡路的开始”。一次考试失利、一次竞选失败，都只是人生的小波浪。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“名号与自律”】唐僧给八戒起名“八戒”，是用名字时时提醒他自律。请谈谈：为什么“立规矩、明戒律”能帮人成长？你给自己立过哪些“规矩”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>规矩是成长的护栏：</strong> “八戒”的名字时刻提醒八戒什么该做、什么不该做。规矩像护栏，帮我们在诱惑面前不越界，在懈怠时不下滑。</p>\n                        <p class=\"mt-2\"><strong>我的规矩：</strong> 例如“作业写完再玩”“每天阅读20分钟”“不发脾气、有话好好说”“不抄别人作业”。定规矩要具体可执行，还要有奖惩机制（做到奖励、违反小惩罚），坚持21天就能养成习惯。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“心经与定心”】唐僧把《心经》当“定心”的法宝。请谈谈：为什么“心定”在关键时刻特别重要？你有哪些“让心静下来”的好办法？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>心定的价值：</strong> 心乱则判断乱，心定才能看清问题、从容应对。唐僧在妖魔环伺中持诵心经，靠“心定”撑过恐惧。考前、比赛前、上台前，心定的人发挥更稳。</p>\n                        <p class=\"mt-2\"><strong>让心静下来的办法：</strong> ①深呼吸（吸气4秒、屏住4秒、呼气6秒）；②做几次“数数”或“正念”，把注意力拉回当下；③默念一句鼓励自己的话（就像唐僧念心经）；④先做能让自己专注的小事（如抄写、整理桌面）。找到属于你的“心经”，关键时刻就能用上。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“互补的团队”】唐僧、悟空、八戒性格能力各不相同，却组成一支好队伍。请谈谈：为什么团队需要“不同类型”的人？你在班级小组里最擅长扮演什么“角色”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>互补才强大：</strong> 若团队全是“唐僧”，就没人降妖；全是“悟空”，就容易莽撞闯祸；全是“八戒”，可能只顾吃喝。不同性格互相制衡、补位，团队才完整。</p>\n                        <p class=\"mt-2\"><strong>我的角色：</strong> 有人擅长创意（军师）、有人擅长执行（先锋）、有人擅长协调（黏合剂）、有人擅长整理（后勤）。找到自己擅长的事并主动承担，就是好队员。也可以尝试扮演不擅长的角色，锻炼自己。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“外在与内心”】悟空用金箍棒打不中乌巢禅师的鸟巢。请谈谈：为什么说“有些东西靠蛮力得不到，靠用心才能得到”？这给你什么启发？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>蛮力有限，用心无限：</strong> 金箍棒能打碎山石，却打不着禅师的鸟巢——因为禅师的境界是“心”层面的，靠恭敬、理解与修行去接近，而不是靠武力。</p>\n                        <p class=\"mt-2\"><strong>启发：</strong> 与人相处，靠尊重和真诚才能走近对方；学知识，靠理解和思考才能真正掌握；解决难题，靠方法和耐心比靠“硬来”有效。真正厉害的人，是“心”上有功夫的人。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“放下执念”】《心经》说“心无挂碍，无有恐怖”。请谈谈：过度的“挂碍”（比如太在意输赢、太怕犯错）会带来什么问题？我们该如何“放下”而不“放弃”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>过度挂碍的问题：</strong> 太怕输就放不开手脚，太怕错就不敢尝试，太在意别人看法就会活得累。恐惧和紧张，往往源于“放不下”。</p>\n                        <p class=\"mt-2\"><strong>放下而不放弃：</strong> 放下的是“对结果的执念”，不放弃的是“对过程的努力”。把注意力放在“我今天又学会了什么”而不是“我考了多少分”，既尽力而为，又从容面对结果。这叫“尽人事，听天命”，反而更放松、发挥更好。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“队伍启程”】取经团队正式启程后，等待他们的还有九九八十一难。请谈谈：为什么说“出发”本身就是最了不起的一步？你准备在学习和生活中“出发”做一件什么事？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>出发的意义：</strong> 再远的路，也是从第一步开始的。取经团队出发时并不清楚前面的八十一难，但他们选择了上路——行动本身，就是战胜恐惧的最好办法。</p>\n                        <p class=\"mt-2\"><strong>我的“出发”：</strong> 可以是为一件坚持已久的事定下小目标（如读完一套书、练好一项运动），也可以是一个新尝试（如参加演讲比赛、学习新技能）。不必等到“准备好了”再出发——先在路上，边走边成长，本身就是最好的准备。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

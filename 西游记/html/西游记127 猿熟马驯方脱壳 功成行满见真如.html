@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第九十八回精读：心无挂碍与明心见性</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第九十八回精读：心无挂碍与明心见性</h1>
+            <p class="text-lg text-gray-700 serif">“猿熟马驯方脱壳，功成行满见真如”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">灵山脚下</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">凌云渡</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">脱胎换骨</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">见真如</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 灵山脚下 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">仙佛同源：佛地脚下，竟是一座道观</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    师徒来到灵山脚下，遇到的竟是玉真观、金顶大仙——佛地脚下站的是道童，这正是《西游记》“仙佛同源”的主题：修道修佛，最终都是修心。金顶大仙笑道：“我盼了十来年，被观音菩萨哄了，原说二三年就到。”他烧香汤给唐僧沐浴——“昨日蓝缕，今日鲜明”，洗净风尘，才好登佛地。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">仙佛同源</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">灵山脚下是道观</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            到灵山脚下，见到的却是<strong>玉真观、金顶大仙</strong>——佛地脚下竟有道童。<strong>“仙佛同源”：修道修佛，修的都是一颗心</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">沐浴登佛地</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">昨日蓝缕，今日鲜明</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            金顶大仙烧香汤给唐僧<strong>沐浴</strong>——“昨日蓝缕，今日鲜明，观此相真佛子也”。洗净尘垢、返璞归真，才好登佛地。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">登顶之前，先把自己“洗干净”</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    唐僧上灵山前先沐浴净身。<strong>想把事做漂亮，先把自己打理好——心静、身净、目标清，才能走到想去的地方</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 凌云渡 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">一根独木桥、一只无底船——心无挂碍才能过</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    灵山脚下八九里宽的活水横在面前，只有一座“凌云渡”独木桥，又细又滑——八戒吓得趴地上不敢过，悟空说“必须从此桥上走过方可成佛”。又见下流撑来一只“无底船”！悟空火眼金睛认出是接引佛祖（南无宝幢光王佛），却不说破。无底船诗云：“有浪有风还自稳，无忧无虑但深情”——心里有牵挂、有惧怕，才上不了这船。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">独木桥</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">凌云渡，又细又滑</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            <strong>“凌云渡”</strong>是灵山前的一根独木桥，又细又滑——悟空说“必须从此桥上走过方可成佛”。<strong>越想修成正果，越得过最难走的“独木桥”</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">无底船</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">无底船儿难过海</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            下流撑来一只<strong>无底船</strong>——悟空认出是<strong>接引佛祖（南无宝幢光王佛）</strong>化身。诗云“无忧无虑但深情”：<strong>心里没牵挂的人，才乘得了无底船</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">恐惧，是过不去的“桥”</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    独木桥其实不宽，你怕才过不去；无底船其实不沉，你忧才上不去。<strong>很多事难的不是事本身，而是心里的“怕”——放下恐惧，路就宽了</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 脱胎换骨 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">上游漂下一个死尸——“那个原来是你”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    唐僧不敢上无底船，被悟空一把推下水，又被撑船人扯上船。船行中，上流漂下一个死尸，唐僧大惊——悟空笑道：“别怕，那个原来是你！”八戒沙僧也拍手：“那是你呀！可贺！”原来这死尸正是唐僧的凡胎肉身：修成正果，脱去肉身、元神得度。上岸后，唐僧反谢徒弟，悟空说“两不相谢，彼此皆扶持也”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">死尸即本我</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“那个原来是你”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            无底船行至中流，上流<strong>漂下一具死尸</strong>——悟空笑道“别怕，那个原来是你”，八戒沙僧拍手“那是你呀！可贺”。<strong>死尸是唐僧的凡胎肉身，元神已脱壳得度</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">彼此扶持</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">两不相谢</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            唐僧省悟，回头反谢徒弟。悟空说<strong>“两不相谢，彼此皆扶持也”</strong>——师傅解说入门修功，徒弟们一路保护脱凡胎，<strong>谁也离不开谁</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">成长，就是“脱去旧的自己”</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    唐僧脱去凡胎，才真正成佛。<strong>人也是要不断“脱壳”的——改掉旧毛病、告别旧自己，才能长成新的、更好的自己</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 见真如 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">无字真经、紫金钵盂——经不可轻传，亦不可空取</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    大雄宝殿上，如来命阿南、迦叶传经。二尊者索要“人事”（好处费），唐僧拿不出，他们竟给了“无字真经”！燃灯古佛派白雄尊者追回。唐僧再回雷音寺告状，如来却说“经不可以轻传，亦不可以空取”——唐僧献上唐王所赐的紫金钵盂，才换得三藏真经5048卷。取经，终于圆满。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">无字真经</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">要“人事”没给，传了白本</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            阿南迦叶索要“人事”（好处费），唐僧没有，二尊者传了<strong>“无字真经”</strong>——燃灯古佛派白雄尊者<strong>追回</strong>，才换得真有字的经。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">紫金钵盂</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">经不可空取</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            如来点破<strong>“经不可以轻传，亦不可以空取”</strong>——唐僧献上唐王所赐的<strong>紫金钵盂</strong>，才换得三藏真经5048卷（一藏之数）。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">想得到，就要有付出</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    真经不能白拿——传经的人要生活，学经的人要有诚心。<strong>想收获，先要有付出和诚意；天下没有“免费的午餐”</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第九十八回“猿熟马驯方脱壳，功成行满见真如”讲的是取经圆满：灵山脚下仙佛同源，金顶大仙为唐僧沐浴；凌云渡一根独木桥、一只无底船，心无挂碍才能过；唐僧被推下无底船，脱去凡胎肉身，上流漂下的死尸“原来是你”；大雄宝殿上阿南迦叶索要“人事”，传了无字真经，燃灯古佛派白雄尊者追回；如来点破“经不可轻传亦不可空取”，唐僧献上紫金钵盂，才换得三藏真经5048卷。这一回让我们看到：登顶前先洗干净自己、恐惧是过不去的桥、成长就是脱去旧的自己、想得到就要有付出。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第九十八回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "唐僧师徒到灵山脚下，先见到的是什么？",
+                    "options": {"A": "雷音寺","B": "玉真观、金顶大仙（一座道观）","C": "观音院","D": "布金寺"},
+                    "correct": "B",
+                    "analysis": "灵山脚下竟是“玉真观”、站着道童——仙佛同源，修道修佛都是修心。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "金顶大仙为什么说“被观音菩萨哄了”？",
+                    "options": {"A": "观音骗他","B": "观音原说取经人二三年就到，实际十来年才到","C": "观音没来","D": "观音走了"},
+                    "correct": "B",
+                    "analysis": "金顶大仙受观音嘱托等取经人，“原说二三年就到，谁知十来年才相逢”。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "金顶大仙用什么招待唐僧上佛地？",
+                    "options": {"A": "斋饭","B": "烧香汤给唐僧沐浴净身","C": "衣服","D": "马"},
+                    "correct": "B",
+                    "analysis": "大仙命小童“烧香汤，给圣僧沐浴”，洗干净好登佛地——昨日蓝缕，今日鲜明。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "“望山走倒马”是什么意思？",
+                    "options": {"A": "马会倒","B": "山看着近，其实很远，马都走倒了","C": "山很高","D": "别望山"},
+                    "correct": "B",
+                    "analysis": "悟空劝唐僧别急着拜：“常言道望山走倒马”——看着到，实际还远，要一步一步走。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "过凌云渡，只有哪两种方式？",
+                    "options": {"A": "坐船、游过去","B": "独木桥、无底船","C": "飞过去、跳过去","D": "绕路、骑马"},
+                    "correct": "B",
+                    "analysis": "八九里宽的活水上，只有一根“凌云渡”独木桥；另有下流撑来的“无底船”——都不是凡人轻易过得去的。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "八戒想过河，想出什么“偷懒”的办法？",
+                    "options": {"A": "游过去","B": "驾风雾过去（被悟空拦住：必须从桥上走方可成佛）","C": "等船","D": "往回走"},
+                    "correct": "B",
+                    "analysis": "八戒趴在地上要“驾风雾过去”——悟空按住：这地方必须从桥上走过方可成佛，有些路必须自己走。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "“无底船”是谁化身的？",
+                    "options": {"A": "观音","B": "接引佛祖（南无宝幢光王佛）","C": "如来","D": "地藏王"},
+                    "correct": "B",
+                    "analysis": "悟空火眼金睛认出撑船的是“接引佛祖，又叫做南无宝幢光王佛”——看破不说破。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "无底船诗说“无忧无虑但深情”，什么意思？",
+                    "options": {"A": "船很稳","B": "只有心无挂碍的人，才乘得了这船","C": "船很漂亮","D": "水很清"},
+                    "correct": "B",
+                    "analysis": "“有浪有风还自稳，无忧无虑但深情”——你心里有忧虑杂念，才上不了这无底船。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "唐僧是怎么上无底船的？",
+                    "options": {"A": "自己跳","B": "被行者掐着脖子往上一推，跌进水中被撑船人扯起","C": "游上去","D": "被八戒拉"},
+                    "correct": "B",
+                    "analysis": "长老迟疑，被行者“掐着脖子往上一推”，轱辘跌进水中，早被撑船人一把扯起站在船上。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "上流漂下的死尸是谁？",
+                    "options": {"A": "妖怪","B": "唐僧的凡胎肉身（“那个原来是你”）","C": "路人","D": "八戒"},
+                    "correct": "B",
+                    "analysis": "悟空笑道“别怕，那个原来是你”——死尸是唐僧脱下的凡胎肉身，元神已脱壳得度。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "唐僧上岸后反谢徒弟，悟空怎么回答？",
+                    "options": {"A": "“不用谢”","B": "“两不相谢，彼此皆扶持也”","C": "“是你该的”","D": "“别客气”"},
+                    "correct": "B",
+                    "analysis": "悟空说“两不相谢，彼此皆扶持”——师傅解说入门修功，徒弟一路保护脱凡胎，谁也离不开谁。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "阿南、迦叶向唐僧要“人事”，是什么意思？",
+                    "options": {"A": "问路","B": "要好处费（传经的酬谢）","C": "问名字","D": "要饭"},
+                    "correct": "B",
+                    "analysis": "“人事”在这里指好处费——暗讽现实中“办事要打点”的陋习，取经路上连灵山都要“打点”。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "唐僧没给“人事”，二尊者传了什么经？",
+                    "options": {"A": "真经","B": "无字真经（白纸本）","C": "少传了几卷","D": "假经"},
+                    "correct": "B",
+                    "analysis": "二尊者没收到好处费，传了“无字之经”——经本“雪白并无半点字迹”，唐僧短叹长吁。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "谁派白雄尊者追回无字真经？",
+                    "options": {"A": "观音","B": "燃灯古佛","C": "玉帝","D": "太上老君"},
+                    "correct": "B",
+                    "analysis": "宝阁上的燃灯古佛看得明白，派白雄尊者“把那无字真经追转，叫他来取有字真经”。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "如来怎么解释“经不可以轻传”？",
+                    "options": {"A": "经很值钱","B": "“经不可以轻传，亦不可以空取”——要有付出和诚心","C": "怕唐僧不懂","D": "经太少了"},
+                    "correct": "B",
+                    "analysis": "如来点破“经不可以轻传，亦不可以空取”——传经的人要生活，学经的人要有诚心，不能白拿。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "唐僧拿什么换回有字真经？",
+                    "options": {"A": "金银","B": "紫金钵盂（唐王所赐的金饭碗）","C": "袈裟","D": "锡杖"},
+                    "correct": "B",
+                    "analysis": "唐僧献上唐王亲手所赐的“紫金钵盂”聊表寸心——才换得三藏真经5048卷。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "灵山脚下有一座道观，叫玉______观。",
+                    "answer": "真",
+                    "analysis": "“玉真观”是灵山脚下的道观——佛地脚下是道观，正是“仙佛同源”的暗示。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "凌云渡的桥是“______木桥”，又细又滑。",
+                    "answer": "独",
+                    "analysis": "“凌云渡”是灵山前的一根独木桥——想成正果，非得亲自走过这又细又滑的桥不可。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "撑无底船的是______引佛祖（南无宝幢光王佛）。",
+                    "answer": "接",
+                    "analysis": "“接引佛祖”负责接引修行人到彼岸——悟空认得他，却看破不说破。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "上游漂下的死尸，是唐僧的凡______肉身。",
+                    "answer": "胎",
+                    "analysis": "“凡胎肉身”指凡人的身体——唐僧脱去凡胎，元神得度，这才真正成佛。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "阿南迦叶要的“人______”就是好处费。",
+                    "answer": "事",
+                    "analysis": "“人事”指传经的酬谢——没收到好处费，二尊者就传了无字真经。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "燃灯古佛派白______尊者追回无字真经。",
+                    "answer": "雄",
+                    "analysis": "“白雄尊者”化作狂风，半空伸手抢走经包——经包散落，大家才发现全是白纸。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "如来点破“经不可以______传，亦不可以空取”。",
+                    "answer": "轻",
+                    "analysis": "“经不可以轻传”——传经要有付出和诚心，不能随随便便白拿。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "三藏真经共15144卷，一______之数是5048。",
+                    "answer": "藏",
+                    "analysis": "15144÷3=5048——三藏即三个“一藏之数”，唐僧取回的正是一藏5048卷。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“心无挂碍”】独木桥其实不宽，你怕才过不去；无底船其实不沉，你忧才上不去。请谈谈：为什么“恐惧”常常比“困难”更可怕？你如何克服心里的“怕”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>心有所惧，寸步难行：</strong> 独木桥画在地上谁都走得过去，换成悬空的就怕了——<strong>拦住你的往往不是桥，是心里的“怕”</strong>。</p>\n                        <p class=\"mt-2\"><strong>克服恐惧：</strong> ①把“可怕的事”拆开看，其实没那么难；②第一次上台发言，先深呼吸、先开口；③先做“最不怕的一小步”，慢慢就不怕了；④多练习：熟了，就不慌了；⑤记住：大多数“怕”，只是自己吓自己。<strong>心无挂碍，方能过“凌云渡”</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“脱胎换骨”】唐僧脱去凡胎肉身，才真正成佛。请谈谈：为什么“告别旧的自己”才能成长？你如何“改掉一个坏习惯、养成一个好习惯”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>不破不立：</strong> 唐僧不脱凡胎，就成不了佛——<strong>成长，就是不断“脱去旧的自己”</strong>。</p>\n                        <p class=\"mt-2\"><strong>养成好习惯：</strong> ①先挑一个“最想改”的坏习惯，集中攻克；②定个小目标：每天进步一点点；③用“新习惯”代替“旧习惯”（如用读书代替刷手机）；④请家人监督、互相鼓励；⑤坚持21天，好习惯就成了。<strong>每一次“脱壳”，都让你更接近更好的自己</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“彼此扶持”】悟空说“两不相谢，彼此皆扶持”。请谈谈：为什么“团队成功离不开互相成就”？你如何珍惜身边帮助过你的人？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>独木难支，众木成林：</strong> 唐僧靠徒弟保护才到西天，徒弟靠师傅解说才成正果——<strong>真正的成功，都是“互相成就”</strong>。</p>\n                        <p class=\"mt-2\"><strong>珍惜身边人：</strong> ①记住父母、老师的付出，不当作理所当然；②同学帮你，真诚道谢；③别人有难，你也要伸出援手；④把“谢谢”挂在嘴边，把“感恩”记在心里；⑤一起变好，才是最好的团队。<strong>互相扶持的人，才能一起走很远</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“付出与回报”】真经不能白拿，唐僧献上紫金钵盂。请谈谈：为什么“想要收获，先要有付出”？你如何理解“天下没有免费的午餐”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>种瓜得瓜，种豆得豆：</strong> 唐僧用紫金钵盂才换回真经——<strong>任何收获，背后都有对应的付出</strong>。</p>\n                        <p class=\"mt-2\"><strong>理解付出与回报：</strong> ①想考高分，先要下功夫复习；②想学技能，先要花时间练习；③想别人尊重你，先要尊重别人；④别总想“不劳而获”，脚踏实地最踏实；⑤把“我想要”和“我能付出什么”放在一起想。<strong>肯付出的孩子，才接得住收获</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“明心见性”】取经修行的终点，是“认识并接纳自己”。请谈谈：为什么“认识自己”是一生的功课？你如何发现自己的优点和不足？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>认识自己，是最大的智慧：</strong> 取经路上的每一难，都是“看见自己”的过程——<strong>知道自己是谁、要什么，才不会被带偏</strong>。</p>\n                        <p class=\"mt-2\"><strong>认识自己：</strong> ①多问“我喜欢什么、擅长什么”；②听听家人老师眼中的你；③写日记，记录自己的想法和情绪；④不回避缺点，正视它才能改它；⑤接纳“不完美的自己”，然后慢慢变好。<strong>认识自己，是变好的起点</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“知行合一”】取经不只是“拿到经”，更是“修好心”。请谈谈：为什么“读完书、行完路”之后，还要“悟一悟”？你如何做到“学而思、思而行”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>学而不思则罔：</strong> 唐僧走完十万八千里、读完真经，还要“悟”——<strong>光读光走不思考，就白读了</strong>。</p>\n                        <p class=\"mt-2\"><strong>学而思、思而行：</strong> ①读完一本书，问问“我学到了什么”；②学完一个道理，联系生活“我能怎么用”；③把“悟到”的记下来，写成自己的话；④想到就去做，做了再总结；⑤让“学—思—行”循环起来。<strong>知行合一，才是真学问</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

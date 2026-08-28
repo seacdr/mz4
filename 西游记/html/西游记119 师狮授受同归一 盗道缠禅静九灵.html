@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第九十回精读：心念清净与收服</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第九十回精读：心念清净与收服</h1>
+            <p class="text-lg text-gray-700 serif">“师狮授受同归一，盗道缠禅静九灵”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">群狮混战</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">九头狮抓人</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">深入敌巢</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">天尊收狮</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 群狮混战 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">八头狮子齐上，八戒先被擒</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    黄狮精请来祖翁九灵元圣，点起狻猊、抟象、白泽、伏狸、猱狮、雪狮等一群狮子，共八头狮子精来报仇。八戒一人对三狮、寡不敌众，被打晕拖走当“猪质”；悟空、沙僧二打四，悟空拔毫毛变出百十个小猴反败为胜，活捉了狻猊和白泽两狮。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">群狮</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">黄狮、狻猊、抟象、白泽、伏狸、猱狮、雪狮、九头狮</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            走了一个黄狮精，引来八头狮子：<strong>黄狮、狻猊、抟象、白泽、伏狸、猱狮、雪狮、九头狮</strong>——每个品种、每样兵器都不重样。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">八戒被擒</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">一人对三狮，被打晕拖走</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            八戒先战黄狮，又遭猱狮（铁蒺藜）、雪狮（三棱简）围攻——<strong>虚晃一耙败阵，被打晕拖去当了“猪质”</strong>。悟空拔毫毛变百十小猴，反以多打少，活捉两狮。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">人多，也要讲战术</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    八戒一个人硬拼三头狮子，自然吃亏；悟空却懂得“拔毛变猴”以多打少。<strong>硬拼拼不过时，要学会“借力”“造势”——办法，永远比蛮力多</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 九头狮抓人 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">九个头九张嘴，一口噙一个</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    黄狮精带五狮索战，悟空沙僧二打五。老妖九头狮却驾黑云直上城楼——九个头九张口，一口噙唐僧、一口噙八戒、一口噙老王，再各噙三个小王子，六张嘴噙六人，三张嘴发声喊叫！悟空拼了，拔尽毫毛变千百小行者，打死了黄狮精、活捉雪狮等五狮。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">九口噙人</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">九个头，九张嘴</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            九头狮<strong>一口噙着唐僧、一口噙着八戒、一口噙着老王</strong>，再各噙三个小王子——<strong>六只嘴噙着六个人，还剩三张嘴发声喊叫</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">打五狮</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">拖倒、活捉、拿住、扛翻、打死</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            悟空拔尽毫毛变千百小行者齐攻：<strong>猱狮被拖倒、雪狮被活捉、抟象被拿住、伏狸被扛翻、黄狮精被打死</strong>——五个狮子五种下场，用词个个不同。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">一个人的力量，也挡不住“群”</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空再强，也架不住老妖“九头齐上、一嘴叼一个”。<strong>真正防不胜防的，不是某一个强敌，而是“多点同时出招”</strong>——守住阵脚、防住后门，同样重要。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 深入敌巢 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">土地供出情报：请东极妙岩宫的主人</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空追青莲儿找到洞府“万灵竹节山九曲盘桓洞”。九灵元圣摇头张口，把悟空、沙僧也轻轻叼进洞捆了。悟空挣脱绳索，压死三个小妖逃跑，又被竹节山土地送来情报：这老妖是九头狮子，号九灵元圣，前年自天下降——要收服他，得去东极妙岩宫请他的“主人公”！
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">九曲盘桓洞</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">万灵竹节山九曲盘桓洞</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            追青莲儿找到完整洞名：<strong>“万灵竹节山九曲盘桓洞”</strong>。九灵元圣摇头张口，把悟空、沙僧“轻轻携入洞来”捆住——九个头，躲过一个躲不过另一个。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">土地情报</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">请主人公来收</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            竹节山土地供出：老妖号<strong>九灵元圣</strong>，前年自天下降，原是六狮之窝的祖翁——<strong>要降服他，得去东极妙岩宫请他的主人公来</strong>。找对了症结，问题就迎刃而解。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">找对“症结”，才能解难题</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    土地一句话点破：这狮子有“主人公”。<strong>再难的题，只要找到它的“根儿”和“关键人”，就能解开；瞎使劲，越使劲越乱</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 天尊收狮 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">狮奴喝醉酒，九头狮才下凡</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空到东极妙岩宫请太乙救苦天尊。天尊一查：原来狮奴偷喝了太上老君送的“轮回琼液”，醉卧三天——天上三天，地上三年，九头狮就趁他睡着偷跑下凡了。天尊带着狮奴来到竹节山，念一声咒：“元圣儿，我来了！”九头狮认得主人，四脚伏地不敢反抗。狮奴抓住狮毛一顿打，再给它戴上金鞍，天尊骑着回宫去了。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">狮奴醉酒</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">轮回琼液醉三天</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            狮奴偷喝太上老君的<strong>“轮回琼液”</strong>，醉卧三天——<strong>天上一日、地上一年</strong>，九头狮趁看守睡着偷跑下凡两年多。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">主人收狮</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">元圣儿，我来了</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            天尊念咒“<strong>元圣儿，我来了</strong>”——九头狮认得主人，<strong>四脚伏地只是磕头，不敢反抗</strong>。狮奴打它一顿，戴上金鞍，天尊骑着回妙岩宫。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">再厉害的“妖怪”，也有能收它的人</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    九灵元圣能叼走齐天大圣，可见主人太乙天尊就低头服软。<strong>世界上没有“天下无敌”的人——找到能约束你的“规矩”和“引路人”，才能走正路</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第九十回“师狮授受同归一，盗道缠禅静九灵”讲的是玉华州收尾：八头狮子复仇混战，九头狮（九灵元圣）九口噙六人；悟空深入敌巢，土地供出“请主人公”的情报——九灵元圣原是太乙救苦天尊的坐骑，狮奴醉酒才让它偷跑下凡；天尊一声咒语就收了狮子，六狮被处死分食，妖洞烧成破瓦窑。回目里的“师—狮、授—兽、道—盗、禅—馋”全是谐音文字游戏，提醒我们“诚心一意上雷音”。这一回让我们看到：办法永远比蛮力多、防不住“群”就防不住局、找对症结才能解难题、再厉害也有能收它的人。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第九十回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "这次共来了几头狮子精？",
+                    "options": {"A": "三头","B": "八头（黄狮、狻猊、抟象、白泽、伏狸、猱狮、雪狮、九头狮）","C": "五头","D": "十头"},
+                    "correct": "B",
+                    "analysis": "黄狮精引回七狮，加九头狮共八头——走了一个黄狮精，引回来一群狮子。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "八戒为什么被狮子们抓走了？",
+                    "options": {"A": "主动投降","B": "一人对战三狮寡不敌众，虚晃一耙败阵被打晕拖走","C": "睡着了","D": "被偷袭"},
+                    "correct": "B",
+                    "analysis": "八戒先战黄狮，又遭猱狮、雪狮围攻——一个人打三个，寡不敌众，被打晕拖去当“猪质”。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "悟空用什么办法反败为胜、活捉两狮？",
+                    "options": {"A": "叫救兵","B": "拔毫毛变百十个小悟空，以多打少","C": "放火","D": "下毒"},
+                    "correct": "B",
+                    "analysis": "悟空“拔一把毫毛嚼碎，变做百十个小悟空”——你们喜欢以多打少，我也以多打少，活捉狻猊、白泽二狮。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "九头狮抓走唐僧等六人，是怎么“抓”的？",
+                    "options": {"A": "用绳子捆","B": "九个头九张嘴，一口噙一个","C": "装进袋子","D": "用爪子抓"},
+                    "correct": "B",
+                    "analysis": "九头狮九个头九张口——一口噙唐僧、一口噙八戒、一口噙老王、再各噙三个小王子，六嘴噙六人。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空拼尽全力打五头狮子，用的什么招？",
+                    "options": {"A": "定身法","B": "把胳膊上毫毛尽数拔下，嚼烂喷出变千百小行者","C": "分身法","D": "瞌睡虫"},
+                    "correct": "B",
+                    "analysis": "悟空“把胳膊上的毫毛尽皆拔下，嚼烂了喷出，变作千百个小行者一起攻上”——猱狮被拖倒、雪狮被活捉、黄狮被打死。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "五个狮子精里，哪个被“打死”了？",
+                    "options": {"A": "猱狮","B": "雪狮","C": "黄狮精","D": "抟象"},
+                    "correct": "C",
+                    "analysis": "五个狮子下场不同：猱狮被拖倒、雪狮被活捉、抟象被拿住、伏狸被扛翻——黄狮精（金毛狮子）被打死。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "完整的洞名叫什么？",
+                    "options": {"A": "豹头山虎口洞","B": "万灵竹节山九曲盘桓洞","C": "陷空山无底洞","D": "狮驼岭狮驼洞"},
+                    "correct": "B",
+                    "analysis": "悟空追青莲儿发现完整洞名——“万灵竹节山九曲盘桓洞”，光名字就透着“九曲盘桓”的深奥。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "九灵元圣把悟空沙僧怎么抓住了？",
+                    "options": {"A": "打昏","B": "九个头左右八个头一起张口，轻轻携入洞来捆上","C": "网住","D": "骗进去"},
+                    "correct": "B",
+                    "analysis": "九灵元圣“把头摇一摇，左右八个头一起张开口，把行者沙僧轻轻携入洞来”——躲过一个躲不过另一个。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "竹节山土地供出的关键情报是什么？",
+                    "options": {"A": "狮子爱吃肉","B": "要降服九灵元圣，得去东极妙岩宫请他的主人公","C": "洞里有宝藏","D": "狮子怕火"},
+                    "correct": "B",
+                    "analysis": "土地说：这老妖是九头狮子、号九灵元圣，“要降服他，就得去东极妙岩宫请他的主人公来”——找对症结才能解。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "九灵元圣是谁的坐骑？",
+                    "options": {"A": "太上老君","B": "太乙救苦天尊（东极妙岩宫）","C": "南极仙翁","D": "玉帝"},
+                    "correct": "B",
+                    "analysis": "悟空“东极妙岩宫，那不就是太乙天尊吗？他的坐下正好是个九头狮子”——九灵元圣正是太乙救苦天尊的坐骑。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "九头狮是怎么偷跑下凡的？",
+                    "options": {"A": "被妖怪拐走","B": "狮奴偷喝“轮回琼液”醉卧三天，狮子趁看守睡着跑了","C": "天尊放的","D": "自己溜的"},
+                    "correct": "B",
+                    "analysis": "狮奴偷喝太上老君的“轮回琼液”，醉卧三天——天上一日地上一年，九头狮趁机偷跑下凡两年多。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "太乙天尊收九头狮，念了一句什么话？",
+                    "options": {"A": "“大胆孽畜”","B": "“元圣儿，我来了”","C": "“快回来”","D": "“定！”"},
+                    "correct": "B",
+                    "analysis": "天尊念声咒语喝道“元圣儿，我来了”——九头狮认得主人，“四只脚伏于地下，只是磕头”，不敢反抗。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "狮奴找到狮子后做了什么？",
+                    "options": {"A": "道歉","B": "抓住狮毛又打又骂，给它戴上金鞍，天尊骑回妙岩宫","C": "放它走","D": "喂它"},
+                    "correct": "B",
+                    "analysis": "狮奴“一把抓过象毛，用拳打钩拔石，一边打一边骂”，然后给狮子戴上金鞍——天尊骑着回宫去了。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "剩下的六头活狮子结局如何？",
+                    "options": {"A": "放了","B": "被杀剥皮吃肉，分给全城居民（一则尝味，二则压惊）","C": "养起来","D": "逃了"},
+                    "correct": "B",
+                    "analysis": "六头活狮子被杀、剥皮、吃肉——分给府内外、王府长史和满城居民，“一来尝尝滋味，二来压压惊恐”。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "三个小王子练成后，打造的兵器各多重？",
+                    "options": {"A": "金箍棒千斤、九齿耙降妖杵各800斤","B": "都13500斤","C": "都5048斤","D": "各500斤"},
+                    "correct": "A",
+                    "analysis": "铁匠造成新兵器：金箍棒千斤、九齿耙和降妖杵各800斤——三个小王子操演精熟，能运用如风。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "回目“师狮授受同归一，盗道缠禅静九灵”用了什么手法？",
+                    "options": {"A": "对偶","B": "谐音文字游戏（师—狮、授—兽、道—盗、禅—馋）","C": "比喻","D": "夸张"},
+                    "correct": "B",
+                    "analysis": "“师与狮、授与兽、道与盗、禅与馋”全是同音字——好为人师引出一群狮子精，群狮又喻人心“杂念”，诚心一意才能上雷音。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "群狮中“老大”是______头狮（九灵元圣）。",
+                    "answer": "九",
+                    "analysis": "“九头狮”有九个脑袋九张嘴——他就是太乙天尊坐骑“九灵元圣”，一个头叼一个人。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "八戒被狮子们抓去，当了“______质”。",
+                    "answer": "猪",
+                    "analysis": "“猪质”是“人质”的俏皮说法——老妖想用八戒换回被擒的两头狮子。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "洞名叫“万灵竹节山九曲______桓洞”。",
+                    "answer": "盘",
+                    "analysis": "“九曲盘桓”形容曲折深奥——洞名与“九灵元圣”的九头呼应，深不可测。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "土地说：要降服九灵元圣，得去东极______岩宫请主人公。",
+                    "answer": "妙",
+                    "analysis": "“东极妙岩宫”是太乙救苦天尊的住处——他的坐骑正是九头狮子。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "狮奴偷喝太上老君的“轮回______液”，醉卧三天。",
+                    "answer": "琼",
+                    "analysis": "“轮回琼液”是太上老君送的美酒——狮奴贪杯醉倒，才让狮子偷跑下凡。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "九头狮认得主人，四脚______地只是磕头。",
+                    "answer": "伏",
+                    "analysis": "“伏地”即趴在地上——再厉害的神兽，见到主人也服服帖帖不敢反抗。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "狮奴给狮子戴上金______，天尊骑着回妙岩宫。",
+                    "answer": "鞍",
+                    "analysis": "“金鞍”是马鞍一样的坐具——给九头狮安上金鞍，它就变回坐骑了。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "回目“师狮授受同归一，盗道______禅静九灵”。",
+                    "answer": "缠",
+                    "analysis": "“道”与“盗”同音——文字游戏点出：群狮如同人心的“杂念”，剥皮吃肉，诚心一意，才能求得真经。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“找关键”】土地一句“请主人公来收”，问题就解决了。请谈谈：为什么“找到关键”比“拼命努力”更重要？你如何找到学习中的“关键点”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>方向对了，努力才有用：</strong> 悟空再能打，也收不了九头狮；找到“主人公”一句咒语就搞定——<strong>找对关键，往往比蛮干重要得多</strong>。</p>\n                        <p class=\"mt-2\"><strong>找关键点：</strong> ①成绩上不去，先找“最弱的那一科/那个知识点”；②难题卡住，想“它考的是哪个概念”；③把大问题拆开，找“根”在哪儿；④问自己“哪一步做对，结果就完全不同”；⑤求助老师，请他们帮你“点关键”。<strong>会找关键的人，四两拨千斤</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“心念清净”】群狮喻“人心杂念”，剥皮吃肉喻清除杂念。请谈谈：为什么“杂念太多”会让人做不成事？你如何“专心致志”地做一件事？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>一心不可二用：</strong> 心里杂念太多，就像一群狮子在脑子里乱叫——<strong>静不下心，再好的本事也发挥不出来</strong>。</p>\n                        <p class=\"mt-2\"><strong>专心致志：</strong> ①做作业时，手机放远、桌面只留书本；②心里想别的时，写下来“待会儿再做”；③把大任务分成小段，一段段专注完成；④用计时法：专注25分钟，休息5分钟；⑤每天留一点“静心”的时间。<strong>扫尽杂念，才能“诚心一意上雷音”</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“自作自受”】狮奴偷喝仙酒，才让狮子跑了下凡害人。请谈谈：为什么“偷懒、贪杯”这类小毛病也会闯大祸？你如何管住自己“贪一时之快”的念头？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>小毛病，大祸根：</strong> 狮奴贪一口酒，醉倒三天，狮子就跑了两年——<strong>一个“偷懒”的念头，常常连着后患</strong>。</p>\n                        <p class=\"mt-2\"><strong>管住贪快念头：</strong> ①想偷懒时，想想“后果会怎样”；②该做的事，别拖到“等一下”；③玩游戏前，先定好时间上限；④用“先做完，再玩”来约束自己；⑤发现自己在放纵，马上提醒自己止损。<strong>守得住小念头，才守得住大事情</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“敬畏与分寸”】九头狮再厉害，见了主人就低头。请谈谈：为什么“再强的人也要有敬畏之心”？你如何理解“尊重规则、尊重师长”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>天外有天，人外有人：</strong> 九头狮能叼走大圣，见太乙天尊却伏地磕头——<strong>懂得“上面还有人、还有规矩”，才不会得意忘形</strong>。</p>\n                        <p class=\"mt-2\"><strong>敬畏之心：</strong> ①成绩再好，也尊重老师的教导；②有本事，不轻视任何人；③守规矩，是给自己“兜底”；④对长辈、规则心怀敬意；⑤把“敬畏”变成“自律”的底气。<strong>心存敬畏的人，走得稳、走得远</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“伙伴分工”】八戒被擒、悟空救人、沙僧接应，各司其职。请谈谈：为什么“团队里每个人都很重要”？你如何做好团队中的“自己”这一环？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>一个都不能少：</strong> 八戒被擒队伍就缺一角，悟空要去救、沙僧要接应——<strong>团队像拼图，少一块都不完整</strong>。</p>\n                        <p class=\"mt-2\"><strong>做好自己这一环：</strong> ①清楚“我的任务是什么”，把它做扎实；②不拖后腿，不推卸责任；③同伴遇到困难，主动补位；④遇到问题，先解决问题再论功劳；⑤把“大家的事”放在心上。<strong>每个人做好自己，团队就成了铁桶</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“借力”】悟空打不过九头狮，就去找太乙天尊“借力”。请谈谈：为什么“学会求助”也是本事？你如何做到“能自己解决，也敢向人求助”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>会借力的人，才走得远：</strong> 悟空不硬撑，找“主人公”来收妖——<strong>承认“我不行，需要帮忙”，不是丢人，是智慧</strong>。</p>\n                        <p class=\"mt-2\"><strong>学会求助：</strong> ①自己能做的事，先自己努力；②卡住太久，就大大方方请教；③找对“求助对象”：问老师、问同学、查资料；④求助前先想清“我卡在哪、需要什么”；⑤别人帮了你，要道谢、要记住。<strong>一个人走得快，一群人走得远</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

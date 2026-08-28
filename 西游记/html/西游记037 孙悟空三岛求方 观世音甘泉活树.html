@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第二十六回精读：三岛求方</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第二十六回精读：三岛求方</h1>
+            <p class="text-lg text-gray-700 serif">“孙悟空三岛求方，观世音甘泉活树”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-journey')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-journey">第一章：三岛求方</button>
+                <button onclick="NavigationModule.switchTab('section-wall')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-wall">第二章：处处碰壁</button>
+                <button onclick="NavigationModule.switchTab('section-milu')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-milu">第三章：观音活树</button>
+                <button onclick="NavigationModule.switchTab('section-truce')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-truce">第四章：结拜果会</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Journey -->
+        <section id="section-journey" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">三岛求方：悟空“跑断腿”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空答应医树，便离开五庄观，四处寻找“医树之方”。他先后跑遍了三座仙岛，拜访了多位仙人。点击翻转卡片，看看他这一路的“奔波”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-j1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">第一站：蓬莱岛</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-j1-front">
+                        <p class="text-xl font-bold text-amber-900 mb-3 serif">福禄寿三星</p>
+                        <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-j1-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            悟空到<strong>蓬莱仙岛</strong>，找<strong>福、禄、寿三星</strong>。三星一听他推倒了镇元大仙的人参果树，<strong>惊得直咂舌</strong>：“那树你也能推倒？我们可没这个本事医活。”不过三星<strong>答应去五庄观说情</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-j2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">第二站：方丈山</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-j2-front">
+                        <p class="text-xl font-bold text-amber-900 mb-3 serif">东华帝君</p>
+                        <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-j2-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            悟空又到<strong>方丈仙山</strong>，拜访<strong>东华帝君</strong>。帝君摇头：“我虽有<strong>九转太乙还丹</strong>，却<strong>救不得树</strong>。”<strong>又扑了个空</strong>。悟空求“方”之路，依然毫无头绪。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-j3')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">第三站：瀛洲</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-j3-front">
+                        <p class="text-xl font-bold text-amber-900 mb-3 serif">九老</p>
+                        <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-j3-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            悟空又到<strong>瀛洲</strong>，找<strong>九老</strong>。九老也<strong>束手无策</strong>，直劝他“还是去求菩萨吧”。<strong>三岛仙人，竟无一人能医此树</strong>——悟空这才想起，该去求<strong>南海观音</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：为“补救”而奔波</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    悟空<strong class="text-amber-900">四处碰壁，却不放弃</strong>，一路从蓬莱跑到瀛洲，<strong class="text-amber-900">为的是“补救自己闯下的祸”</strong>。这份<strong class="text-amber-900">担当与执着</strong>，是他在本回最可贵的地方。真正的成长，不是不犯错，而是<strong class="text-amber-900">犯了错肯负责、愿意为补救付出努力</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Wall -->
+        <section id="section-wall" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">处处碰壁：力不从心的“仙人们”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    三岛之上，福禄寿、东华帝君、九老都是赫赫有名的仙人，却都对“医树”束手无策。点击翻转卡片，思考这“碰壁”背后的意义。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-w1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">名人也“无能为力”</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-w1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“术业有专攻”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-w1-back">
+                        <p class="text-gray-700 text-left">
+                            福禄寿管“福气长寿”，帝君管“丹药”，九老各有神通——可他们<strong>都不擅长“医树”</strong>。这告诉我们<strong>“术业有专攻”</strong>：每个人都有擅长与不擅长，<strong>找对人，才能办成事</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-w2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">“找对人”的智慧</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-w2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">对症下药</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-w2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空转了一大圈，才明白：医树这种“起死回生”的活，得找<strong>有“净瓶甘露”的观音</strong>。这就像学习：问错了人、用错了方法，再努力也难见效；<strong>找对方法、找对老师，才事半功倍</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“碰壁”也是一种学习</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    悟空跑了三座岛，看似<strong class="text-amber-900">“白跑”</strong>，实则<strong class="text-amber-900">排除了错误选项</strong>：知道了“这些人都不行”，才能锁定“该去找观音”。学习中也是一样：<strong class="text-amber-900">试错不是浪费，是在帮我们靠近正确答案</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Milu -->
+        <section id="section-milu" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">观音活树：净瓶甘露，起死回生</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空到南海求观音。观音随他来到五庄观，用净瓶中的甘露救活了人参果树。点击翻转卡片，了解这场“甘泉活树”的神通。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-m1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">净瓶甘露</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-m1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“起死回生的甘泉”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-m1-back">
+                        <p class="text-gray-700 text-left">
+                            观音用<strong>杨柳枝蘸取净瓶甘露</strong>，洒在人参果树上。果树<strong>枯木逢春，重新生根发芽、枝叶繁茂</strong>，果子也一一复原。<strong>观音的“净瓶甘露”正是“医树”的正解</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-m2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">慈悲的力量</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-m2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“救树”也是“救人”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-m2-back">
+                        <p class="text-gray-700 text-left">
+                            观音救活果树，也<strong>解救了被扣住的唐僧师徒</strong>。<strong>“救人”与“救树”在她这里是一体的</strong>——因为<strong>慈悲，就是愿意修复被伤害的一切</strong>。这让我们想到：<strong>真正的善良，不只是不伤害，更是愿意去“修复”</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“起死回生”的象征</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    人参果树<strong class="text-amber-900">死而复生</strong>，象征着<strong class="text-amber-900">“错误可以被修复”</strong>——犯了错，只要真心补救、找对方法，就能<strong class="text-amber-900">“救活”局面</strong>。这也是一种<strong class="text-amber-900">希望的哲学</strong>：别轻易说“完了”，总有办法让枯树逢春。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Truce -->
+        <section id="section-truce" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">结拜与果会：化敌为友</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    果树救活后，镇元大仙信守诺言，与悟空结拜为兄弟，还开了一场“人参果会”答谢各方。点击翻转卡片，看看这场风波的圆满收尾。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">信守诺言</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">大仙与悟空结拜</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t1-back">
+                        <p class="text-gray-700 text-left">
+                            树活之后，镇元大仙<strong>信守承诺</strong>，<strong>与悟空结为兄弟</strong>，还摆下<strong>“人参果会”</strong>，请来众仙，答谢观音、三星等。一场“大祸”，<strong>以“结拜+果会”圆满收场</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">“化敌为友”的启示</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">坏事变成好事</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空原本与大仙“结怨”，最后却<strong>结为兄弟</strong>。关键就在于：<strong>悟空负责（补救），大仙大度（给机会），观音慈悲（帮助）</strong>——三方合力，把“冤家”变成了“兄弟”。<strong>化敌为友，往往比“你死我活”更圆满</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">五庄观故事的“心法”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    五庄观这一场“大闹”，最终教会悟空：<strong class="text-amber-900">①敢作敢当②补救比逃避有用③找对方法/人④把“结怨”变“结拜”</strong>。取经路上没有“白走的路”，每一次闯祸、碰壁、补救，都在让悟空（和我们）<strong class="text-amber-900">一点点变成更好的自己</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第二十六回“孙悟空三岛求方，观世音甘泉活树”是“五庄观风波”的和解篇。悟空四处求方、处处碰壁，最终靠观音的甘露救活果树，与大仙化敌为友。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第二十六回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "悟空为救人参果树，第一站去了哪里？",
+                    "options": {
+                        "A": "南海普陀山",
+                        "B": "蓬莱仙岛，找福禄寿三星",
+                        "C": "方丈仙山",
+                        "D": "灵山"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空先到蓬莱仙岛找福禄寿三星，三星表示没本事医树，但答应去五庄观说情。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "悟空三岛求方的第二站拜访的是谁？",
+                    "options": {
+                        "A": "东华帝君",
+                        "B": "观音菩萨",
+                        "C": "太上老君",
+                        "D": "灵吉菩萨"
+                    },
+                    "correct": "A",
+                    "analysis": "悟空第二站到方丈仙山找东华帝君。帝君虽有九转太乙还丹，却也救不得树。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "悟空三岛求方的第三站是哪里？",
+                    "options": {
+                        "A": "瀛洲，找九老",
+                        "B": "峨眉山",
+                        "C": "五台山",
+                        "D": "昆仑山"
+                    },
+                    "correct": "A",
+                    "analysis": "悟空第三站到瀛洲找九老，九老也束手无策，劝他去找菩萨。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "三岛仙人为何都“医不了树”？",
+                    "options": {
+                        "A": "他们都不愿意帮忙",
+                        "B": "术业有专攻，他们各有神通却不擅长“起死回生医树”",
+                        "C": "他们怕镇元大仙",
+                        "D": "他们太忙了"
+                    },
+                    "correct": "B",
+                    "analysis": "福禄寿管福气长寿、帝君管丹药、九老各有神通，但“医活灵根”非其所长。这体现了“术业有专攻”，要办成事得找对人。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空求方“处处碰壁”，精读认为这其实是一种：",
+                    "options": {
+                        "A": "白白浪费时间",
+                        "B": "排除错误选项、逐步锁定正确方向（该找观音）的学习过程",
+                        "C": "运气不好",
+                        "D": "悟空方法太笨"
+                    },
+                    "correct": "B",
+                    "analysis": "碰壁让悟空排除了“这些人不行”的选项，才知道该去找观音。试错不是浪费，是在帮我们靠近正确答案。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "最终是谁用净瓶甘露救活了人参果树？",
+                    "options": {
+                        "A": "镇元大仙",
+                        "B": "观音菩萨",
+                        "C": "太上老君",
+                        "D": "福禄寿三星"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空到南海请观音，观音用杨柳枝蘸净瓶甘露洒在树上，人参果树枯木逢春、起死回生。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "观音救活果树，象征了什么？",
+                    "options": {
+                        "A": "观音的法力最高",
+                        "B": "错误可以被修复——真心补救、找对方法，就能“救活”局面",
+                        "C": "人参果树本来就没死",
+                        "D": "悟空不需要负责"
+                    },
+                    "correct": "B",
+                    "analysis": "树死而复生，象征“错误可以被修复”。犯了错只要真心补救、找对方法，局面就能好转，这是一种“希望的哲学”。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "树活之后，镇元大仙兑现了什么承诺？",
+                    "options": {
+                        "A": "与悟空结拜为兄弟，并开“人参果会”答谢",
+                        "B": "把五庄观送给悟空",
+                        "C": "让悟空当观主",
+                        "D": "请悟空吃一年的果子"
+                    },
+                    "correct": "A",
+                    "analysis": "大仙信守承诺，与悟空结拜为兄弟，还摆下“人参果会”答谢观音、三星等各方仙人。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "悟空与大仙“从结怨到结拜”，最关键的因素是：",
+                    "options": {
+                        "A": "运气好",
+                        "B": "悟空负责补救、大仙大度给机会、观音慈悲帮助，三方合力化敌为友",
+                        "C": "大仙心软",
+                        "D": "悟空嘴甜"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空用担当补救、大仙用气度给机会、观音用慈悲帮助，三者缺一不可，最终把“冤家”变成“兄弟”。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "“化敌为友，往往比你死我活更圆满”，这句话的意思是：",
+                    "options": {
+                        "A": "不要和任何人发生冲突",
+                        "B": "用沟通、担当、宽容化解矛盾，比一味对抗更值得",
+                        "C": "敌人迟早变朋友",
+                        "D": "朋友不重要"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空和大仙本是对立，却通过担当与宽容化解矛盾、结为兄弟。化解矛盾、化敌为友，比“两败俱伤”的对抗更圆满。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "福禄寿三星答应悟空，去五庄观做什么？",
+                    "options": {
+                        "A": "帮悟空医树",
+                        "B": "替悟空说情",
+                        "C": "带走人参果",
+                        "D": "劝唐僧走"
+                    },
+                    "correct": "B",
+                    "analysis": "三星虽医不了树，却答应去五庄观替悟空说情、求情，也算帮了忙。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "本回中，悟空身上最值得肯定的品质是：",
+                    "options": {
+                        "A": "武艺高强",
+                        "B": "敢作敢当、四处奔波为补救自己闯下的祸，不放弃",
+                        "C": "跑得快",
+                        "D": "会说话"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空闯祸后没有一走了之，而是四处求方、为补救付出努力。这份担当与执着，是本回最可贵的地方。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "“救树”与“救人”在观音这里的统一，体现了：",
+                    "options": {
+                        "A": "观音顺便帮忙",
+                        "B": "慈悲就是愿意修复被伤害的一切，不只不伤害，更要愿意去修复",
+                        "C": "观音喜欢树",
+                        "D": "观音只听悟空的话"
+                    },
+                    "correct": "B",
+                    "analysis": "观音救活果树，也解救了唐僧师徒。“救树”与“救人”一体，体现慈悲精神：愿意修复被伤害的一切。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "悟空求方时“三岛”依次是：",
+                    "options": {
+                        "A": "蓬莱、方丈、瀛洲",
+                        "B": "蓬莱、瀛洲、方丈",
+                        "C": "方丈、蓬莱、瀛洲",
+                        "D": "瀛洲、方丈、蓬莱"
+                    },
+                    "correct": "A",
+                    "analysis": "悟空求方的顺序是蓬莱（福禄寿三星）→方丈（东华帝君）→瀛洲（九老），三处都无方。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "“五庄观风波”对悟空成长的意义，精读概括为：",
+                    "options": {
+                        "A": "没意义，只是闯祸",
+                        "B": "教会他敢作敢当、补救比逃避有用、找对方法、化敌为友",
+                        "C": "让他学会了吃人参果",
+                        "D": "让他认识了更多神仙"
+                    },
+                    "correct": "B",
+                    "analysis": "这场风波让悟空从“闯祸抵赖”成长为“担当补救”，还学会了找对方法、化敌为友，是重要的成长一课。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "悟空三岛求方的顺序是蓬莱、______、瀛洲。",
+                    "answer": "方丈",
+                    "analysis": "悟空三岛求方的顺序是：蓬莱、方丈、瀛洲（海上三仙山）。他先到蓬莱找福禄寿三星，再到方丈岛找东华帝君，最后到瀛洲……一路「求医问药」，结果都救不了树。三岛都跑遍，说明「办法要自己找，找遍也要找」。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "悟空到蓬莱岛找______三星，三星答应去五庄观说情。",
+                    "answer": "福禄寿",
+                    "analysis": "悟空到蓬莱岛找福、禄、寿三星帮忙。三星一听「人参果树倒了」，连连摇头：这树是天地灵根，我们「救不得」。不过三星答应了去五庄观「说情」——虽然救不了树，但能帮上「人情」。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "东华帝君虽有九转______还丹，却也救不得树。",
+                    "answer": "太乙",
+                    "analysis": "东华帝君虽有「九转太乙还丹」，但他说这丹「只能医人，不能医树」。能医人的灵丹，医不了树——「术业有专攻」，每个领域都有自己的「专业门槛」，不是所有灵丹妙药都万能。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "观音用______蘸取净瓶甘露，救活了人参果树。",
+                    "answer": "杨柳枝",
+                    "analysis": "最后是观音菩萨用「杨柳枝」蘸取净瓶里的甘露，洒在人参果树上，枯树「复生」。观音的甘露是「活树」的钥匙——「专业的事要交给专业的人」，观音才是「救树」的行家。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "人参果树______逢春，重新生根发芽。",
+                    "answer": "枯木",
+                    "analysis": "观音把杨柳枝蘸甘露洒向枯树，人参果树「枯木逢春」，重新生根、发芽、开花、结果。成语「枯木逢春」就出自类似的意象——只要方法对，看似「没救」的事，也能起死回生。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "树活之后，镇元大仙与悟空______为兄弟。",
+                    "answer": "结拜",
+                    "analysis": "树活了，镇元大仙大喜，兑现诺言，与悟空「结拜为兄弟」。前一回还是「捉拿」的对象，这一回成了「兄弟」——只要把「坏事」补救好，冤家也能变朋友。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "大仙摆下______会，答谢观音、三星等仙人。",
+                    "answer": "人参果",
+                    "analysis": "树活之后，镇元大仙摆下「人参果会」，请观音、三星、唐僧师徒等人参果宴，答谢大家。一场「大祸」，最后变成一场「盛宴」——敢于承担、用心补救，结局可以很圆满。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "“术业有______”，要办成事得找对专业的人。",
+                    "answer": "专攻",
+                    "analysis": "「术业有专攻」：福禄寿救不了树，东华帝君救不了树，只有观音的「甘露」能救。这提醒我们：遇到难题，要找「对口的专家」，而不是乱投医。学习上也是一样，哪科弱，就要找对方法、对症下药。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“补救与坚持”】悟空三岛求方、处处碰壁却不放弃。请谈谈：为什么“为补救而坚持”值得敬佩？当你的补救一时看不到效果时，该怎么办？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>补救的坚持可贵：</strong> 悟空闯祸后没有逃避，而是四处奔波想办法。做错了事肯负责、不放弃补救，比“假装没事”强一百倍。</p>\n                        <p class=\"mt-2\"><strong>看不到效果时：</strong> ①别急着放弃，换一种方法、换一个角度再试；②总结经验，找出“哪里不对”（悟空发现仙人们都不行，就换找观音）；③必要时求助更有经验的人；④相信“只要方向对，坚持就有结果”。补救的过程本身，就是成长的收获。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“找对方法”】悟空问遍三岛仙人无用，一找观音就解决了。请谈谈：为什么说“努力的方向比努力的程度更重要”？如何“找对方向”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>方向对了才事半功倍：</strong> 悟空在仙人们那里再努力也是白搭，找到观音才迎刃而解。南辕北辙，跑得越快离目标越远。</p>\n                        <p class=\"mt-2\"><strong>找对方向：</strong> ①先想清楚“问题到底是什么、要找谁解决”；②多听建议，别闷头一条道走到黑；③学会“换人、换法、换工具”；④发现方法不对就及时调整，不固执。学习中“问对老师、用对方法”，比盲目刷题更有效。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“化敌为友”】悟空与大仙从“结怨”到“结拜”。请谈谈：化解矛盾需要哪几方的努力？你在和同学发生矛盾时，会怎么主动“化敌为友”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>化解矛盾靠多方：</strong> 悟空负责补救、大仙大度给机会、观音从中帮忙——犯错的一方要担当，受伤害的一方要宽容，旁观者可以牵线搭桥。</p>\n                        <p class=\"mt-2\"><strong>我的做法：</strong> ①先冷静，不当场争吵；②主动沟通，说清自己的错和想法；③真诚道歉并想办法补救；④给对方“台阶”，也接受对方的诚意。朋友之间没有解不开的结，放下“输赢”，才能赢回友谊。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“慈悲与修复”】观音救活果树也解救师徒，体现“慈悲=愿意修复”。请谈谈：为什么说“真正的善良，不只是不伤害，更是愿意去修复”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>善良要“主动修复”：</strong> “不伤害”是被动的善，“愿意修复”是主动的善。观音本可以不管这棵树，却用甘露救活它，这才是大慈悲。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> 看到同学东西掉了，主动帮忙捡；朋友闹矛盾了，主动帮忙调解；发现误会了，主动解释。做那个“愿意多走一步去修复关系、修复局面”的人，世界会因为你的主动而更温暖。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“试错的价值”】悟空跑了三座岛“白跑”一场，却因此找到了正确的路。请谈谈：为什么说“试错不是浪费”？你从自己的“试错”中学到了什么？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>试错是探路：</strong> 悟空不跑这三趟，就不知道“这些仙人不行”，也就不会坚定去找观音。每排除一个错误选项，正确答案就离你更近一步。</p>\n                        <p class=\"mt-2\"><strong>我的试错：</strong> 比如学游泳试过几种方法、解难题试过几种思路、学乐器调整过练习方式。失败几次不可怕，可怕的是“试一次就放弃”。把每次失败当成“这个不行，换个方向”的信号，路就越走越明。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“守诺”】镇元大仙信守“医活便结拜”的诺言。请谈谈：为什么“说到做到”能赢得尊重？你见过或做过“守信用”的事吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>守诺赢得信任：</strong> 大仙完全可以“不认账”，但他信守诺言与悟空结拜，让人佩服。说到做到的人，一句话顶千斤，别人放心托付。</p>\n                        <p class=\"mt-2\"><strong>守信用的事：</strong> 答应还书就按时还、答应帮同学就帮到底、答应按时交作业就做到。答应之前要慎重（做不到就别轻易答应），答应之后要尽力做到。信用是靠一件件小事积累起来的“财富”。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“枯木逢春”】人参果树死而复生。请谈谈：生活中那些“看起来没救了”的事，为什么常常还有转机？你相信“柳暗花明又一村”吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>别轻易说“没救”：</strong> 果树倒了，悟空以为完了，结果观音甘露一到，枯木逢春。很多时候“没救”只是“还没找到方法”，不是“真的完了”。</p>\n                        <p class=\"mt-2\"><strong>相信转机：</strong> 考试失利，还有下次机会；和朋友闹僵，还有修复的可能；计划被打乱，还可以调整重来。遇到“谷底”时，别绝望，先想办法、找人帮、找方法。希望常在你觉得“不可能”之后，多坚持一下，就能看到“柳暗花明”。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

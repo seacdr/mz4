@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第四回精读：尊严与欲望</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第四回精读：尊严与欲望</h1>
+            <p class="text-lg text-gray-700 serif">“官封弼马心何足，名注齐天意未宁”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-officer')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-officer">第一章：弼马温之谜</button>
+                <button onclick="NavigationModule.switchTab('section-dignity')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-dignity">第二章：尊严与愤怒</button>
+                <button onclick="NavigationModule.switchTab('section-qi')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-qi">第三章：自封齐天</button>
+                <button onclick="NavigationModule.switchTab('section-trick')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-trick">第四章：有官无禄</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Officer -->
+        <section id="section-officer" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">“弼马温”到底是个什么官？</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    孙悟空被招安上天，本以为能大展拳脚，却被封了个“弼马温”。这个官名历史上根本不存在，是作者精心设计的“谐音梗”与“讽刺”。点击下方卡片，揭开弼马温背后的三重密码。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-wei1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">官名谐音</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-wei1-front">
+                        <p class="text-3xl font-bold text-amber-900 mb-3 serif">弼马温</p>
+                        <p class="text-gray-500">(点击揭秘谐音)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-wei1-back">
+                        <div class="text-3xl font-bold text-amber-900 mb-3 serif">避 · 马 · 瘟</div>
+                        <p class="text-gray-700 text-left text-sm">
+                            古代民间认为马厩里拴只猴子，可以避免马匹得瘟疫。<strong>“弼马温”=“避马瘟”</strong>。孙悟空被当成“驱瘟的工具”，根本不被当作正经人才看待。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-wei2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">官职等级</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-wei2-front">
+                        <p class="text-3xl font-bold text-amber-900 mb-3 serif">未入流</p>
+                        <p class="text-gray-500">(点击揭秘等级)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-wei2-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            悟空问这官是几品？回答是<strong>“没有品”</strong>——“小到没有品，小到不配有品”，叫<strong>“未入流”</strong>。相当于人间在地方上替朝廷养马的小吏，除了看马，什么权力也没有。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-wei3')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">招安真相</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-wei3-front">
+                        <p class="text-3xl font-bold text-amber-900 mb-3 serif">软禁</p>
+                        <p class="text-gray-500">(点击揭秘真相)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-wei3-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            玉帝让悟空上天的真实目的<strong>不是“用你”，而是“安顿你、软禁你”</strong>。玉帝随口一句“看看哪个地方少什么官”，就是典型的敷衍与应付。从一开始，悟空就没被当作自己人。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center mt-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：一个“妖仙”的称呼</h3>
+                <p class="text-gray-800 italic mb-4">“哪个是妖仙？悟空躬身答应道：老孙便是。”</p>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    太白金星在玉帝面前称悟空为<strong class="text-amber-900">“妖仙”</strong>，代表天庭体制对他的真实评价。而悟空自称<strong class="text-amber-900">“老孙”</strong>，不称“微臣”“卑职”，在封建礼制下“石破天惊”——众仙大惊：“野猴子怎么不跪？”悟空身上有一种<strong class="text-amber-900">不屈的尊严</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Dignity -->
+        <section id="section-dignity" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">孙悟空为什么生气？</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    很多人以为悟空生气是因为“嫌官小”。其实官小只是导火索，真正让他愤怒的是两个更深层的原因。请<strong class="text-amber-700">点击下方原因卡片</strong>，理解那种让所有读者都感同身受的情绪。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-anger1')">
+                    <div class="bg-red-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">原因一：被藐视</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-anger1-front">
+                        <p class="text-3xl mb-3">🙈</p>
+                        <p class="text-xl font-bold text-gray-700 mb-3 serif">“这般藐视老孙！”</p>
+                        <p class="text-gray-500">(点击展开分析)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-red-50" id="card-anger1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空愤怒的核心是<strong>“你瞧不起我”</strong>。他不看重官位大小，而是看重透过官位体现出来的<strong>态度</strong>。人格是平等的，凭什么让我给你养马？这正是我们每个人面对“被轻视”时的共同感受。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-anger2')">
+                    <div class="bg-blue-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">原因二：被欺骗</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-anger2-front">
+                        <p class="text-3xl mb-3">🎭</p>
+                        <p class="text-xl font-bold text-gray-700 mb-3 serif">“哄我来替他养马”</p>
+                        <p class="text-gray-500">(点击展开分析)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-blue-50" id="card-anger2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空生气还因为<strong>对方不诚恳、不真诚</strong>。说好了是“请你上来当官、重用你”，结果是个骗局——原来只是找个养马的。“被欺骗”比“被轻视”更让人愤怒，因为它同时侮辱了你的智商与人格。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">从“正当维权”到“钻牛角尖”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    孙悟空一开始只想维护自己的尊严，这是<strong class="text-amber-900">正当的</strong>。但愤怒的情绪如果不加控制，就会一点点变质：从“我不比任何人差”变成“我要比所有人都高”。当<strong class="text-red-700">独角鬼王</strong>出现、送上皇帝专属的赭黄袍、提议“做个齐天大圣有何不可”时，悟空的心已经被欲望填满——他不再满足于“被尊重”，而是想“凌驾于所有人之上”，这，就是回目中所说的<strong class="text-amber-900">“心何足”——人心是不知足的</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Qi -->
+        <section id="section-qi" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">齐天大圣：一颗入魔的心</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    从“美猴王”到“齐天大圣”，名字改变的背后是心性的蜕变。孙悟空连败巨灵神与哪吒三太子，越是胜利，越是膨胀。点击下方时间轴节点，看清这头“心猿”是如何一步步走向失控的。
+                </p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
+                <h3 class="text-lg font-bold mb-6 text-center serif">心性变化轨迹</h3>
+                <div class="chart-container">
+                    <canvas id="heartChart"></canvas>
+                </div>
+                <div class="mt-4 text-center text-sm text-gray-500">
+                    点击上方图表节点查看心境变化
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+                    <h3 class="text-xl font-bold mb-4 serif text-blue-900">巨灵神战败的启示</h3>
+                    <p class="text-gray-700 text-sm mb-4">
+                        巨灵神是“中看不中用”的典型，与混世魔王一个级别。他张口就骂悟空是<strong>“猢狲”</strong>，给悟空扣帽子，暴露了自己的傲慢。
+                    </p>
+                    <p class="text-gray-700 text-sm">
+                        悟空一棒打断他的宣花斧，讥讽道：“脓包！我也饶了你，你快去报信。”胜利让悟空更加自信，也更加听不进别人的话。
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+                    <h3 class="text-xl font-bold mb-4 serif text-red-900">哪吒战败的启示</h3>
+                    <p class="text-gray-700 text-sm mb-4">
+                        哪吒不同于巨灵神——他问悟空“你有多大的神通，就敢称此名号”，是<strong>尊重强者</strong>的逻辑。他变作三头六臂，手持六般兵器。
+                    </p>
+                    <p class="text-gray-700 text-sm">
+                        悟空眼疾手快，拔毫毛变作本相，真身绕到哪吒脑后一棒打伤其左臂。先胜巨灵神、再伤哪吒，悟空“更膨胀了，更高兴了”。
+                    </p>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“七星猢狲”的定性</h3>
+                <p class="text-gray-800 italic mb-4">“我把你这欺心的猢狲！”——巨灵神</p>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    “欺心”二字是作者借巨灵神之口给悟空下的<strong class="text-amber-900">定论</strong>：你把你的心蒙蔽了，忘了自己是谁，开始以为老子天下第一。为了维护自己的尊严，反而去蔑视别人的尊严，这正是<strong class="text-amber-900">“入魔”</strong>的表现。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Trick -->
+        <section id="section-trick" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">有官无禄：更高明的软禁</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    打不过孙悟空怎么办？太白金星献上一条妙计：干脆封他做“齐天大圣”，但只给虚名、不给实权。这是天庭更高明的权谋。点击翻转卡片，看透这套“捧杀”的手法。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-plan1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">太白金星的妙计</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-plan1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">有官无禄</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘计策)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-plan1-back">
+                        <p class="text-gray-700 text-left">
+                            <strong>“有官无禄”</strong> = 空有名号，不给事管、不发俸禄。目的：<strong>养在天宫之间，收他的邪心</strong>，让他慢慢安分下来，不生狂妄。表面承认你是个人，实际上还是不把你当回事——这是更高明的“软禁”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-plan2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">齐天大圣府</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-plan2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">安静 · 凝神</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘隐喻)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-plan2-back">
+                        <p class="text-gray-700 text-left">
+                            齐天大圣府里设了两个司：<strong>“安静”司</strong>和<strong>“凝神”司</strong>。这哪是当齐天大圣？分明是<strong>坐监狱</strong>！两个司的名字都在说“你给我老实点”。玉帝还吩咐“安心定志，再勿妄为”，全是让悟空“消停”的意思。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8 mt-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">两大伏笔</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-4 rounded border border-gray-200">
+                        <h4 class="font-bold text-amber-900 mb-2">伏笔一：蟠桃园</h4>
+                        <p class="text-sm text-gray-700">
+                            齐天大圣府就盖在<strong>蟠桃园的右边</strong>。孙悟空学艺时最爱吃桃（“吃了七回饱桃”），把爱桃的猴子安排在蟠桃园旁，明摆着是给后文“大闹蟠桃会”埋雷。
+                        </p>
+                    </div>
+                    <div class="bg-white p-4 rounded border border-gray-200">
+                        <h4 class="font-bold text-amber-900 mb-2">伏笔二：心未宁</h4>
+                        <p class="text-sm text-gray-700">
+                            回目说“名注齐天<strong>意未宁</strong>”。心不知足，今天不闹事明天也会闹事。<strong>人心不足蛇吞象</strong>，欲望没有尽头。虚名安抚不了一颗真正想被尊重的心。
+                        </p>
+                    </div>
+                </div>
+                <p class="text-gray-700 mt-6 text-center text-sm">
+                    <strong>核心启示：</strong>真正的尊重无法用虚名换取。悟空虽然当上了“齐天大圣”，却依然是被人藐视的猴子——这正是下一场大风暴的导火索。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第四回表面讲孙悟空上天当官、大闹天宫的前奏，实际上是一堂生动的“尊严与欲望”课。人在被轻视时会愤怒，这是正当的；但愤怒若不受控制，就会变成伤害别人的“魔”。请在答题中体会这种心性的变化，并联系自己的学习与生活。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第四回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic Local -->
+    <script>
+        /**
+         * 页面本地数据
+         */
+        const Page_DATA = {
+            chartData : {
+                labels: ['封弼马温', '发现未入流', '反下天宫', '自封齐天大圣', '打败巨灵神', '打伤哪吒'],
+                values: [45, 30, 60, 75, 88, 95],
+                details: [
+                    "以为被重用，欢欢喜喜上任",
+                    "发现官小到没品，尊严受损",
+                    "怒火中烧，打出御马监",
+                    "心被欲望填满，开始入魔",
+                    "胜利让他更加自信膨胀",
+                    "连败天兵天将，目中无人"
+                ]
+            }
+        };
+        // 图表渲染模块
+        const ChartModule = {
+            init() {
+                const ctx = document.getElementById('heartChart').getContext('2d');
+                const hoverLinePlugin = {
+                    id: 'hoverLine',
+                    afterDraw: chart => {
+                        if (chart.tooltip?._active?.length) {
+                            let x = chart.tooltip._active[0].element.x;
+                            let yAxis = chart.scales.y;
+                            let ctx = chart.ctx;
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.moveTo(x, yAxis.top);
+                            ctx.lineTo(x, yAxis.bottom);
+                            ctx.lineWidth = 1;
+                            ctx.strokeStyle = '#92400e';
+                            ctx.setLineDash([5, 5]);
+                            ctx.stroke();
+                            ctx.restore();
+                        }
+                    }
+                };
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Page_DATA.chartData.labels,
+                        datasets: [{
+                            label: '心性膨胀指数',
+                            data: Page_DATA.chartData.values,
+                            borderColor: '#92400e',
+                            backgroundColor: 'rgba(146, 64, 14, 0.1)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#92400e',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                titleColor: '#92400e',
+                                bodyColor: '#333',
+                                borderColor: '#e5e7eb',
+                                borderWidth: 1,
+                                padding: 12,
+                                displayColors: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        let text = Page_DATA.chartData.details[context.dataIndex];
+                                        let wrapped = [];
+                                        for(let i=0; i<text.length; i+=16) {
+                                            wrapped.push(text.substring(i, i+16));
+                                        }
+                                        return wrapped;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 110,
+                                title: { display: true, text: '心性膨胀度', font: { family: 'Noto Sans SC' } },
+                                ticks: { display: false },
+                                grid: { color: '#f3f4f6' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { font: { family: 'Noto Sans SC', weight: 'bold' } }
+                            }
+                        },
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                    },
+                    plugins: [hoverLinePlugin]
+                });
+            }
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            try { ChartModule.init(); }   catch(e) { console.error('ChartModule:', e); }
+        });
+    </script>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "“弼马温”这个官名是作者虚构的，暗含谐音讽刺。它的谐音含义最准确的是：",
+                    "options": {
+                        "A": "避马瘟——古代民间认为马厩里养猴可以避免马匹得瘟疫，悟空只是“驱瘟工具”",
+                        "B": "逼马闻——意思是让悟空每日逼迫天马闻味道，以便驯服马群",
+                        "C": "弼马温驯——寓意悟空应当像驯马一样驯服自己的心性",
+                        "D": "比马问——寓意悟空的身手比马还快，因而被安排去管理天马"
+                    },
+                    "correct": "A",
+                    "analysis": "“弼马温”谐音“避马瘟”。古代民间确有在马厩中养猴以防马匹染疫的说法，因此这个官名充满了嘲讽，暗示悟空只是被当作“避瘟的工具”，而非被尊重的人才。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "孙悟空被封“弼马温”后，查问官职品级，得到的回答是“没有品”“未入流”。这说明这个官职：",
+                    "options": {
+                        "A": "品级太高，连玉帝都无权定品",
+                        "B": "小到没有品级，不配有品，是最低最小的官职",
+                        "C": "官职暂时空缺，等待玉帝日后补授品级",
+                        "D": "品级由御马监内部评定，与其他官员无关"
+                    },
+                    "correct": "B",
+                    "analysis": "原文中悟空问“此官是个几品？”回答“没有品”，即“未入流”——最低最小，只能看马，除了看马什么也干不了。这是对悟空尊严的极大贬损。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "悟空发怒时喊出“这般藐视老孙”。结合精读分析，孙悟空愤怒的根源主要是：",
+                    "options": {
+                        "A": "嫌官小，贪图更高的俸禄和权力",
+                        "B": "认为玉帝用欺骗的方式让他养马，且打心底里瞧不起他",
+                        "C": "后悔自己不该上天，想回花果山继续称王",
+                        "D": "害怕天马难养，自己无法胜任这份工作"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空愤怒的原因有两个：一是“被藐视”，二是不诚恳、被欺骗。官小只是导火索，真正让他愤怒的是人格上的轻视与招安的谎言，这也是读者能对他产生同情的原因。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "众猴对悟空说“大王在天上不知，天上一日，下界一年”。这一时间规则的深层社会隐喻是：",
+                    "options": {
+                        "A": "天庭的神仙寿命太长，因此时间过得比凡间慢",
+                        "B": "古代“天子身边朝廷”与基层之间负担不对等——领导张张嘴，员工跑断腿",
+                        "C": "孙悟空在天上学会了一种可以加速时间的神通",
+                        "D": "暗示花果山即将发生重大变故，时间被压缩"
+                    },
+                    "correct": "B",
+                    "analysis": "“天上一日，下界一年”既是《西游记》世界的基本时间法则，也暗喻权力中心（朝廷/上级）的一次决定，会让基层（民间/下属）付出巨大代价，类似“领导张张嘴，员工跑断腿”。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "独角鬼王献上的“赭黄袍”在象征意义上意味着：",
+                    "options": {
+                        "A": "普通的御寒衣物，表达对悟空的关心",
+                        "B": "皇帝专属的黄袍，暗示拥立悟空当老大、称王称帝",
+                        "C": "天马驯养的专用装备，帮助悟空管理马群",
+                        "D": "妖怪结盟的信物，表示愿意归顺齐天大圣"
+                    },
+                    "correct": "B",
+                    "analysis": "赭黄袍是古代皇帝专属服饰，独角鬼王献赭黄袍并称“与大王称亲”，是暗示悟空去当“老大”。这正中悟空膨胀的欲望，推动他自封齐天大圣。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "“就做个齐天大圣，有何不可？”独角鬼王的这句话之所以让悟空“欢喜不胜”，是因为它：",
+                    "options": {
+                        "A": "给悟空指明了新的修行道路",
+                        "B": "恰好说出了悟空内心深处膨胀的欲望",
+                        "C": "帮助悟空化解了对天庭的愤怒",
+                        "D": "提醒悟空要谦逊做人，不可自大"
+                    },
+                    "correct": "B",
+                    "analysis": "独角鬼王讲的正是悟空的心声。悟空此时的心性已被欲望充满，从“维护尊严”滑向“凌驾所有人之上”。这句话让他的欲望得到了认同与放大。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "悟空立起“齐天大圣”的旗号，并宣布“以后只准称我为齐天大圣，不许再称大王”。这一举动的深层象征是：",
+                    "options": {
+                        "A": "悟空性格变得开朗，更喜欢响亮的名号",
+                        "B": "过去的“美猴王”已经消失，取而代之的是被欲望填满的新形象",
+                        "C": "悟空想要与天庭划清界限，专心修行",
+                        "D": "花果山的猴子们推举悟空担任更高的职务"
+                    },
+                    "correct": "B",
+                    "analysis": "“不再称大王”象征着旧我（美猴王/孙悟空）的消亡和新我（齐天大圣）的诞生。由争取尊严转向追求至高权力，心性已经“入魔”。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "巨灵神骂悟空“我把你这欺心的猢狲”，其中“欺心”二字的含义是：",
+                    "options": {
+                        "A": "悟空欺骗了自己的心，忘了本心，盲目自大",
+                        "B": "悟空曾经欺骗过巨灵神，因此结下仇恨",
+                        "C": "悟空想要偷取天庭的宝物，心怀不轨",
+                        "D": "悟空的心跳太快，像犯了错误一样慌张"
+                    },
+                    "correct": "A",
+                    "analysis": "“欺心”是作者借巨灵神之口给悟空下的定论：他把自己的心蒙蔽了，忘了自己是谁，开始以为天下第一。为了维护自尊而蔑视他人尊严，即是入魔。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "哪吒与悟空交手前问“你有多大的神通，就敢称此名号”。与巨灵神相比，哪吒的态度更接近：",
+                    "options": {
+                        "A": "对悟空充满鄙夷，认定他名不副实",
+                        "B": "尊重强者、尊重好汉——只要神通够大，叫这个名号就合理",
+                        "C": "奉命行事，对谁都不在意",
+                        "D": "想试探悟空是否偷学了他的法术"
+                    },
+                    "correct": "B",
+                    "analysis": "巨灵神是打心眼里觉得“你个泼猴凭什么”，而哪吒问的是“你有多大本事敢称此名”，隐含的逻辑是：如果你神通够大，就可以。这说明哪吒尊重英雄、尊重好汉。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "悟空与哪吒交战时，拔下一根毫毛变作本相，真身绕到哪吒脑后打伤其左臂。这体现的战术智慧是：",
+                    "options": {
+                        "A": "正面硬碰硬，以绝对力量取胜",
+                        "B": "使用分身术迷惑对手，真身出其不意偷袭",
+                        "C": "逃跑后趁机反击，利用地形优势",
+                        "D": "联合花果山群猴共同围攻哪吒"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空用毫毛变作自己的假身吸引哪吒注意，真身绕到背后偷袭，体现了“分身诱敌、真身制胜”的战术智慧，也展现了七十二变的妙用。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "太白金星向玉帝献计时说，封悟空“齐天大圣”但要“有官无禄”。“有官无禄”的含义是：",
+                    "options": {
+                        "A": "给悟空实际官职，但不发俸禄",
+                        "B": "只给虚名，不给事管也不发俸禄，以此收其邪心",
+                        "C": "让悟空管理蟠桃园，但不给他果子吃",
+                        "D": "让悟空当官但没有下属，形同虚设"
+                    },
+                    "correct": "B",
+                    "analysis": "“有官无禄”即空有名号，既不给实权也不给俸禄。目的是把悟空“养在天宫之间，收他的邪心，使他不生狂妄”，是一种更高明的软禁策略。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "齐天大圣府内设有“安静司”和“凝神司”。这两个机构的名字暗示：",
+                    "options": {
+                        "A": "帮助悟空静心修炼，早日得道",
+                        "B": "让悟空老实安分、别再生事，形同软禁监控",
+                        "C": "为悟空提供安静的办公环境，便于处理天务",
+                        "D": "记录悟空每天的言行，作为升官的依据"
+                    },
+                    "correct": "B",
+                    "analysis": "“安静”“凝神”都在说“你给我老实点”，与其说是当大圣，不如说是坐监狱。玉帝还命其“安心定志，再勿妄为”，进一步说明这是监控与软禁。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "作者把齐天大圣府特意安排在“蟠桃园的右边”，这一细节的主要作用是：",
+                    "options": {
+                        "A": "说明悟空喜欢清净，蟠桃园环境优美",
+                        "B": "为后文“大闹蟠桃会”埋下伏笔——爱桃的猴子被安排在桃园旁",
+                        "C": "显示玉帝对悟空的信任，把重要园林交给他看管",
+                        "D": "说明蟠桃园守卫不足，需要悟空帮忙看守"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空学艺时就爱吃桃（“吃了七回饱桃”）。作者把爱吃桃的猴子安排在蟠桃园旁，显然是为后文悟空偷蟠桃、大闹蟠桃会埋下伏笔，体现环环相扣的结构。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "回目“官封弼马心何足，名注齐天意未宁”中，“心何足”与“意未宁”的核心哲理是：",
+                    "options": {
+                        "A": "人要有远大志向，不应满足于小官小职",
+                        "B": "人心不知足、欲望无止境，今天不闹事明天也会闹事",
+                        "C": "做官应当安分守己，不要胡思乱想",
+                        "D": "天上的官职都不稳定，容易变动"
+                    },
+                    "correct": "B",
+                    "analysis": "“心何足”指人心不知足，“意未宁”指心意不安宁。欲望像“人心不足蛇吞象”，没有尽头。虚名安抚不了一颗真正渴望被尊重的心，冲突必然爆发。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "孙悟空第一次上天时被南天门的守将拦下，而第二次被封齐天大圣时“天兵天将都拱手相迎”。这种对比说明了：",
+                    "options": {
+                        "A": "天庭的礼仪制度发生了变化",
+                        "B": "虚名和武力威慑让众人改变了态度，但并非发自内心的尊重",
+                        "C": "守门的将领换了一批更懂礼貌的人",
+                        "D": "悟空学会了天庭的规矩，懂得礼数"
+                    },
+                    "correct": "B",
+                    "analysis": "两次入天门的对比表明：人们改变态度是因为“齐天大圣”的虚名和悟空不好惹的武力，而非真心尊重他。这种虚假的尊重注定无法持久，冲突仍会爆发。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "“弼马温”这个官名是作者虚构的，谐音为“______”，来源于古代民间在马厩中养______来防止马匹得瘟疫的习俗。",
+                    "answer": "避马瘟|猴子",
+                    "analysis": "「弼马温」谐音「避马瘟」。古代民间确实有在马厩里养猴子的习俗，认为猴子能镇住「马瘟」，保护马匹。作者用这个民俗给悟空封了个「弼马温」，表面是官名，骨子里却是「用猴子看马」的戏谑与轻视。悟空后来一打听这官职「未入流」，才明白自己受了天大羞辱，从此埋下大闹天宫的种子。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "孙悟空询问弼马温的品级，得到的回答是“没有品”，即“______”，意思是低到不配有品级。",
+                    "answer": "未入流",
+                    "analysis": "明清官制中，九品以下、没有正式品级的官叫「未入流」，意思是连最低的九品都排不上。原著中管马监的人回话说这官「最低最小，只可与他看马」。悟空一听「没品」，当即反出天宫。一个「未入流」，点破了天庭对悟空「明升暗贬」的把戏，也点燃了他内心的怒火。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "众猴告诉悟空“______，下界一年”，这是《西游记》世界的重要时间法则，也暗喻高层决策对基层的巨大影响。",
+                    "answer": "天上一日",
+                    "analysis": "原著中众猴说「天上一日，下界一年」。这是《西游记》的独特时间设定：仙界时间比人间慢得多。它既营造「天上一天、凡间一年」的奇幻感，也暗含深意——高层一个决定，基层要付出漫长的时间与代价，就像大人一句随口承诺，孩子可能要等很久。做事要多为别人着想。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "独角鬼王献给悟空一件______袍，这是古代______专属的服饰，暗示拥立悟空称王。",
+                    "answer": "赭黄|皇帝",
+                    "analysis": "赭黄色是古代皇帝的专用颜色（龙袍就是赭黄色），普通人穿了可是大罪。独角鬼王献上赭黄袍，等于公开「拥立」悟空称王。悟空穿上这身「龙袍」，自称「齐天大圣」，说明他的野心已从「做官」升级为「做王」，为后文大闹天宫埋下伏笔。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "悟空打败巨灵神后，又击伤了______三太子，先后两次战胜天兵天将，内心更加膨胀。",
+                    "answer": "哪吒",
+                    "analysis": "原著中哪吒三太子奉旨讨伐花果山，施展三头六臂的神通与悟空大战，结果反被悟空打伤。悟空先后战胜巨灵神、哪吒两员大将，越发骄傲自满。这提醒我们：越是顺境中连连获胜，越要警惕「骄兵必败」——得意忘形往往是翻车的开始。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "太白金星建议玉帝封悟空“齐天大圣”，但要“______”，即只给虚名不给实权，把悟空养在天宫收其邪心。",
+                    "answer": "有官无禄",
+                    "analysis": "太白金星建议「就叫他做个齐天大圣，只是加他个空衔，有官无禄」。「有官无禄」就是只有名分、没有实权俸禄，想用虚名把悟空「养」在天宫，消磨他的反心。这是天庭的「软招安」。可惜悟空并不满足于虚名，最终还是闹出大乱子——用「画饼」对待有真本事的人，早晚会出问题。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "齐天大圣府设在______园的右边，内设“安静”司和“凝神”司，为后文悟空大闹蟠桃会埋下伏笔。",
+                    "answer": "蟠桃",
+                    "analysis": "玉帝给悟空建了「齐天大圣府」，府址偏偏设在蟠桃园右边，还设了「安静司」「凝神司」两个机构。把好动贪吃的悟空安排在蟠桃园旁边，等于「请贼看库」——这是作者精心埋的伏笔，为后文悟空偷吃蟠桃、大闹蟠桃会做好了铺垫。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "回目“官封弼马心何足，名注齐天______”揭示了悟空即使被封为大圣，内心依然不能安宁。",
+                    "answer": "意未宁",
+                    "analysis": "回目「官封弼马心何足，名注齐天意未宁」点出全回的主题：封了「弼马温」，悟空嫌不够；封了「齐天大圣」，他内心依然不宁静。「心」与「意」的不安，才是悟空屡屡闯祸的根源。这提醒我们：内心的安宁，比外在的名号更重要。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于尊严】孙悟空被封为弼马温后非常愤怒，大喊“这般藐视老孙”。他愤怒的根源不是“官小”，而是“被藐视”和“被骗”。请结合你自己的生活，谈谈：当你觉得自己被同学、老师或家长轻视时，应该怎样既维护尊严又不失理性？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>愤怒的根源：</strong> 悟空看重的不是官位大小，而是透过官位体现出的“态度”——他被当成了工具而非人才，还遭到了欺骗。</p>\n                        <p class=\"mt-2\"><strong>如何维护尊严：</strong> ①先冷静，分辨对方是“故意轻视”还是“无心疏忽”；②用实力和行动证明自己，而不是用情绪对抗；③必要时心平气和地表达感受，说出“你这样做让我觉得不被尊重”；④把委屈化作努力，让自己变得更强大，正如悟空用一身的本领赢得后来众人的忌惮。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于欲望】悟空从“维护自己的尊严”逐渐变成“要凌驾于所有人之上”，独角鬼王的一句“就做个齐天大圣有何不可”让他彻底入魔。这体现了“人心不足蛇吞象”的道理。请结合学习或生活中的例子，谈谈欲望过度会带来什么危害，我们该如何控制欲望？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>危害：</strong> 适度的上进心是好事，但过度追求名利、攀比、贪心，会让人迷失本心，甚至伤害他人。就像悟空，为了争一口气不断膨胀，最终闹得天翻地覆、被压五行山。</p>\n                        <p class=\"mt-2\"><strong>如何控制：</strong> ①知足常乐，珍惜已经拥有的；②把目标设定在“提升自己”而非“超越别人”；③当发现自己为了赢而变得不择手段时，及时停下来反省；④多想想身边人的感受，保持同理心。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于真诚待人】孙悟空愤怒的第二个原因是“你不诚恳，骗我”。太白金星两次招安，第一次是“哄你当官”，第二次是“有官无禄的虚名”。请谈谈：在人际交往中，为什么“真诚”比“好听的名头”更重要？你有没有遇到过“说得好听却做不到”的经历？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>真诚更重要：</strong> 名头、许诺都是外在的，只有发自内心的真诚尊重才能建立真正的信任。天庭给了悟空“齐天大圣”的名号，却没有给他真正的尊重，所以矛盾终究爆发。</p>\n                        <p class=\"mt-2\"><strong>联系实际：</strong> 比如朋友嘴上说“我永远帮你”，可你需要时却总找借口推脱，这种虚假的关系迟早会破裂。真诚的关系建立在行动与信任之上，而不是空头许诺。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于自我认知】巨灵神骂悟空“欺心的猢狲”，意思是悟空蒙蔽了自己的本心、盲目自大。请结合这个故事，谈谈“认清自己”的重要性：一个人有本事之后，如何避免变得骄傲自大、目中无人？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>认清自己的重要性：</strong> 有本事是好事，但如果因此忘乎所以、目空一切，就会失去朋友和进步的空间，甚至走向毁灭。</p>\n                        <p class=\"mt-2\"><strong>如何避免骄傲：</strong> ①常怀谦虚之心，认识到“天外有天，人外有人”；②多听取他人意见，不把批评当成冒犯；③记住自己的初心，不因一时的胜利而迷失；④把本事用于帮助他人，而不是炫耀和欺压。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于权谋与虚名】玉帝打不过孙悟空，便采纳太白金星的计策，封他“齐天大圣”却“有官无禄”，想用虚名安抚他。请思考：为什么“虚名”无法真正解决问题？在现实生活中，怎样的认可才是“真正有效的认可”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>虚名无法解决问题：</strong> 因为人的内心需要的是“被真正看见、被真正尊重”，而不是一个好听的头衔。悟空虽当上齐天大圣，内心依然知道自己是“被人藐视的猴子”，所以矛盾没有消除。</p>\n                        <p class=\"mt-2\"><strong>真正有效的认可：</strong> ①给与实质性的信任和机会，让人发挥作用；②真诚地肯定他人的价值和付出；③用平等的态度相处，而不是居高临下地施舍名号。比如老师真正放手让学生负责一件事，比口头夸奖更有意义。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于战斗中的智慧】悟空与哪吒交手时，用毫毛变作假身吸引注意，真身绕到背后一击制胜。这种“以智取胜”的做法给了你什么学习或生活上的启发？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>启发：</strong> 解决问题不一定要硬碰硬，善用智慧、讲究策略往往更有效。</p>\n                        <p class=\"mt-2\"><strong>联系学习：</strong> 比如遇到一道难题，正面硬算可能耗时费力，换个角度思考（画图、举例子、逆向推理）反而能很快找到答案；处理同学矛盾时，用幽默和沟通化解，往往比争执更有用。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于诚实与守信】孙悟空当初能称王，是因为群猴约定“谁进得去出得来不伤身体就拜他为王”，他引用《论语》“人而无信，不知其可”要求大家守信。而天庭对悟空却一次次不讲信用。请谈谈“信”在一个集体、一个社会中为什么如此重要？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>“信”的重要性：</strong> 信任是合作的基础。人与人、集体与集体之间如果失去信用，就难以建立真正的团结与秩序，最终会因内耗而分崩离析。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> 一个班级如果同学之间言而无信，合作学习就无法进行；一个国家如果官府失信于民，社会就会动荡。守信的人赢得尊重，守信的社会才能和谐发展。这启示我们从小就要做一个“言必信，行必果”的人。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

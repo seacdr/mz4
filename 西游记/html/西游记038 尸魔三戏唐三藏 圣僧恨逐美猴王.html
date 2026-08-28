@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第二十七回精读：三打白骨精</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第二十七回精读：三打白骨精</h1>
+            <p class="text-lg text-gray-700 serif">“尸魔三戏唐三藏，圣僧恨逐美猴王”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-maiden')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-maiden">第一章：村姑送饭</button>
+                <button onclick="NavigationModule.switchTab('section-thrice')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-thrice">第二章：三戏三变</button>
+                <button onclick="NavigationModule.switchTab('section-fight')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-fight">第三章：三打现形</button>
+                <button onclick="NavigationModule.switchTab('section-exile')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exile">第四章：恨逐猴王</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Maiden -->
+        <section id="section-maiden" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">白虎岭上：一个“送饭的村姑”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    师徒离开五庄观，来到白虎岭（白骨岭）。这里住着一个白骨精，专想吃唐僧肉。它先变作一个送饭的村姑，来骗唐僧。点击翻转卡片，看悟空如何识破。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-m1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">白骨精</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-m1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“尸魔”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-m1-back">
+                        <p class="text-gray-700 text-left">
+                            白骨精是<strong>一具白骨所化的尸魔</strong>，常年盘踞在白虎岭，专吃过往行人。它听说吃了唐僧肉能长生不老，便设下<strong>“三戏”连环计</strong>：变成<strong>村姑、老妇、老公公</strong>，想骗过唐僧师徒。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-m2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">悟空识破</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-m2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">火眼金睛</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-m2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空用<strong>火眼金睛</strong>一看，便识破了“村姑”是<strong>妖怪所变</strong>。他举起金箍棒，<strong>一棒打下去</strong>——可白骨精<strong>留下假尸，真身逃走</strong>。唐僧却只看到“悟空打死了送饭的女子”，<strong>勃然大怒，责怪悟空</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：“看得见”与“看不见”</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    唐僧<strong class="text-amber-900">肉眼凡胎</strong>，只看见“悟空杀了人”；悟空<strong class="text-amber-900">火眼金睛</strong>，看穿了“这是妖怪”。<strong class="text-amber-900">同一件事，不同的人“看到”的完全不同</strong>。生活中，我们要学会<strong class="text-amber-900">透过现象看本质</strong>，不要被表面的“可怜”“善良”蒙住了眼睛。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Thrice -->
+        <section id="section-thrice" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">一而再、再而三：白骨精的三次变化</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    白骨精不甘心，又接连变成老妇人、老公公，一次次来骗唐僧。点击翻转卡片，看看它的“三戏”都是什么套路。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">第一戏：村姑</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-t1-front">
+                        <p class="text-xl font-bold text-amber-900 mb-3 serif">“送饭女子”</p>
+                        <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-t1-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            白骨精变作<strong>貌美村姑</strong>，提着饭菜，说“是来斋僧的”。唐僧信以为真，悟空<strong>一眼识破，一棒打死</strong>。白骨精<strong>真身脱走</strong>，留下假尸，唐僧开始念紧箍咒责怪悟空。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">第二戏：老妇</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-t2-front">
+                        <p class="text-xl font-bold text-amber-900 mb-3 serif">“找女儿的老妪”</p>
+                        <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-t2-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            白骨精又变作<strong>八旬老妇人</strong>，拄着拐杖，哭着“找女儿”。悟空再次识破，<strong>二棒打死</strong>。唐僧<strong>又惊又怒</strong>，紧箍咒<strong>越念越紧</strong>，悟空疼得满地打滚。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t3')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">第三戏：老公公</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-t3-front">
+                        <p class="text-xl font-bold text-amber-900 mb-3 serif">“寻妻女的老翁”</p>
+                        <p class="text-gray-500 text-sm">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-t3-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            白骨精又变作<strong>慈眉善目的老公公</strong>，说“来寻妻女”。唐僧这次<strong>更信</strong>了，还责怪悟空“又滥杀”。悟空<strong>忍无可忍</strong>，一棒下去，这次<strong>妖怪再也逃不掉</strong>——当场现出白骨原形。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“三戏”的共同套路</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    白骨精的三次变化，都是<strong class="text-amber-900">利用“同情心”来骗人</strong>：送饭的村姑（善良）、找女儿的老妇（可怜）、寻妻女的老翁（无辜）。它<strong class="text-amber-900">专挑人性最柔软的地方下手</strong>。这也提醒我们：骗子往往<strong class="text-amber-900">打扮成“需要帮助的人”</strong>，善良要有，<strong class="text-amber-900">警惕心也要有</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Fight -->
+        <section id="section-fight" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">三打白骨精：真相大白</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空第三棒下去，白骨精现出原形——一堆白骨，脊梁上还刻着“白骨夫人”四个字。点击翻转卡片，理解悟空“三次坚持”的意义。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-f1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">现出原形</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-f1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">一堆白骨</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-f1-back">
+                        <p class="text-gray-700 text-left">
+                            第三棒下去，妖怪<strong>当场现出原形</strong>：一堆<strong>白骨</strong>，脊梁上写着<strong>“白骨夫人”</strong>。悟空指着白骨对唐僧说：“师父，你看，这才是妖怪的真面目！”<strong>真相，终于摆在了眼前</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-f2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">坚持与误解</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-f2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“明知会被怪，也要除妖”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-f2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空明知唐僧会责怪，仍<strong>三次坚持除妖</strong>——因为<strong>他看得见妖怪，不能眼睁睁看师父被害</strong>。哪怕被误解、被念咒，<strong>该做的事，还是要做</strong>。这就是<strong>责任与担当</strong>：对的事情，即使暂时不被理解，也要坚持。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“真相”与“信任”</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    白骨精死了，可<strong class="text-amber-900">真相并没有换来信任</strong>——唐僧仍认为悟空滥杀无辜。因为信任一旦破裂，<strong class="text-amber-900">再确凿的证据也可能被看作“狡辩”</strong>。这提醒我们：①做人要<strong class="text-amber-900">擦亮眼睛、兼听则明</strong>；②人与人之间，<strong class="text-amber-900">信任是最宝贵、也最脆弱的东西</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Exile -->
+        <section id="section-exile" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">恨逐美猴王：一次悲痛的“分别”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    唐僧认定悟空“连伤三命”，写下贬书，把悟空赶回了花果山。点击翻转卡片，回顾这场令人痛心的“分别”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-e1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">紧箍咒与贬书</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-e1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“你回你的花果山”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-e1-back">
+                        <p class="text-gray-700 text-left">
+                            唐僧<strong>念起紧箍咒</strong>，疼得悟空抱头打滚，又<strong>写下贬书</strong>，“我不要你这个徒弟了”。悟空<strong>再三恳求</strong>，唐僧<strong>执意不肯</strong>。悟空含泪<strong>拜别师父</strong>，一个筋斗<strong>回花果山</strong>去了。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-e2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">悟空的“委屈”</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-e2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“我除妖，何错之有？”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-e2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空明明<strong>除掉了妖怪、救了师父</strong>，却被当成“滥杀无辜的恶徒”<strong>赶出师门</strong>。他心里的委屈，比紧箍咒的疼更难受。<strong>做好事却被误解，最考验一个人的心态</strong>——悟空虽委屈，却仍记挂着师父的安危（后文伏笔）。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">这一回，为何如此经典？</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    “三打白骨精”是《西游记》<strong class="text-amber-900">最著名的桥段之一</strong>，因为它集中展现了：<strong class="text-amber-900">①妖精的狡猾②悟空的忠诚与委屈③唐僧的肉眼凡胎与固执④误解、信任与责任</strong>。它让我们看到，取经路上最难渡的，有时不是妖魔鬼怪，而是<strong class="text-amber-900">人心的沟壑</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第二十七回“尸魔三戏唐三藏，圣僧恨逐美猴王”是全书写得最深刻、最动人的章节之一。白骨精三变，悟空三打，唐僧却三次误解，最终把忠心耿耿的悟空赶走。请认真作答，思考“眼见”与“真相”、“误解”与“信任”。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第二十七回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "白骨精住在哪里？",
+                    "options": {
+                        "A": "白虎岭（白骨岭）",
+                        "B": "黄风岭",
+                        "C": "黑风山",
+                        "D": "流沙河"
+                    },
+                    "correct": "A",
+                    "analysis": "白骨精盘踞在白虎岭（也叫白骨岭），是一具白骨所化的尸魔，专吃过往行人。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "白骨精想吃唐僧肉的原因是什么？",
+                    "options": {
+                        "A": "好奇唐僧的味道",
+                        "B": "传说吃了唐僧肉能长生不老",
+                        "C": "替夫报仇",
+                        "D": "被妖怪逼迫"
+                    },
+                    "correct": "B",
+                    "analysis": "白骨精听说吃了唐僧肉能长生不老，便设下“三戏”连环计，先后变成村姑、老妇、老公公来骗唐僧。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "白骨精第一次变作什么模样？",
+                    "options": {
+                        "A": "送饭的村姑",
+                        "B": "老妇人",
+                        "C": "老公公",
+                        "D": "樵夫"
+                    },
+                    "correct": "A",
+                    "analysis": "白骨精第一次变作一个提着饭菜的貌美村姑，说“是来斋僧的”，想骗走唐僧。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "悟空用什么本领识破白骨精的变化？",
+                    "options": {
+                        "A": "七十二变",
+                        "B": "火眼金睛",
+                        "C": "顺风耳",
+                        "D": "筋斗云"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空在太上老君八卦炉中炼就火眼金睛，能看穿妖怪的变化。他一眼就识破了白骨精。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空第一棒打死“村姑”后，白骨精是如何逃脱的？",
+                    "options": {
+                        "A": "被八戒放走",
+                        "B": "留下假尸，真身脱走",
+                        "C": "变成唐僧",
+                        "D": "跳进河里逃走"
+                    },
+                    "correct": "B",
+                    "analysis": "白骨精使“解尸法”，留下假尸迷惑唐僧，真身早已脱走。所以唐僧只看到“悟空打死了人”。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "白骨精第二次、第三次分别变作什么？",
+                    "options": {
+                        "A": "老妇人和老公公",
+                        "B": "老妇人和小孩",
+                        "C": "老公公和和尚",
+                        "D": "村姑和老妇"
+                    },
+                    "correct": "A",
+                    "analysis": "白骨精第二次变作找女儿的八旬老妇人，第三次变作寻妻女的慈眉善目老公公，一环扣一环。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "白骨精三次变化的“共同套路”是：",
+                    "options": {
+                        "A": "都打扮成凶狠的样子",
+                        "B": "都利用人的同情心，打扮成“需要帮助的人”",
+                        "C": "都拿着兵器",
+                        "D": "都躲在山洞里"
+                    },
+                    "correct": "B",
+                    "analysis": "村姑（善良）、老妇（可怜）、老公公（无辜），白骨精专挑人性最柔软处下手，利用同情心行骗。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "白骨精第三次被打死后，现出了什么原形？",
+                    "options": {
+                        "A": "一堆白骨，脊梁上刻着“白骨夫人”",
+                        "B": "一只老虎",
+                        "C": "一股黑烟",
+                        "D": "一只狐狸"
+                    },
+                    "correct": "A",
+                    "analysis": "第三棒后妖怪现出原形——一堆白骨，脊梁上写着“白骨夫人”。悟空指着白骨让唐僧看，这就是妖怪的真面目。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "唐僧为什么始终不相信悟空？",
+                    "options": {
+                        "A": "悟空撒谎成性",
+                        "B": "唐僧肉眼凡胎，只看到表面“打死人”，且信任已经破裂，先入为主",
+                        "C": "八戒陷害悟空",
+                        "D": "悟空故意骗师父"
+                    },
+                    "correct": "B",
+                    "analysis": "唐僧肉眼凡胎看不见妖怪，加上前两次“打死人”已让他先入为主，信任破裂后，连现出白骨的真凭实据也难以扭转他的看法。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "唐僧赶走悟空时，做了什么？",
+                    "options": {
+                        "A": "只口头责备了几句",
+                        "B": "念紧箍咒，并写下贬书，执意把他赶走",
+                        "C": "让悟空回天庭",
+                        "D": "让八戒送悟空"
+                    },
+                    "correct": "B",
+                    "analysis": "唐僧念起紧箍咒疼得悟空打滚，又写下贬书，说“不要这个徒弟了”，执意赶走悟空。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "悟空被赶走后，去了哪里？",
+                    "options": {
+                        "A": "南海",
+                        "B": "花果山",
+                        "C": "灵山",
+                        "D": "五庄观"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空含泪拜别师父，一个筋斗云回到花果山水帘洞，重新当起了“美猴王”。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "“三打白骨精”中，悟空最可贵的精神是：",
+                    "options": {
+                        "A": "武艺高强",
+                        "B": "明知会被误解责怪，仍坚持除妖、保护师父，尽到责任",
+                        "C": "跑得快",
+                        "D": "会变身"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空明知唐僧会怪罪，仍三次坚持除妖，因为不能看着师父被害。对的事即使不被理解也要做，这是责任与担当。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "“真相并没有换来信任”，这句话给我们的启示是：",
+                    "options": {
+                        "A": "真相不重要",
+                        "B": "信任一旦破裂就很难修复，所以平时要真诚、多沟通、学会倾听",
+                        "C": "别人永远不可信",
+                        "D": "解释没有用"
+                    },
+                    "correct": "B",
+                    "analysis": "唐僧先入为主，连白骨现形都不信。信任是宝贵的，一旦破裂，要付出更多努力才能修复。平时真诚待人、多沟通、兼听则明，才能避免误解。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "精读认为，取经路上“最难渡的”有时是：",
+                    "options": {
+                        "A": "妖魔鬼怪",
+                        "B": "人心的沟壑——误解、猜疑、信任的破裂",
+                        "C": "高山大河",
+                        "D": "吃不饱饭"
+                    },
+                    "correct": "B",
+                    "analysis": "这一回中，最难的不是白骨精，而是唐僧与悟空之间的误解。人心的猜疑与隔阂，有时比妖怪更让人难过。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "从“悟空除妖”到“唐僧赶走悟空”，最根本的冲突是：",
+                    "options": {
+                        "A": "悟空偷懒",
+                        "B": "悟空“看得见真相”与唐僧“只信眼睛所见”之间的认知差异",
+                        "C": "八戒挑拨离间",
+                        "D": "悟空想回花果山"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空有火眼金睛、能看真相，唐僧肉眼凡胎、只信表象。认知的差异加上沟通不畅，导致了这场悲剧性的分别。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "白骨精盘踞在______岭，是一具白骨所化的尸魔。",
+                    "answer": "白虎",
+                    "analysis": "白骨精盘踞在「白虎岭」，是一具白骨修炼成精的「尸魔」。白虎岭荒凉凶险，「白虎」二字也透着杀机。这里是「三打白骨精」的舞台，也是取经团队第一次「内讧」发生地。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "白骨精第一次变作送饭的______，想骗走唐僧。",
+                    "answer": "村姑",
+                    "analysis": "白骨精第一次变作一个送饭的「村姑」，提着饭菜，假装给丈夫送饭，想骗唐僧吃。她的计划是「先骗走唐僧，再下手」。可悟空「火眼金睛」一眼看穿——妖怪再会变，也逃不过「智慧之眼」。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "悟空用______金睛识破白骨精的变化。",
+                    "answer": "火眼",
+                    "analysis": "悟空在太上老君八卦炉里炼成的「火眼金睛」，能识破妖怪的伪装。白骨精变村姑、变老妇、变老公公，都被悟空一眼看穿。这一双「慧眼」，是悟空降妖的「秘密武器」，也是「透过现象看本质」的象征。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "白骨精第一次、第二次都留下______尸，真身脱走。",
+                    "answer": "假",
+                    "analysis": "白骨精前两次被悟空打死，都留下「假尸」（村姑、老妇的尸体），真身却「脱壳」逃走。这是她的「金蝉脱壳」之计——用一个假象骗过唐僧，让唐僧以为悟空「滥杀无辜」。挑拨离间，是白骨精的「杀手锏」。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "白骨精第三次变作寻妻女的______，被悟空第三棒打死。",
+                    "answer": "老公公",
+                    "analysis": "白骨精第三次变作一个寻妻女的「老公公」，假装来找老伴和女儿，哭哭啼啼，骗取唐僧同情。这次悟空不再「手软」，当头一棒把她打死，终于现出白骨原形——「事不过三」，再狡猾的妖怪也有现形的一天。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "白骨精现出原形，是一堆______，脊梁上刻着“______夫人”。",
+                    "answer": "白骨|白骨",
+                    "analysis": "白骨精被悟空第三棒打死，现出原形：一堆白骨，脊梁上刻着「白骨夫人」四个字。「白骨夫人」就是白骨精的本名。一堆白骨，说明了她的「本质」——再光鲜的「伪装」，也掩盖不了「白骨」的真相。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "唐僧念起______咒，疼得悟空抱头打滚。",
+                    "answer": "紧箍",
+                    "analysis": "唐僧见悟空「连杀三人」，以为他「草菅人命」，念起「紧箍咒」，疼得悟空「抱头打滚」。紧箍是唐僧「管」悟空的工具，却也成了「误会」的放大器——唐僧被「假象」蒙蔽，用紧箍惩罚了「真本事」。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "唐僧写下______书，执意把悟空赶回______山。",
+                    "answer": "贬|花果",
+                    "analysis": "唐僧写下「贬书」，把悟空赶回花果山，并说「再不要你」。悟空含泪叩别，回了花果山。这是取经团队最大的一次「分裂」——「火眼金睛」被赶走，队伍失去了「主心骨」，也为后面「宝象国遇难」埋下伏笔。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“透过现象看本质”】唐僧肉眼凡胎，被白骨精的“可怜相”迷惑；悟空火眼金睛，一眼看穿真相。请谈谈：为什么不能只看“表面”？生活中如何做到“透过现象看本质”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>表象会骗人：</strong> 白骨精打扮得越可怜，越是陷阱。看人看事只看表面，容易被假象蒙蔽，做出错误判断。</p>\n                        <p class=\"mt-2\"><strong>透过现象看本质：</strong> ①多问“为什么”——他为什么这样说？这样做有什么目的？②不轻信“一面之词”，多角度了解；③看“长期表现”而不是“一时表演”；④遇事冷静，不凭一时感动或愤怒下结论。会思考的人，不容易被骗。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“坚持正确的事”】悟空明知会被责怪，仍三次坚持除妖。请谈谈：当“做对的事”暂时不被理解时，我们该坚持还是放弃？怎样坚持得“聪明”一些？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>该坚持的要坚持：</strong> 悟空若放弃，唐僧就要被吃。原则性的对错，不能因为“怕被误会”就不做。做人要有“明知道难，也要做”的勇气。</p>\n                        <p class=\"mt-2\"><strong>坚持得聪明：</strong> ①做之前想清楚“这确实是对的”；②尽量用对方能理解的方式解释，争取支持；③留下证据、找帮手，减少误解；④如果暂时说不通，可以先做、事后用结果说话。既坚持原则，又讲究方法，才是成熟的坚持。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“误解与信任”】白骨精现出白骨，唐僧仍不信悟空。请谈谈：为什么信任一旦破裂就很难修复？我们该怎样珍惜和维护信任？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>信任脆弱：</strong> 唐僧连续两次看到“悟空打死人”，心里已经认定悟空“滥杀”。一旦有了成见，再好的证据也会被曲解，信任的裂痕很难弥补。</p>\n                        <p class=\"mt-2\"><strong>维护信任：</strong> ①平时说到做到，不撒谎不隐瞒，积累“信任存折”；②有分歧时及时沟通，别让误会越积越深；③被人误解时，冷静解释，不赌气；④对他人也保持信任，除非有确凿证据。信任像玻璃，碎了难复原，所以要格外珍惜。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“被误解时的情绪”】悟空被冤枉、被赶走，心里满是委屈。请谈谈：被误解时，如何调整自己的情绪？什么做法是“成熟”的？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>被误解很难受：</strong> 委屈、愤怒都是正常的，但发泄、记恨只会让关系更糟。悟空虽委屈，仍心系师父，没有因被赶走而“黑化”。</p>\n                        <p class=\"mt-2\"><strong>成熟的做法：</strong> ①先让情绪“降温”，不急着争辩；②冷静地把事实说清楚，一次不行就换时机再说；③理解对方“为什么会这样想”，从对方角度解释；④做好自己，用时间和行动证明；⑤实在说不通，就交给时间。成熟不是不委屈，而是委屈时还能保持理性和善良。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“防骗”】白骨精利用同情心行骗。请谈谈：为什么“好心”也需要“防人之心”？我们遇到“看起来很可怜的人或事”时，该怎么处理？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>好心+警惕：</strong> 善良是美德，但骗子常利用善良。帮助别人要“帮忙不添乱、救助有分寸”，不能因为“可怜”就完全放下警惕。</p>\n                        <p class=\"mt-2\"><strong>处理“可怜的事”：</strong> ①真遇到需要帮助的人（如老人走失），可以报警或求助大人，科学地帮；②网上“捐款”“中奖”等信息先核实，不轻信；③陌生人提出“带你走”“买东西”等要求，坚决拒绝并告诉家长；④帮人之前先确认安全、再求助成年人。善良要给对人、用对方法。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“责任与委屈”】悟空做了“分内该做”的事，却承受了最大的委屈。请谈谈：为什么说“尽责任的人，往往要承受更多”？我们该不该因为“怕受委屈”就不负责任？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>尽责常伴随委屈：</strong> 管纪律的同学被说“多管闲事”，说实话的人被骂“多嘴”，尽责的人往往要承担更多误解和压力。但正是这些人，守护了集体的公正与安全。</p>\n                        <p class=\"mt-2\"><strong>我的态度：</strong> ①把“该做的事”做对，是对自己负责；②受委屈时想想“我为什么做”，守住本心；③用行动和结果说话，日久见人心；④学会倾诉，别独自硬扛。世界需要“愿意负责、不怕委屈”的人，希望我们都能成为这样的人。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“经典与成长”】“三打白骨精”流传几百年，大家都很熟悉。请谈谈：为什么这个“人人知道结局”的故事，读起来依然动人？它教会了我们什么？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>经典写的是“人”：</strong> 这个故事写的不是“妖怪多可怕”，而是悟空、唐僧、白骨精之间的“人心较量”——忠诚、误解、信任、委屈，这些情感几百年不变，所以永远打动人。</p>\n                        <p class=\"mt-2\"><strong>它教会我们：</strong> ①看人看事要透过现象看本质；②做对的事要敢于坚持；③信任很珍贵，要用心经营；④被误解时保持理性与善良；⑤每个人都会经历“好心被误解”，但真正的成长，是在误解中依然选择做对的事。这些道理，会陪你很多年。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

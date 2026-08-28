@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第八十三回精读：以智破局与感化</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第八十三回精读：以智破局与感化</h1>
+            <p class="text-lg text-gray-700 serif">“难灭伽持圆大觉，法王成正体天然”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">灭法国</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">伪装进城</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">大柜藏身</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">剃头解局</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 灭法国 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">国王发愿：要杀一万个和尚</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    夏日的柳荫下，一个老母带着小孩拦住唐僧：前面五六里就是灭法国，国王两年前许下罗天大愿，要杀一万个和尚——已经杀了9996个无名和尚，只差四个“有名的”凑满一万！悟空火眼金睛一看：这老母原来是观音菩萨，小孩是善财童子（红孩儿），专来报信。城中本该杀气腾腾，却“喜气冲融、祥光荡漾”，让人疑惑。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">观音报信</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">老母原来是菩萨</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            悟空火眼金睛认出：柳荫下的老母是<strong>观音菩萨</strong>，小孩是<strong>善财童子（红孩儿）</strong>——菩萨不直接出手，只提前报信，怎么过靠师徒自己。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">杀万僧</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">只差四个有名和尚</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            灭法国国王许愿<strong>杀一万个和尚</strong>，已杀<strong>9996个无名和尚</strong>，只差四个“有名的”凑数——唐僧师徒四个和尚一进城，正好“圆满”。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">好消息，也可能是坏消息的引子</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    观音专程来“报信”，说明这一关要靠自己闯。<strong>有人提醒你是好事，但路还得自己走——提前知道风险，才能提前做准备</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 伪装进城 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">偷衣服、戴头巾，和尚扮成马贩子</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空进城探路，发现家家挂灯笼的“王小二店”，客人把衣服头巾都收起来了。他等不及，变老鼠抢了衣服头巾就走，还亮明身份：“明人不做暗事，我乃齐天大圣，借衣过城，过了就还！”四人换上俗衣、戴上头巾，改叫“唐大官、孙二官、猪三官、沙四官”，自称十兄弟合伙贩马。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">偷衣借帽</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">明人不做暗事</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            悟空变老鼠抢走衣服头巾，婆子喊“夜耗子成精”，悟空亮明身份：“<strong>明人不做暗事，我乃齐天大圣</strong>……借你的衣服用一用，过了城就送还。”
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">马贩子</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">唐大官、孙二官、猪三官、沙四官</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            四人换俗衣、戴头巾，不再叫“师傅徒弟”，改称<strong>唐大官、孙二官、猪三官、沙四官</strong>，自称十兄弟合伙贩马，四人先来住店。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">随机应变，是生存的智慧</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    前面是杀和尚的国家，师徒立刻“改头换面”扮成马贩子。<strong>环境变了，方法就得跟着变——懂得变通，才能渡过难关</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 大柜藏身 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">睡进大柜，却被贼抬、被官封</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空怕露光头，要求住在“不透风不透亮”的地方。寡妇店主让四人睡进一张大柜（四尺宽、七尺长、三尺高）。谁知悟空夜里睡不着，自己演“卖马赚了四千两”的戏，被与强盗勾搭的店伙听了去——二十多个贼半夜来劫，把柜子抬出城，又被官军夺下，连柜带马封进总府。唐僧在柜中直埋怨。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">大柜藏身</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">不透风、不透亮</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            悟空谎称“猪三官有寒湿气、沙四官有漏肩风、唐大哥怕光、我畏明”，要求黑处睡——寡妇便让四人睡进<strong>父亲留下的四尺宽、七尺长、三尺高的大柜</strong>里。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">贼劫官封</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">演了一场戏，招来一伙贼</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            悟空半夜不睡，自言自语演“卖马赚了四千两银子”的戏——被<strong>与强盗勾结的店伙</strong>听了去，招来二十多个贼抬柜出城；又被<strong>官军夺下，连柜带马封进总府</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">祸从口出</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空一句玩笑“有四千两银子”，就引来一场大祸。<strong>有些话，说者无心、听者有意——不该说的场合，管住自己的嘴</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 剃头解局 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">你们要杀和尚？先让你们全变和尚！</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    三更时分，悟空钻出柜子，拔左臂毫毛变作漫天瞌睡虫，让全国官员昏睡；又拔右臂毫毛变作千百个小行者，拿着剃头刀，把国王、后妃、太监、满朝文武的头全剃光！第二天早朝，君臣一见面，全是光头，抱头痛哭——再也不敢杀和尚了。国王开柜见到四个真和尚，立刻拜师求赎罪，悟空让他把国号改为“亲法国”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">瞌睡虫+剃头刀</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">全国一夜变光头</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            悟空拔左臂毫毛变<strong>瞌睡虫</strong>让人昏睡，拔右臂毫毛变<strong>千百个小行者</strong>，拿金箍棒变的剃头刀——一夜之间，<strong>王宫内外、五府六部、满朝文武全成了光头</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">亲法国</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">国王认错拜师</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            国王开柜见到四个真和尚，忙下龙床礼拜：<strong>“愿为门下，赎罪悔过”</strong>。悟空不求财宝，只求倒换关文；并建议把“灭法国”改成<strong>“亲法国”</strong>，亲近佛法。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">不战而屈人之兵</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空不杀一人、不打一仗，用“剃头”让国王自己认错。<strong>最高明的办法，不是打败对手，而是让对手心服口服——化敌为友，才是真本事</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第八十三回“难灭伽持圆大觉，法王成正体天然”讲的是灭法国之难：国王发愿杀一万个和尚，只差四个；观音报信后，师徒扮成马贩子偷衣进城；睡进大柜却被贼劫、被官封；悟空半夜用瞌睡虫和剃头刀，让全国官员一夜变光头；国王悔悟拜师，国号改为“亲法国”。这一回让我们看到：提前知道风险才能提前准备、环境变了方法要跟着变、祸从口出、不战而屈人之兵。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第八十三回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "拦住唐僧的老母和小孩，真身是谁？",
+                    "options": {"A": "太白金星和仙童","B": "观音菩萨和善财童子（红孩儿）","C": "土地和山神","D": "普通百姓"},
+                    "correct": "B",
+                    "analysis": "悟空火眼金睛认出：老母是观音菩萨，小孩是善财童子（红孩儿）——菩萨专来报信。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "灭法国国王要杀多少和尚？",
+                    "options": {"A": "一千","B": "一万个（已杀9996个，只差四个）","C": "一百","D": "五百"},
+                    "correct": "B",
+                    "analysis": "国王许愿杀一万个和尚，已杀9996个无名和尚，只差四个“有名的”——师徒四人正好凑数。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "悟空进城探路，看到的城市是什么景象？",
+                    "options": {"A": "杀气腾腾","B": "喜气冲融、祥光荡漾","C": "破败荒凉","D": "火光冲天"},
+                    "correct": "B",
+                    "analysis": "灭法国干着杀和尚的事，城中却是“喜气冲融、祥光荡漾”——悟空觉得奇怪，这么好的去处为什么要灭法。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "悟空准备用什么办法掩饰和尚身份？",
+                    "options": {"A": "躲起来","B": "偷衣服和头巾，扮成俗人进城","C": "直接闯","D": "变形"},
+                    "correct": "B",
+                    "analysis": "和尚最显眼的是光头和僧袍——悟空偷来衣服头巾，让大家换上俗衣、戴上头巾，掩饰身份。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空抢衣服被婆子喊“夜耗子成精”，他怎么回应？",
+                    "options": {"A": "逃跑","B": "“明人不做暗事，我乃齐天大圣……借你的衣服用一用，过了城就送还”","C": "道歉","D": "不承认"},
+                    "correct": "B",
+                    "analysis": "悟空亮明身份：“明人不做暗事，我乃齐天大圣”——偷是手段，但敢作敢当。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "四人扮成俗人后，怎么称呼彼此？",
+                    "options": {"A": "师傅徒弟","B": "唐大官、孙二官、猪三官、沙四官","C": "哥哥弟弟","D": "老爷"},
+                    "correct": "B",
+                    "analysis": "悟空定下规矩：不再叫“师傅徒弟”，改叫唐大官（唐僧）、孙二官（悟空）、猪三官（八戒）、沙四官（沙僧）。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "四人自称是干什么的？",
+                    "options": {"A": "进京赶考","B": "十兄弟合伙贩马（四人先来住店）","C": "探亲","D": "做生意卖布"},
+                    "correct": "B",
+                    "analysis": "悟空说他们是“十兄弟贩马”，四人先来住店，后边还有六兄弟带着马——这样店家就不会起疑。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "四人为什么要睡进大柜？",
+                    "options": {"A": "柜子舒服","B": "怕睡熟头巾滑落露出光头，要找不透风不透亮的地方","C": "店主要求的","D": "没房间"},
+                    "correct": "B",
+                    "analysis": "唐僧担心睡着后帽子掉、露出光头——悟空谎称大家各有“怕风、畏光”的病，寡妇就让他们睡进大柜。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "悟空半夜演的“四千两银子”的戏，招来了谁？",
+                    "options": {"A": "官兵","B": "与强盗勾搭的店伙引来二十多个贼打劫","C": "国王","D": "观音"},
+                    "correct": "B",
+                    "analysis": "悟空自言自语演“卖马赚了四千两”的戏，被“与强盗一伙”的走堂、挑水的听去——招来二十多个贼抬柜打劫。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "贼把柜子抬出城后，柜子落到了谁手里？",
+                    "options": {"A": "贼自己留着","B": "官军追贼，夺下柜子和白马，封进总府","C": "悟空抢回","D": "丢了"},
+                    "correct": "B",
+                    "analysis": "巡城总兵带兵追贼，贼不敢抵挡逃走——官军夺下柜子、捉住白马，封进总府等明日请旨。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "悟空三更从柜里出来后，第一件事做了什么？",
+                    "options": {"A": "放火","B": "拔左臂毫毛变瞌睡虫，让全国官员昏睡","C": "偷马","D": "逃跑"},
+                    "correct": "B",
+                    "analysis": "悟空钻出柜子，拔左臂毫毛“都变作瞌睡虫”，让王宫内院、五府六部、各衙门官员都睡不醒。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "悟空用右臂毫毛做了什么？",
+                    "options": {"A": "变兵器","B": "变作千百个小行者，拿剃头刀给全国官员剃头","C": "变猴子","D": "变绳索"},
+                    "correct": "B",
+                    "analysis": "悟空拔右臂毫毛变千百个小行者，金箍棒变千百口剃头刀——一夜之间给国王、后妃、太监、满朝文武全剃了光头。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "第二天国王醒来发现什么？",
+                    "options": {"A": "头发没了，自己也成了光头","B": "国库空了","C": "城破了","D": "马丢了"},
+                    "correct": "A",
+                    "analysis": "国王一摸头“吓得三尸神炸，七魄飞空”——自己变成光头；皇后、嫔妃、太监、满朝文武全是光头。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "国王见到四个真和尚后做了什么？",
+                    "options": {"A": "要杀他们","B": "忙下龙床，君臣同拜，愿拜他们为师赎罪","C": "赶走他们","D": "关起来"},
+                    "correct": "B",
+                    "analysis": "国王以为“杀僧遭报应”，见四个和尚忙下龙床礼拜：“愿为门下”——请求收他们为徒，赎罪悔过。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "悟空对国王提的“报酬”是什么？",
+                    "options": {"A": "金银财宝","B": "只要倒换关文、送出城","C": "封官","D": "送袈裟"},
+                    "correct": "B",
+                    "analysis": "国王愿献财宝，悟空说“我们都是有道之僧”，只求倒换关文、送出城就行——不贪财。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "灭法国最后改成了什么国号？",
+                    "options": {"A": "灭法国","B": "亲法国（亲近佛法）","C": "信法国","D": "礼法国"},
+                    "correct": "B",
+                    "analysis": "悟空说“灭法”不好，改为“亲法国”——亲近佛法，愿天下“海晏河清千代胜，风调雨顺万方安”。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "灭法国国王要杀______万个和尚，只差四个。",
+                    "answer": "一",
+                    "analysis": "“一万个”是国王的罗天大愿——已杀9996个，只差四个有名和尚凑满。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "悟空认出柳荫下的老母是______音菩萨。",
+                    "answer": "观",
+                    "analysis": "“观音菩萨”带着善财童子来报信——她不直接出手，只提前提醒师徒前方有难。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "和尚最显眼的特征：脑袋是______的。",
+                    "answer": "光",
+                    "analysis": "“光头”是和尚的标志——悟空偷衣服头巾，就是为了盖住光头，扮成俗人。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "悟空抢衣后亮明身份：“明人不做______事，我乃齐天大圣”。",
+                    "answer": "暗",
+                    "analysis": "“明人不做暗事”是说做事光明磊落——悟空偷衣服是不得已，但敢作敢当，不藏不掖。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "四人睡进寡妇家四尺宽、七尺长的______柜。",
+                    "answer": "大",
+                    "analysis": "“大柜”不透风不透亮，正好藏身——可谁知柜子被贼抬、被官封，惹出更多麻烦。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "悟空拔左臂毫毛变成瞌______虫，让全国官员昏睡。",
+                    "answer": "睡",
+                    "analysis": "“瞌睡虫”是让人睡不醒的宝贝——悟空给全国当官的一人送一个，好方便剃头。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "悟空让金箍棒变作千百口剃______刀。",
+                    "answer": "头",
+                    "analysis": "“剃头刀”是悟空这次破局的工具——你杀和尚，我就让全国官员都变光头，看你怎么办。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "国王把国号从“灭法国”改为“______法国”。",
+                    "answer": "亲",
+                    "analysis": "“亲法国”意为亲近佛法——国王从杀僧悔悟为拜僧，国号也随之改变，前后呼应。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“以智取胜”】悟空没杀一个人，用“剃头”就让国王认错。请谈谈：为什么“动脑子”常常比“动拳头”更有效？你如何用“巧办法”解决问题？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>攻心为上，攻城为下：</strong> 悟空不杀不打，让全国变光头，国王自己就醒悟了——<strong>让人心服，比让人害怕更高明</strong>。</p>\n                        <p class=\"mt-2\"><strong>用巧办法：</strong> ①先想“对方在乎什么”，从那里入手；②硬碰硬不行，就换思路、换角度；③多用“让对方自己明白”的办法；④借力：请老师、同学、工具帮忙；⑤多想“还有没有更好的法子”。<strong>蛮力撞不开的门，钥匙轻轻一转就开了</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“随机应变”】面对杀和尚的国家，师徒立刻扮成马贩子。请谈谈：为什么“懂得变通”是重要的生存能力？你如何在规则变化时调整自己？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>水无常形，人无常势：</strong> 环境是杀和尚，师徒就扮俗人；环境一变，方法也跟着变——<strong>会变通的人，到哪儿都活得下来</strong>。</p>\n                        <p class=\"mt-2\"><strong>学会变通：</strong> ①先看清“新情况是什么、要什么”；②旧办法不管用，就换新办法；③守住“目标和底线”，灵活改“做法”；④多学几样技能，才能随时切换；⑤别死脑筋：此路不通，就换条路。<strong>变通不是放弃原则，而是换一种方式坚持</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“祸从口出”】悟空一句“四千两银子”的玩笑，招来一伙贼。请谈谈：为什么“说话要看场合”？你如何做到“言多必失”时管住嘴？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>说者无心，听者有意：</strong> 悟空演戏自娱，却被别有用心的人听去惹来大祸——<strong>有些话，在不该说的地方说，就会变成麻烦</strong>。</p>\n                        <p class=\"mt-2\"><strong>管住嘴：</strong> ①公共场合不炫耀“我有多少钱、多少好东西”；②家里的事、别人的隐私不外传；③没把握的话先不说，想好再说；④涉及“钱、秘密、评价别人”的话要谨慎；⑤说之前问自己“这话能大声说吗”。<strong>管住嘴，就是管住祸</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“化解矛盾”】国王从“杀僧”到“拜师”，悟空不记仇、不报复。请谈谈：为什么“宽容”比“记恨”更能解决问题？你如何看待“以德报怨”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>化敌为友，才是赢家：</strong> 国王认错，悟空就收他、帮他改国号——<strong>放下仇恨，把敌人变成朋友，才是最大的胜利</strong>。</p>\n                        <p class=\"mt-2\"><strong>以德报怨：</strong> ①别人道歉，给ta改过的机会；②对“真心悔改”的人，伸出接纳的手；③把“他对不起我”放下，想“怎么一起把事做好”；④宽容不等于软弱，是有原则地放过；⑤冤家宜解不宜结。<strong>宽容，是对自己最大的善待</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“不贪图回报”】国王愿献财宝，悟空只求倒换关文。请谈谈：为什么“帮人不求回报”更显品格？你如何做到“重情义、轻利益”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>帮人，是发乎本心：</strong> 悟空替国王解决了大麻烦，却一分钱不要——<strong>帮人是出于善意，不是图人回报</strong>。</p>\n                        <p class=\"mt-2\"><strong>重情义轻利益：</strong> ①帮朋友时，别惦记“我能得到什么”；②别人谢你，可以说“这没什么”；③该拒绝的“好处”要拒绝，守住原则；④把“友谊、信用”看得比“小利”重；⑤真正的朋友，是因为你“好”而留下，不是因为你“给得多”。<strong>施恩不图报，是人品的试金石</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“面对人为之难”】灭法国没有妖怪，难来自国王的“执念”。请谈谈：为什么“人心里的执念”有时比妖怪更难对付？你如何克服自己的“偏见与固执”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>心魔，比外魔更难除：</strong> 国王因“和尚说过我坏话”就发愿杀万僧——<strong>偏见和执念一旦上头，比妖怪更难说服</strong>。</p>\n                        <p class=\"mt-2\"><strong>克服偏见固执：</strong> ①承认“我也可能错”，不一条道走到黑；②多听不同声音，不只听顺耳的；③把“我讨厌他”和“事实对不对”分开；④给自己留“改变主意”的空间；⑤常问“如果是别人，我会怎么看”。<strong>放下执念，才能看到更大的世界</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

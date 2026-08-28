@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第十八回精读：高老庄收八戒</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第十八回精读：高老庄收八戒</h1>
+            <p class="text-lg text-gray-700 serif">“观音院唐僧脱难，高老庄行者降魔”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-trouble')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-trouble">第一章：高老庄的烦恼</button>
+                <button onclick="NavigationModule.switchTab('section-pig')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-pig">第二章：猪刚鬣的身世</button>
+                <button onclick="NavigationModule.switchTab('section-trick')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-trick">第三章：悟空戏八戒</button>
+                <button onclick="NavigationModule.switchTab('section-join')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-join">第四章：收服悟能</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Trouble -->
+        <section id="section-trouble" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">高老庄：一个“妖怪女婿”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    师徒离开黑风山，来到乌斯藏国的高老庄，借宿在高太公家。高太公愁眉苦脸，诉说自己招了个“妖怪女婿”。点击翻转卡片，看看高家的烦恼与妖怪的“两面性”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-h1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">高太公的苦</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-h1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“招了个妖怪女婿”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-h1-back">
+                        <p class="text-gray-700 text-left">
+                            高太公有三个女儿，小女儿<strong>高翠兰</strong>许配给了一个“高大壮汉”，原以为找了个好女婿，谁知女婿<strong>会变成猪头</strong>，还<strong>把翠兰锁在后宅</strong>，吓得高家到处请法师捉妖。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-h2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">妖怪的另一面</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-h2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“也能干活”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-h2-back">
+                        <p class="text-gray-700 text-left">
+                            这妖怪并非一无是处：他<strong>替高家干活</strong>，扫地、犁田、种菜样样在行，甚至不要工钱。但他终究是<strong>妖怪</strong>，会吃人、会锁人，让高家日夜不安——这也为后文他皈依后“也能干又能吃”的性格埋下伏笔。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：凡人的求助</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    高太公为了赶走妖怪女婿，请过法师、贴过榜文，却都<strong class="text-amber-900">无济于事</strong>。唐僧师徒的到来，成了高家最后的希望。这正是取经故事的常见模式：<strong class="text-amber-900">凡人解决不了的难题，由取经人（悟空）出手化解</strong>——也体现了“行善积德、救苦救难”的主题。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Pig -->
+        <section id="section-pig" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">猪刚鬣：从“天蓬”到“猪妖”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空变作高翠兰，套出了妖怪的来历：他叫猪刚鬣，住在福陵山云栈洞，原是天庭的天蓬元帅。点击翻转卡片，回顾猪八戒“从天蓬到猪妖”的坠落。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-p1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">前身</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-p1-front">
+                        <p class="text-3xl font-bold text-amber-900 mb-3 serif">天蓬元帅</p>
+                        <p class="text-gray-500">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-p1-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            猪八戒原是<strong>天庭的天蓬元帅</strong>，掌管天河八万水军，地位显赫、威风凛凛。他自报来历：“自幼本有分，一直在天河里当官。”
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-p2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">坠落</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-p2-front">
+                        <p class="text-3xl font-bold text-amber-900 mb-3 serif">醉酒调戏嫦娥</p>
+                        <p class="text-gray-500">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-p2-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            天蓬元帅因<strong>醉酒调戏嫦娥</strong>，触犯天条，被贬下凡间。因为<strong>投胎时错投猪胎</strong>，结果变成了<strong>猪头猪脑</strong>的猪妖，占山为妖、吃人为生。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-p3')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">现状</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-p3-front">
+                        <p class="text-3xl font-bold text-amber-900 mb-3 serif">福陵山云栈洞</p>
+                        <p class="text-gray-500">(点击揭秘)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-amber-50" id="card-p3-back">
+                        <p class="text-gray-700 text-left text-sm">
+                            猪刚鬣栖身<strong>福陵山云栈洞</strong>，因吃人太多，后经观音点化，才<strong>不再吃人</strong>，皈依佛门、持斋把素，只是贪吃好色的毛病难改，是个“带病的修行者”。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“取经人”的画像：都不是完人</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    猪八戒的堕落源于<strong class="text-amber-900">“贪”与“欲”</strong>——贪吃、好色、贪安逸。他与沙僧、悟空一样，都是<strong class="text-amber-900">“犯了错、待赎罪”</strong>的人。取经团队不是“圣人天团”，而是一群<strong class="text-amber-900">带着毛病上路、在修行中改毛病</strong>的普通人——这正是《西游记》最接地气、最动人的地方。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Trick -->
+        <section id="section-trick" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">“背媳妇”：一场经典的闹剧</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空变作高翠兰的模样，在房里等八戒回来。八戒毫无防备，要背“媳妇”回洞成亲。悟空趁机捉弄他，最后现出本相。点击翻转卡片，回顾这场经典的“背媳妇”闹剧。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">悟空变翠兰</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">套问来历</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空化作高翠兰，装模作样与八戒周旋，套出了他的来历：“我本是天蓬元帅……因调戏嫦娥被贬，错投了猪胎。”知己知彼，才能百战不殆。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">现出本相</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“好个女婿！认得你外公么？”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t2-back">
+                        <p class="text-gray-700 text-left">
+                            八戒背着“媳妇”走出几步，悟空变回原形，现出<strong>毛脸雷公嘴</strong>的猴相。八戒大惊失色，才知道上了当，一耙子打来，悟空与八戒展开大战，一路打到了<strong>福陵山云栈洞</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“背媳妇”的喜剧魅力</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    “猪八戒背媳妇”是<strong class="text-amber-900">中国民间最经典的喜剧桥段之一</strong>：贪色的八戒背了个假媳妇，最后被捉弄得狼狈不堪。喜剧的背后是<strong class="text-amber-900">惩恶扬善</strong>的逻辑：好色、贪心的人，终会搬起石头砸自己的脚。这种“寓教于乐”的写法，正是《西游记》老少皆宜的魅力所在。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Join -->
+        <section id="section-join" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">云栈洞归正：八戒皈依</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空追八戒到云栈洞，八戒战败，问明唐僧来历后，想起观音的嘱咐，便答应皈依，拜唐僧为师。点击翻转卡片，看八戒如何从“妖”变“僧”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-j1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">战败归正</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-j1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“愿随师父去西天”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-j1-back">
+                        <p class="text-gray-700 text-left">
+                            八戒与悟空大战，不敌败走，回到云栈洞。悟空堵住洞口，八戒听说唐僧是<strong>取经人</strong>，又想起观音早让他“等取经人”，便烧了洞府，表示<strong>愿意皈依、护送西行</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-j2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">法名“悟能”</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-j2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“八戒”的来历</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-j2-back">
+                        <p class="text-gray-700 text-left">
+                            唐僧给八戒剃度，赐法名<strong>“悟能”</strong>，又因他不戒荤腥、贪吃好色，叫他<strong>“八戒”</strong>——要他遵守佛门戒律，<strong>戒掉八种毛病</strong>。“八戒”既是名字，也是对他的提醒与期望。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">取经团队，再添一人</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    八戒加入后，取经团队有了<strong class="text-amber-900">唐僧、悟空、八戒</strong>三人。八戒虽贪吃懒散、爱耍小聪明，却是团队的<strong class="text-amber-900">“气氛担当”</strong>与重要战力。每个人都有缺点，但都能在团队中找到自己的位置——这正是取经团队的包容与力量。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第十八回“观音院唐僧脱难，高老庄行者降魔”是“高老庄收八戒”的精彩故事。这一回充满喜剧色彩，也让我们看到：人非圣贤，孰能无过；带着缺点上路，在修行中改正缺点，同样值得敬佩。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第十八回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "高太公家为什么烦恼？",
+                    "options": {
+                        "A": "庄稼收成不好",
+                        "B": "招了个会变猪头、锁住女儿的“妖怪女婿”",
+                        "C": "儿子不孝顺",
+                        "D": "家产被人抢走"
+                    },
+                    "correct": "B",
+                    "analysis": "高太公把女儿翠兰许配给一个“壮汉”，谁知他是妖怪，会变猪头，还把小女儿锁在后宅，高家请法师也赶不走他，日夜不安。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "高家的“妖怪女婿”是谁？他栖身何处？",
+                    "options": {
+                        "A": "熊罴怪，黑风山",
+                        "B": "猪刚鬣，福陵山云栈洞",
+                        "C": "黄风怪，黄风岭",
+                        "D": "沙悟净，流沙河"
+                    },
+                    "correct": "B",
+                    "analysis": "高家的妖怪女婿是猪刚鬣，栖身在福陵山云栈洞。他原是天蓬元帅，被贬下凡错投猪胎，成了猪妖。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "猪八戒的“前身”是：",
+                    "options": {
+                        "A": "天蓬元帅，掌管天河八万水军",
+                        "B": "卷帘大将",
+                        "C": "金蝉子",
+                        "D": "托塔天王"
+                    },
+                    "correct": "A",
+                    "analysis": "猪八戒原是玉帝驾下的天蓬元帅，掌管天河八万水军，地位显赫，因醉酒调戏嫦娥被贬下凡。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "天蓬元帅被贬下凡后，为什么会变成猪妖？",
+                    "options": {
+                        "A": "他本来就长得像猪",
+                        "B": "投胎时错投了猪胎",
+                        "C": "被观音惩罚变成猪",
+                        "D": "他自愿变成猪躲藏"
+                    },
+                    "correct": "B",
+                    "analysis": "天蓬元帅被贬出天关，下界投胎时“错投了猪胎”，因此变成猪头猪脑的猪妖。这是八戒形象充满喜剧色彩的原因。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空打听妖怪来历的方式是：",
+                    "options": {
+                        "A": "直接去云栈洞叫阵",
+                        "B": "变作高翠兰，在房里套问猪八戒的话",
+                        "C": "问土地神",
+                        "D": "翻看高家的家谱"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空变作高翠兰在房里等八戒，趁八戒毫无防备，套出了他的来历与底细。这是“知己知彼”的战术智慧。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "“猪八戒背媳妇”桥段中，八戒背的其实是：",
+                    "options": {
+                        "A": "真的高翠兰",
+                        "B": "悟空变化成的假翠兰",
+                        "C": "观音变化的翠兰",
+                        "D": "一只猪妖"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒要背“媳妇”回洞成亲，背的是悟空变化成的假翠兰。走到半路，悟空现出本相，八戒才知道上了当。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "悟空在八戒面前现出本相后，八戒的反应是：",
+                    "options": {
+                        "A": "立刻跪地求饶",
+                        "B": "大惊失色，举钉耙与悟空大战",
+                        "C": "高兴地与悟空叙旧",
+                        "D": "逃跑躲进山里"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒见背的是毛脸雷公嘴的猴精，又惊又怒，举钉耙便打，与悟空从高老庄一路打回福陵山云栈洞。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "八戒最终愿意皈依唐僧，主要是因为：",
+                    "options": {
+                        "A": "被悟空打怕了，不得不从",
+                        "B": "想起观音早让他等取经人，正好唐僧就是取经人，且有改过向善之心",
+                        "C": "高家给他很多银子",
+                        "D": "他想吃唐僧的斋饭"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒战败后听说唐僧是取经人，想起观音曾嘱咐他“等取经人来，随他西行”，便烧了洞府、皈依佛门。既有外力，也有向善之心。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "唐僧给八戒起的法名和别称分别是：",
+                    "options": {
+                        "A": "法名悟能，别称八戒",
+                        "B": "法名悟净，别称八戒",
+                        "C": "法名悟空，别称八戒",
+                        "D": "法名悟能，别称行者"
+                    },
+                    "correct": "A",
+                    "analysis": "唐僧给八戒剃度，赐法名“悟能”；又因他不戒荤腥、贪吃好色，要他戒掉八种毛病，所以叫他“八戒”。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "“八戒”这个别称的深层含义是：",
+                    "options": {
+                        "A": "吃八碗饭的戒律",
+                        "B": "要他遵守佛门戒律、戒掉八种毛病，既是名字也是提醒",
+                        "C": "只准吃八种食物",
+                        "D": "八戒是排行第八的意思"
+                    },
+                    "correct": "B",
+                    "analysis": "“八戒”指戒除八种戒律与毛病。这个名字既是法号，也是唐僧对他的提醒与期望——克服贪吃好色等毛病，好好修行。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "猪八戒这个角色，精读中概括为：",
+                    "options": {
+                        "A": "完美无缺的英雄",
+                        "B": "贪吃懒散、爱耍小聪明，却真实可爱、能在团队中找到位置",
+                        "C": "阴险狡诈的反派",
+                        "D": "默默无闻的配角"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒有贪吃、懒惰、爱占小便宜等毛病，却因此显得真实可爱。他虽不完美，却是团队的“气氛担当”和重要战力，有自己的位置与价值。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "八戒作为“带病的修行者”，他的特点是：",
+                    "options": {
+                        "A": "已经彻底改掉所有毛病",
+                        "B": "经观音点化后不再吃人、持斋把素，但贪吃好色的毛病还在，需在修行中慢慢改",
+                        "C": "完全不想改过自新",
+                        "D": "从来不犯错误"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒受观音点化后已不再吃人、持斋把素，但贪吃好色等习气仍重。他是“带着毛病上路、在修行中改毛病”的普通人，这更贴近真实人性。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "“猪八戒背媳妇”成为经典喜剧，主要因为它：",
+                    "options": {
+                        "A": "场面宏大、打斗激烈",
+                        "B": "幽默风趣、寓教于乐，讽刺了贪心好色的行为",
+                        "C": "让人感动落泪",
+                        "D": "情节复杂难懂"
+                    },
+                    "correct": "B",
+                    "analysis": "这个桥段既有喜剧的欢乐，又有惩恶扬善的深意——贪心好色者终被捉弄。这种“寓教于乐”的写法，是《西游记》老少皆宜的重要原因。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "取经团队的成员，精读强调他们都是：",
+                    "options": {
+                        "A": "法力无边的圣人",
+                        "B": "犯了错、待赎罪，带着毛病上路修行的人",
+                        "C": "天生完美的天才",
+                        "D": "被强迫押送西天的犯人"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空大闹天宫、八戒调戏嫦娥、沙僧打碎玻璃盏、白龙马烧明珠——取经团队成员都有过错，却都在取经路上赎罪修行、改过向善。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "本回中，高太公多次“请法师捉妖”均失败，这说明了：",
+                    "options": {
+                        "A": "妖怪太厉害，无人能敌",
+                        "B": "凡俗之力难以解决根本问题，需要真正的修行者（悟空）出手",
+                        "C": "高太公舍不得花钱",
+                        "D": "法师们都不愿意帮忙"
+                    },
+                    "correct": "B",
+                    "analysis": "普通法师的法术对八戒无效，悟空凭借真本事将其收服。这体现了“行善积德、救苦救难”的主题，也说明解决难题要靠真正的实力与智慧。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "高太公的小女儿名叫______，被妖怪女婿锁在后宅。",
+                    "answer": "高翠兰",
+                    "analysis": "高太公的小女儿叫高翠兰，被妖怪女婿（猪八戒）强娶后锁在后宅，三年不见天日。高太公请法师降妖，正好遇到取经的唐僧师徒。悟空变作高翠兰的样子「引蛇出洞」，才引出猪八戒。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "猪八戒原是天庭的______元帅，掌管天河八万水军。",
+                    "answer": "天蓬",
+                    "analysis": "猪八戒原是天庭掌管天河八万水军的天蓬元帅，威风八面。只因蟠桃会上喝醉酒、调戏嫦娥，被玉帝贬下凡间。一个「酒」字误终身——酒后失德，代价惨重。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "天蓬元帅因______调戏嫦娥被贬，下界时错投______胎。",
+                    "answer": "醉酒|猪",
+                    "analysis": "天蓬元帅因「醉酒调戏嫦娥」被贬，投胎时又慌慌张张，错投了母猪胎，变成猪头人身的模样。一失足成千古恨，还添了几分「喜剧色彩」——八戒的「贪吃好色」，从这一念之差就埋下了种子。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "猪刚鬣栖身在______山______洞。",
+                    "answer": "福陵|云栈",
+                    "analysis": "猪八戒被贬后栖身在福陵山云栈洞，靠吃人度日，自称「猪刚鬣」。后来经观音点化，才「持斋把素」，等候取经人。从「吃人魔王」到「候补取经人」，八戒的转变，靠的是观音的一番开导。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "悟空变作______套问出猪八戒的来历，又变作“媳妇”戏弄他。",
+                    "answer": "高翠兰",
+                    "analysis": "悟空先变作高翠兰的模样套问猪八戒的来历，把八戒的老底摸得一清二楚；后来又变作「媳妇」戏弄他，让八戒吃了个哑巴亏。悟空「智取」八戒——有时动脑子，比动手更管用。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "唐僧给猪八戒赐法名“______”，又因他不守戒律，叫他“______”。",
+                    "answer": "悟能|八戒",
+                    "analysis": "唐僧给猪刚鬣赐法名「悟能」，又因他不守「五荤三厌」的戒律，给他起个别号叫「八戒」，提醒他要戒掉这些毛病。取名字这件事，本身就含着「约束与期望」——名字叫「八戒」，是天天提醒他「要八戒」。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "猪八戒经观音点化后不再吃人、______，皈依佛门。",
+                    "answer": "持斋把素",
+                    "analysis": "猪八戒经观音点化后「持斋把素」（吃素斋、守戒律），不再吃人。虽然后来他经常「破戒」（偷吃西瓜、惦记美色），但大方向已经「改邪归正」。可见改变不是一蹴而就，允许反复，但要始终向上。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "“猪八戒______”是民间最经典的喜剧桥段之一，讽刺了贪心好色的行为。",
+                    "answer": "背媳妇",
+                    "analysis": "「猪八戒背媳妇」是民间最经典的桥段：悟空变作高小姐，让八戒背着走，一路上捉弄他。这个桥段既好笑，又讽刺了八戒「贪心好色」的毛病——背上的「媳妇」是假的，贪来的「便宜」往往是陷阱。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“缺点与成长”】猪八戒贪吃、懒惰、爱耍小聪明，却仍是取经团队的重要一员。请谈谈：人都有缺点，为什么“带着缺点努力变好”比“假装没有缺点”更可贵？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>直面缺点更可贵：</strong> 八戒从不掩饰自己的贪吃懒做，却在取经路上一次次成长。承认自己有缺点并努力改进，比伪装完美、拒绝反省更能让人进步。</p>\n                        <p class=\"mt-2\"><strong>联系自己：</strong> 承认自己粗心，才能想办法改；承认自己贪玩，才能定计划管住自己。不要因为“有缺点”就否定自己，也不要“破罐子破摔”。一点点改，就是了不起的成长。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“团队包容”】取经团队里，悟空机灵、八戒贪吃、唐僧迂腐，性格各异却能一起走到西天。请谈谈：一个团队为什么需要“性格不同”的人？我们该如何接纳与自己不一样的人？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>性格互补的价值：</strong> 若团队里全是“急性子”，就容易冲动犯错；全是“慢性子”，又可能拖沓误事。不同性格互相制衡、互相补充，团队才更稳健。</p>\n                        <p class=\"mt-2\"><strong>接纳不同：</strong> ①不嘲笑别人的特点，理解“每个人都不一样”；②欣赏他人的长处，包容他人的短处；③遇到分歧多沟通，求同存异。一个能容纳不同声音的集体，才最有活力。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“贪欲的教训”】八戒因“贪”（调戏嫦娥、贪吃）而堕落，又因“贪”在“背媳妇”中被戏弄。请谈谈：贪欲会给人带来哪些危害？我们该如何在诱惑面前“管住自己”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>贪欲的危害：</strong> 贪让人失去理智、失去前途（八戒丢了天蓬元帅的位子）；贪也让人容易上当受骗（被假媳妇戏弄）。贪得无厌，最终害的是自己。</p>\n                        <p class=\"mt-2\"><strong>管住自己：</strong> ①分清“需要”与“想要”，不盲目跟风攀比；②面对诱惑先想后果，给冲动“踩刹车”；③用目标和计划约束自己（比如“写完作业才能玩”）；④培养自控力，从抵制小诱惑练起。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“将功补过”】八戒犯错被贬，但通过护送取经来赎罪。请谈谈：犯过错的人，如何用“行动”重新赢得信任？我们该怎么看待“曾经犯错的人”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>用行动赢回信任：</strong> 八戒用一路护送的实际行动赎罪，慢慢赢得团队认可。嘴上的道歉不重要，行动上的改变才真正有效。</p>\n                        <p class=\"mt-2\"><strong>看待犯错的人：</strong> ①不因一次错误给人“判死刑”，给ta改过的机会；②观察ta的持续行动，而不是只听表态；③对已经改正的人，要放下成见、真诚接纳。宽容与信任，能让人更有力量变好。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“幽默的力量”】猪八戒这个角色给取经路上带来许多笑声，“猪八戒背媳妇”更是经典喜剧。请谈谈：幽默在生活和学习中有什么作用？为什么说“会自嘲、懂幽默”是一种智慧？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>幽默的作用：</strong> 幽默能缓解紧张、拉近距离、化解尴尬。八戒的插科打诨让艰难的取经路轻松了许多，也让人记住了这个可爱的角色。</p>\n                        <p class=\"mt-2\"><strong>幽默是智慧：</strong> ①幽默需要观察力和分寸感，不是乱开玩笑；②自嘲是幽默的最高境界——能坦然面对自己的缺点，说明内心强大；③在别人难过时，适度的幽默能温暖人心。但要注意：幽默不能建立在伤害别人上。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“脚踏实地”】八戒在高家时能干活（扫地、犁田、种菜），说明他并非一无是处。请谈谈：为什么说“肯干实事”比“只会说漂亮话”更值得信赖？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>实干胜空谈：</strong> 八戒虽贪吃，但干起农活来是把好手，能实实在在帮高家做事。说一百句漂亮话，不如做一件实事让人信服。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> 班级里真正受欢迎、被信赖的，往往是那个默默扫地、主动搬书、说到做到的人。做事踏实、答应的事一定办到，这样的人到哪里都受欢迎。做实事，是最有说服力的“语言”。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“名号与自律”】唐僧给八戒起名“八戒”，是要他戒除八种毛病。请谈谈：为什么给自己“立规矩、定戒律”能帮助人成长？你给自己定过哪些“小规矩”？效果如何？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>立规矩促进成长：</strong> “八戒”这个名字时时提醒八戒约束自己。规矩像一根“标杆”，让我们知道自己该做什么、不该做什么，是自我管理的重要工具。</p>\n                        <p class=\"mt-2\"><strong>我的小规矩：</strong> 比如“晚饭前写完作业”“周一到周五不玩手机”“每天睡前读书20分钟”“犯错要主动承认”。定规矩不难，难在坚持；可以请家人监督，也可以设置小奖励。坚持下来，好习惯就养成了。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

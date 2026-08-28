@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第二十四回精读：五庄观人参果</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第二十四回精读：五庄观人参果</h1>
+            <p class="text-lg text-gray-700 serif">“万寿山大仙留友，五庄观行者窃果”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-temple')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-temple">第一章：五庄观奇果</button>
+                <button onclick="NavigationModule.switchTab('section-trust')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-trust">第二章：大仙的托付</button>
+                <button onclick="NavigationModule.switchTab('section-tempt')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-tempt">第三章：八戒撺掇</button>
+                <button onclick="NavigationModule.switchTab('section-theft')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-theft">第四章：偷果风波</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Temple -->
+        <section id="section-temple" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">万寿山五庄观：天地灵根</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    师徒四人来到万寿山五庄观。这里住着“地仙之祖”镇元大仙，观里还有一棵天地灵根——人参果树。点击翻转卡片，认识这个神奇的地方与神果。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">镇元大仙</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“地仙之祖”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t1-back">
+                        <p class="text-gray-700 text-left">
+                            五庄观主<strong>镇元大仙</strong>，号称<strong>“地仙之祖”</strong>，辈分极高、法力无边。他不拜三清、不拜四帝，只敬“天地”——在仙佛两界都地位尊崇。这回来，恰逢他<strong>外出赴会</strong>，才给悟空偷果留下了“机会”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">人参果</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“三千年一开花”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t2-back">
+                        <p class="text-gray-700 text-left">
+                            人参果树是<strong>天地灵根</strong>：<strong>三千年一开花，三千年一结果，再三千年才成熟</strong>，一万年只结<strong>三十个</strong>果子。人参果<strong>形如婴儿（三朝未满的孩童）</strong>，闻一闻能活三百六十岁，吃一个能活四万七千年——是天地间难得的<strong>仙家至宝</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：“宝贝”考验人心</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    人参果是“至宝”，也是<strong class="text-amber-900">一面照妖镜</strong>：唐僧<strong class="text-amber-900">视若婴儿、不敢食用</strong>（慈悲）；清风明月<strong class="text-amber-900">偷偷分吃</strong>（自私）；八戒<strong class="text-amber-900">馋涎欲滴</strong>（贪）；悟空<strong class="text-amber-900">偷果分食</strong>（偷）。同一件宝贝面前，每个人的<strong class="text-amber-900">品格高下，一览无余</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Trust -->
+        <section id="section-trust" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">大仙的托付：一份“恩情”与“误会”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    镇元大仙临走前，特意嘱咐看家的清风、明月两个童子：若唐僧路过，就送他两个人参果——因为五百年前，大仙曾与唐僧（金蝉子）有一面之缘。点击翻转卡片，看看这份好意如何变成了误会。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-r1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">大仙的嘱咐</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-r1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“送他两个果子”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-r1-back">
+                        <p class="text-gray-700 text-left">
+                            镇元大仙与金蝉子曾有一面之缘，便嘱咐童子：“若唐僧师徒到了，<strong>打两个人参果给他吃</strong>。”这是<strong>一份念旧的善意</strong>，也说明唐僧来历不凡——他本是如来的弟子<strong>金蝉子</strong>转世。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-r2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">唐僧拒吃</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-r2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“像婴儿，不敢吃”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-r2-back">
+                        <p class="text-gray-700 text-left">
+                            清风明月端来人参果，唐僧见果子<strong>形如婴儿</strong>，吓了一大跳：“这分明是三朝未满的孩童，我怎敢吃人？”<strong>坚决不吃</strong>。童子们见他“不识货”，只好自己把果子吃了。慈悲心肠的唐僧，却也因此<strong>错过了宝贝、留下了隐患</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“误会”的种子</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    唐僧拒吃，童子自吃——果子本来就<strong class="text-amber-900">不多不少</strong>，双方<strong class="text-amber-900">缺乏沟通</strong>，为后文的“偷果—骂人—大闹”埋下了伏笔。许多矛盾，往往就源于<strong class="text-amber-900">“没说清楚”和“各想各的”</strong>——好好沟通，能避免很多不必要的麻烦。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Tempt -->
+        <section id="section-tempt" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">八戒撺掇：从“馋”到“偷”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    八戒偷听到童子在说人参果的事，馋得直流口水。他自己不敢去偷，便撺掇悟空去偷。点击翻转卡片，看看贪念是如何一步步“传染”的。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-p1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">八戒“馋”</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-p1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“让我也尝尝！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-p1-back">
+                        <p class="text-gray-700 text-left">
+                            八戒偷听童子的谈话，知道人参果能延年益寿，<strong>馋得抓耳挠腮</strong>。他自己不敢去偷，便撺掇悟空：“师兄，你有本事，<strong>去弄几个来尝尝</strong>。”<strong>“馋”是“偷”的第一步</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-p2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">悟空“偷”</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-p2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">一念之差</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-p2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空本想不偷，架不住八戒再三撺掇，<strong>动了偷心</strong>。他跳上果树，用金箍棒<strong>一棒打下一个人参果</strong>——结果果子<strong>“遇土而入”</strong>，掉进地里消失不见。<strong>偷来的东西，往往“得而复失”</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“撺掇”的力量</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    八戒自己不敢偷，却<strong class="text-amber-900">鼓动别人去偷</strong>——这提醒我们：①<strong class="text-amber-900">贪念会“传染”</strong>，要警惕“大家都不干正事”的氛围；②<strong class="text-amber-900">鼓动别人犯错的人</strong>，往往自己躲在后面；③做人要有主见，<strong class="text-amber-900">别人怂恿“干坏事”时，要敢于说“不”</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Theft -->
+        <section id="section-theft" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">偷果风波：纸包不住火</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空费了大力气，又打下三个果子，与八戒、沙僧偷偷分吃了。可没过多久，清风明月清点果子，发现数目不对。点击翻转卡片，看看这桩“偷果案”如何败露。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-f1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">分食“仙果”</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-f1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“见者有份”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-f1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空使个“隐身法”，连打三个果子，与八戒、沙僧<strong>偷偷分吃</strong>。八戒<strong>囫囵吞枣</strong>，还没尝出味道就咽了，直说“没吃出滋味”，<strong>贪吃的人，往往连“享受”都来不及</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-f2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">东窗事发</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-f2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“果子少了！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-f2-back">
+                        <p class="text-gray-700 text-left">
+                            清风明月<strong>清点人参果</strong>，发现数目不对，一番查问，<strong>认定是悟空他们偷的</strong>，便指着师徒<strong>破口大骂</strong>。悟空被骂得性起，一怒之下，<strong>推倒了人参果树</strong>——一场大祸就此酿成（下一回）。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“一念之贪，步步错”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    从“馋”到“偷”，从“偷”到“被骂”，从“被骂”到“推树”——<strong class="text-amber-900">小错一步步滚成大错</strong>。精读提醒我们：①<strong class="text-amber-900">贪小便宜，往往吃大亏</strong>；②犯错后<strong class="text-amber-900">冲动行事</strong>（推树），只会让事情更糟；③<strong class="text-amber-900">做错事要敢担当</strong>，而不是用更大的错去“解气”。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第二十四回“万寿山大仙留友，五庄观行者窃果”是“五庄观”故事的起因。这一回让我们看到：一件“宝贝”面前，人心百态尽显——有人慈悲、有人自私、有人贪馋、有人冲动。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第二十四回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "五庄观的观主是谁？",
+                    "options": {
+                        "A": "镇元大仙，号称“地仙之祖”",
+                        "B": "太白金星",
+                        "C": "太上老君",
+                        "D": "菩提祖师"
+                    },
+                    "correct": "A",
+                    "analysis": "五庄观主是镇元大仙，号称“地仙之祖”，辈分极高、法力无边，不拜三清、不拜四帝，只敬天地。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "人参果树的特点是什么？",
+                    "options": {
+                        "A": "一年开花、一年结果",
+                        "B": "三千年一开花、三千年一结果、再三千年才成熟，一万年只结三十个",
+                        "C": "永不结果",
+                        "D": "一年结几百个果子"
+                    },
+                    "correct": "B",
+                    "analysis": "人参果是天地灵根，三千年一开花、三千年一结果、再三千年成熟，一万年才结三十个，极其珍贵。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "人参果的外形像什么？",
+                    "options": {
+                        "A": "苹果",
+                        "B": "三朝未满的婴儿（孩童）",
+                        "C": "桃子",
+                        "D": "西瓜"
+                    },
+                    "correct": "B",
+                    "analysis": "人参果形如三朝未满的孩童，正因为像婴儿，唐僧才吓得不敢吃，坚持“不吃人”。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "人参果的功效是：",
+                    "options": {
+                        "A": "只能解渴",
+                        "B": "闻一闻能活三百六十岁，吃一个能活四万七千年",
+                        "C": "只能美容",
+                        "D": "没有特殊功效"
+                    },
+                    "correct": "B",
+                    "analysis": "人参果是仙家至宝，闻一闻能活三百六十岁，吃一个能活四万七千年，因此人人都想尝一口。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "镇元大仙外出前，嘱咐童子们做什么？",
+                    "options": {
+                        "A": "看好家门，谁也不理",
+                        "B": "若唐僧师徒到了，送两个人参果给唐僧吃",
+                        "C": "把人参果都摘下来",
+                        "D": "把唐僧赶走"
+                    },
+                    "correct": "B",
+                    "analysis": "镇元大仙与唐僧前身金蝉子有一面之缘，便嘱咐童子送唐僧两个人参果，这是念旧的善意。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "唐僧为什么拒绝吃人参果？",
+                    "options": {
+                        "A": "他不喜欢果子的味道",
+                        "B": "觉得果子形如婴儿，不忍心吃，认为“吃人”违背戒律",
+                        "C": "怕中毒",
+                        "D": "想留给徒弟们吃"
+                    },
+                    "correct": "B",
+                    "analysis": "唐僧见人参果像三朝未满的婴儿，坚持“不敢吃人”。虽然这是误会，却体现了他的慈悲心肠。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "唐僧拒吃后，清风明月两个童子把果子：",
+                    "options": {
+                        "A": "还给了树",
+                        "B": "自己分着吃了",
+                        "C": "扔掉了",
+                        "D": "卖给了别人"
+                    },
+                    "correct": "B",
+                    "analysis": "唐僧拒吃，童子们觉得“不识货”，便自己把两个人参果分吃了。这一细节埋下了后文矛盾的伏笔。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "是谁首先撺掇悟空去偷人参果？",
+                    "options": {
+                        "A": "唐僧",
+                        "B": "沙僧",
+                        "C": "八戒",
+                        "D": "清风"
+                    },
+                    "correct": "C",
+                    "analysis": "八戒偷听到人参果的事，馋得不行，自己不敢去偷，便撺掇悟空“有本事去弄几个来尝尝”。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "悟空打下的第一个人参果，发生了什么事？",
+                    "options": {
+                        "A": "被八戒抢走了",
+                        "B": "“遇土而入”，掉进地里消失不见",
+                        "C": "被清风明月发现",
+                        "D": "掉到唐僧面前"
+                    },
+                    "correct": "B",
+                    "analysis": "人参果“遇土而入”，悟空打下的第一个果子掉进地里不见了，气得他直跳脚，也说明“偷来的东西往往得而复失”。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "悟空后来打了几个果子，与八戒、沙僧分吃？",
+                    "options": {
+                        "A": "一个",
+                        "B": "三个",
+                        "C": "五个",
+                        "D": "十个"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空用棒又打下三个果子，与八戒、沙僧三人分吃。八戒囫囵吞枣，没尝出滋味就咽了。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "偷果之事是如何败露的？",
+                    "options": {
+                        "A": "悟空主动承认",
+                        "B": "清风明月清点人参果，发现数目不对，查问后认定是悟空他们偷的",
+                        "C": "八戒说漏了嘴",
+                        "D": "唐僧告状"
+                    },
+                    "correct": "B",
+                    "analysis": "清风明月清点果子发现少了，一番查问后认定是师徒所为，便指着他们破口大骂。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "被骂之后，悟空一气之下做了什么？",
+                    "options": {
+                        "A": "赔礼道歉",
+                        "B": "推倒了人参果树",
+                        "C": "逃跑了",
+                        "D": "打了清风明月"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空被骂得性起，一怒之下推倒了人参果树，酿成大祸，为下一回“镇元仙捉取经僧”埋下伏笔。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "从“馋”到“偷”、从“偷”到“推树”，精读概括为：",
+                    "options": {
+                        "A": "运气不好",
+                        "B": "一念之贪、冲动行事，小错一步步滚成大错",
+                        "C": "人参果太诱人",
+                        "D": "童子们太小心眼"
+                    },
+                    "correct": "B",
+                    "analysis": "贪念引发偷窃，被骂后冲动推树，小错不断放大。这提醒我们：勿以恶小而为之，犯错后更要冷静、敢担当。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "八戒“囫囵吞枣”吃人参果的细节，讽刺的是：",
+                    "options": {
+                        "A": "人参果不好吃",
+                        "B": "贪吃的人连“享受”都来不及，贪得再多也是囫囵吞枣",
+                        "C": "八戒牙口不好",
+                        "D": "八戒不会吃"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒狼吞虎咽，还没尝出滋味就咽了。贪心的人只顾“占有”，往往失去了细细品味美好事物的机会。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "本回中“唐僧拒吃”与“悟空偷吃”形成对比，精读认为这体现了：",
+                    "options": {
+                        "A": "唐僧太傻",
+                        "B": "面对同一件“宝贝”，品格高下立现——慈悲与贪念的对比",
+                        "C": "悟空胆子大",
+                        "D": "唐僧不贪吃"
+                    },
+                    "correct": "B",
+                    "analysis": "同一件人参果，唐僧因慈悲拒吃，悟空因贪念偷吃。宝贝如同一面“照妖镜”，照出人心的高下。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "五庄观主是______大仙，号称“______之祖”。",
+                    "answer": "镇元|地仙",
+                    "analysis": "五庄观主是「镇元大仙」，号称「地仙之祖」——地仙里辈分最高的一位，连观音都要让他三分。他家里有一棵「人参果树」，是天地灵根。能让「大仙」亲自留客，唐僧的面子不小。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "人参果树______年一开花、______年一结果。",
+                    "answer": "三千|三千",
+                    "analysis": "人参果树三千年一开花，三千年一结果，再三千年才成熟，前后近一万年才结三十个果子。人参果「万年一熟」，珍贵无比。正因为太珍贵，才引出后面「偷果、毁树、求方、活树」一连串故事。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "人参果形如______未满的婴儿，唐僧因此不敢吃。",
+                    "answer": "三朝",
+                    "analysis": "人参果「三千年开花，三千年结果，再三千年成熟」，形如「三朝未满的婴儿」（出生不到三天的婴儿），有手有脚、五官俱全。唐僧一看「像小孩」，吓得不敢吃——「太像人」反而成了唐僧拒吃的理由。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "镇元大仙出门前，嘱咐童子打两个人参果给______吃。",
+                    "answer": "唐僧",
+                    "analysis": "镇元大仙出门前交代两个童子：打两个人参果给唐僧吃，「一则还他个人情，二则听他说说取经的来历」。可唐僧「肉眼凡胎」，见果如婴孩，坚决不吃。大仙的「好意」，被唐僧「拒之门外」。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "唐僧拒吃后，______两个童子把果子自己分吃了。",
+                    "answer": "清风明月",
+                    "analysis": "唐僧拒吃后，清风、明月两个童子「你一个我一个」，把人参果分吃了。正因为他们「偷吃」被八戒撞见、嘲讽，才引发八戒撺掇悟空去偷果——「贪吃」惹出「偷果」，一环扣一环。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "悟空打下的第一个人参果______而入，掉进地里不见了。",
+                    "answer": "遇土",
+                    "analysis": "悟空打下的第一个人参果「遇土而入」，一落地就钻进土里不见了。悟空以为「土地神偷走了」，还叫出土地神审问。其实人参果「遇金而落，遇木而枯，遇水而化，遇火而焦，遇土而入」——悟空没有用金器托盘，果子自然「入土」。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "八戒吃人参果时______吞枣，没尝出滋味就咽了。",
+                    "answer": "囫囵",
+                    "analysis": "八戒吃人参果时「囫囵吞枣」，一口就咽了下去，没尝出滋味，还厚着脸皮问悟空「再弄一个尝尝」。贪吃却不「识货」，吃的是「稀世珍宝」，却像吃普通水果——好东西也要细细品味，才不会「暴殄天物」。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "悟空被童子骂后，一气之下______了人参果树。",
+                    "answer": "推倒",
+                    "analysis": "悟空被清风、明月一顿臭骂（说他「偷果子」），恼羞成怒，索性一不做二不休，把整棵人参果树「推倒」了。这一推，闯下大祸——毁坏天地灵根，也为下一回「镇元仙捉取经僧」埋下伏笔。冲动是魔鬼，说的就是这一刻的悟空。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“小恶与大错”】悟空从“偷果”到“推树”，小错一步步变成大祸。请谈谈：为什么说“小错误如果不及时纠正，会越滚越大”？我们该如何“防微杜渐”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>小错会滚大：</strong> 偷一个果子是小错，被骂后推倒果树就是大祸。一次小错不改正，胆子会越来越大，错误也越来越严重。</p>\n                        <p class=\"mt-2\"><strong>防微杜渐：</strong> ①“勿以恶小而为之”，再小的错也不做；②犯了小错立刻改正、及时道歉，不拖成大错；③注意“第一次”，绝不给自己开坏头；④学会在冲动时“踩刹车”，冷静后再行动。把小问题解决在萌芽，才不会酿成大祸。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“贪念的传染”】八戒自己不敢偷，却撺掇悟空去偷。请谈谈：为什么说“鼓动别人犯错的人更该反省”？当朋友怂恿你做不该做的事时，你该怎么办？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>鼓动者更需反省：</strong> 八戒躲在后面“看戏”，却让悟空去冒险犯错，这种做法既损人也不利己。真正的朋友不该把别人“推进火坑”。</p>\n                        <p class=\"mt-2\"><strong>面对怂恿：</strong> ①分清“玩笑”与“真怂恿”，涉及原则和危险的事坚决不做；②敢于说“不”，态度明确；③可以反问“那你为什么不自己来？”；④必要时告诉老师或家长。交友要有底线，宁可暂时“不合群”，也不做错事。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“慈悲与坚持原则”】唐僧误把人参果当婴儿，坚决不吃，宁可错过仙果也不违背戒律。请谈谈：为什么说“守住原则”比“占便宜”更重要？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>原则是立身之本：</strong> 唐僧宁可错过人参果，也不肯“吃人”破戒。虽然他是误会，但这种“不为利益违背原则”的精神值得学习。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> 考试时不抄答案、拾金不昧、答应的事一定做到、不因好处说假话——这些“原则”看似吃了眼前亏，却赢得了长久的信任与安心。占小便宜可能得一时之利，守住原则才能走得长远。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“沟通避免误会”】如果清风明月把“这是仙果、吃了延年益寿”解释清楚，唐僧或许就不会拒吃，矛盾也可能少一些。请谈谈：为什么说“把话说清楚”能避免很多麻烦？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>沟通消除误会：</strong> 唐僧不敢吃是因为“不知情”，童子们觉得唐僧“不识货”却没说清楚，双方各想各的，误会就来了。</p>\n                        <p class=\"mt-2\"><strong>把话说清楚：</strong> ①表达要说清“是什么、为什么、怎么办”，不含糊；②有疑问就直接问，不自己瞎猜；③听别人说话要听完、听全，别断章取义；④发生矛盾先沟通，别急着生气。很多时候，一句解释就能化解一场误会。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“冲动是魔鬼”】悟空被骂后一怒推树，让事情变得不可收拾。请谈谈：为什么说“生气时做的决定，往往是错的”？我们该如何控制冲动？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>冲动容易出错：</strong> 悟空本来只是偷果的“小错”，一冲动推倒果树，变成“大祸”。人在愤怒时，判断力会下降，容易做出后悔的事。</p>\n                        <p class=\"mt-2\"><strong>控制冲动：</strong> ①生气时先“暂停”——数10秒、深呼吸、离开现场；②把想说的话、想做的事先放一放，冷静后再处理；③用“我生气是因为……”说出感受，而不是直接发泄；④事后复盘：当时忍一忍，结果会不会更好？学会给情绪“降温”，是成熟的重要标志。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“宝贝与人心”】人参果是仙家至宝，却引出贪、偷、骂、推树一连串风波。请谈谈：为什么说“再好的东西，用不正当手段得到也会带来灾祸”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>不正当得来的东西会“咬人”：</strong> 人参果是宝贝，但悟空他们偷来的，结果引出大祸。东西再好，若是偷来抢来，心里不安，还会引来麻烦。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> 抄来的答案考了高分，心里发虚；拿别人的东西一时高兴，被发现就难堪；用不正当手段赢得的“荣誉”，经不起推敲。真正属于自己的，才是安心的。想要好东西，就用正当、努力的方式去得到。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“知错与担当”】悟空偷果又推树，把祸闯大了。请谈谈：如果犯了错，怎样的态度才是“有担当”？“认错”和“补救”哪个更重要？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>有担当的态度：</strong> ①不推卸、不撒谎，承认“是我做的”；②不找借口，正视错误的影响；③想办法弥补损失，尽量把“坏事”变成“教训”。</p>\n                        <p class=\"mt-2\"><strong>认错与补救：</strong> 认错是开始，补救是关键——光说“对不起”不够，还要用行动减少伤害（悟空后来也去请菩萨救活果树，就是补救）。做人要有“闯了祸敢负责”的勇气，这样的担当，能让错误变成成长。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

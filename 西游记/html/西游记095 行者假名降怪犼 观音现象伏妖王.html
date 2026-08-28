@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第七十一回精读：因果报应与巧计得胜</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第七十一回精读：因果报应与巧计得胜</h1>
+            <p class="text-lg text-gray-700 serif">“行者假名降怪犼，观音现象伏妖王”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">变春娇</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">掉包金铃</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">外公叫阵</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">观音收犼</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 变春娇 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">瞌睡虫放倒春娇，虱子计骗来金铃</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空变苍蝇安抚金圣娘娘，定下“破除万事无过酒”之计。他先用瞌睡虫放倒娘娘的贴身侍婢春娇，自己变成春娇模样，陪娘娘劝赛太岁喝酒，又把毫毛变作虱子、跳蚤、臭虫布满妖怪全身，哄他脱下衣服“捉虱子”——趁机把紫金铃骗到手。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">瞌睡虫</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">放倒春娇，不伤性命</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            悟空“摸出一个瞌睡虫放在春娇脸上”，春娇倒地就睡。<strong>这次不打死再变，而是用瞌睡虫迷晕再变</strong>——同样是“顶替”，手法却与变“有来有去”不同，避免故事重复。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">虱子计</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">皇帝身上还有三个虱子</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            悟空把毫毛嚼碎变作<strong>虱子、跳蚤、臭虫</strong>布满妖怪全身，每层衣服都是。娘娘笑说“常言道，皇帝身上还有三个虱子”，主动要替大王捉虱——<strong>名正言顺地让妖怪脱下藏宝的衣服</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">变着法儿解决问题</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    同样一件事——“替代别人”，悟空每次都换新招。<strong>真正的聪明，不是重复老办法，而是每个难题都想出新解法</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 掉包金铃 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">真铃藏起，假铃入箱</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空借口替大王“捉虱子”，把三个紫金铃骗到手，立即藏起真铃，拔根毫毛变出三个一模一样的假铃。娘娘接过“假铃”放进衣箱、用黄金锁锁好——赛太岁完全没察觉。悟空随后现了本相，偷出洞去叫阵：“赛太岁，还我金圣娘娘！”
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">毫毛变假铃</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">以假乱真</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            悟空“拔根毫毛变作三个铃，一般无二”，在灯前翻捡给妖怪看，妖怪浑然不觉——<strong>真假难辨，是“掉包计”的精髓</strong>，和金角大王那回的“公母葫芦”异曲同工。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">锁进衣箱</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">假铃成了“铁证”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            娘娘把<strong>假铃</strong>放进衣箱、用黄金锁锁好——妖怪以为宝贝还锁在箱里，<strong>其实真的早被悟空贴身带走了</strong>。一锁，反而帮悟空把“铃铛还在”的假象坐实。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">瞒天过海</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空“掉包”妙在：让对手亲眼“确认”东西还在。<strong>最高明的保密，是让对方相信你已经“收好了”</strong>——安全感的错觉，是最强的烟幕。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 外公叫阵 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">“外公”与“姓外的”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空在洞外高叫“我是朱紫国拜请来的外公，来请圣宫娘娘回国”，吓得小妖去禀报“朱子国来了个叫外公的”。赛太岁竟认真查“百家姓”里有没有姓“外”的，娘娘拿“千字文”里的“外受傅训”来圆场——一段与打妖怪毫无关系的趣笔，却让人会心一笑。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">占便宜</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">叫一声外公</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            悟空自称“外公”，是要占赛太岁的便宜。妖怪骂他“相貌若猴子，嘴脸似猢狲”，悟空回敬：<strong>我五百年前大闹天宫，谁不叫我一声“老孙”，叫你叫我外公，你也不吃亏</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">千字文</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">外受傅训</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            赛太岁一本正经查“百家姓”有没有“姓外的”，娘娘说<strong>千字文里有“外受傅训”</strong>——妖怪竟信以为真。这段与打妖无关的趣笔，正是《西游记》来自民间说书的“有趣打趣”基因。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">幽默是生活的盐</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    哪怕在生死相搏的战场，作者也忘不了让人笑一笑。<strong>会幽默的人，日子再难也能过得轻松些</strong>——笑，是最好的降压药。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 观音收犼 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">金毛犼下凡，原是“消灾”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空摇响真金铃，红火青烟黄沙齐发，把赛太岁烧得走投无路——观音菩萨却现身洒甘露灭火。原来这妖怪是观音的坐骑金毛犼，趁牧童打盹咬断锁链下凡。更深的因果是：朱紫国国王当年做太子时在落凤坡射伤射死孔雀大明王菩萨的一双儿女，佛母预其“拆凤三年、身耽啾疾”，金毛犼是来替他“消灾”的。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">雌雄反转</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">我的雌，你的雄</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            赛太岁摇自己的铃，烟火沙全不放；悟空说“我的是雌的，你的是雄的——<strong>雄铃见了雌铃，害起怕来就不灵了</strong>”。这也暗合赛太岁“惧内”的性格，与平顶山“公母葫芦”正好反过来写。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">落凤坡因果</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">拆凤三年</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            观音揭秘：朱紫国国王做太子时在<strong>落凤坡射伤雄孔雀、射死雌孔雀</strong>（孔雀大明王菩萨之子），佛母预其报应“<strong>拆凤三年，身耽啾疾</strong>”——与爱人分离三年、染重病。金毛犼下凡夺后，正是替他“消灾”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c33')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">解铃还须系铃人</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c33-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">三个金铃归原主</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c33-back">
+                        <p class="text-gray-700 text-left">
+                            金毛犼现原身，观音骑上要走，发现<strong>三个金铃不见</strong>——原来金铃本是栓金毛犼的铃铛。悟空想赖账，菩萨一句“念念紧箍咒”，他立刻双手奉还：<strong>解铃还须系铃人</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">种什么因，得什么果</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    国王当年射雀的“因”，换来三年分离的“果”。<strong>你今天做的每一件事，都会在将来以某种方式回到你身边</strong>——善良和敬畏，是最好的“护身符”。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第七十一回“行者假名降怪犼，观音现象伏妖王”讲的是智斗金毛犼：瞌睡虫放倒春娇、虱子计骗出紫金铃、掉包假铃、自称外公叫阵，最后观音现身收服坐骑，并揭开朱紫国国王“落凤坡射雀”招致“拆凤三年”的因果，张天师再解五彩毒衣。这一回让我们看到：变着法儿解决问题、瞒天过海、幽默打趣、种因得果。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第七十一回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "悟空变苍蝇安抚娘娘时，定下什么计策？",
+                    "options": {"A": "硬闯","B": "“破除万事无过酒”，用酒灌醉妖怪再找机会下手","C": "下毒","D": "念咒"},
+                    "correct": "B",
+                    "analysis": "悟空说“破除万事无过酒”——让娘娘劝妖怪喝酒，把他灌醉，自己再变侍婢伺机下手。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "悟空要顶替娘娘的哪位贴身侍婢？",
+                    "options": {"A": "春娇（玉面狐狸所变）","B": "夏荷","C": "秋月","D": "冬梅"},
+                    "correct": "A",
+                    "analysis": "娘娘唤“春娇何在”，屏风后转出玉面狐狸——悟空用瞌睡虫放倒她，变作她的模样。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "悟空怎么处理侍婢春娇的？",
+                    "options": {"A": "一棒打死再变","B": "用瞌睡虫让她沉睡，自己变作她的模样","C": "关起来","D": "放走"},
+                    "correct": "B",
+                    "analysis": "这次悟空“摸出瞌睡虫放在春娇脸上”，春娇倒地就睡——不伤性命，手法与打死有来有去不同，避免重复。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "悟空用什么办法让妖怪脱下藏宝的衣服？",
+                    "options": {"A": "骗他洗澡","B": "变虱子跳蚤臭虫布满全身，娘娘借口替他捉虱","C": "强扒","D": "买新衣"},
+                    "correct": "B",
+                    "analysis": "悟空把毫毛变作虱子跳蚤臭虫布满妖怪全身，娘娘说“皇帝身上还有三个虱子”，主动要替大王捉虱——妖怪便乖乖解衣。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "娘娘劝妖怪捉虱时引用了哪句俗语？",
+                    "options": {"A": "鸡犬不宁","B": "皇帝身上还有三个虱子","C": "一毛不拔","D": "虱多不痒"},
+                    "correct": "B",
+                    "analysis": "娘娘笑言“常言道，皇帝身上还有三个虱子”——用这句俗语化解妖怪捉虱的“出丑”，顺势哄他脱衣。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "悟空骗到真金铃后，用什么制造“铃铛还在”的假象？",
+                    "options": {"A": "放回原处","B": "拔根毫毛变作三个一模一样的假铃，娘娘锁进衣箱","C": "藏起来","D": "还回去"},
+                    "correct": "B",
+                    "analysis": "悟空“拔根毫毛变作三个铃，一般无二”，娘娘把假铃放进衣箱用黄金锁锁好——妖怪以为宝贝还锁在箱里。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "悟空在洞外自称什么来叫阵？",
+                    "options": {"A": "齐天大圣","B": "朱紫国拜请来的外公","C": "如来","D": "观音"},
+                    "correct": "B",
+                    "analysis": "悟空高叫“我是朱子国拜请来的外公，来请圣宫娘娘回国”——占妖怪便宜，还惹出一段“姓外”的笑话。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "赛太岁查“百家姓”里有没有姓“外”的，娘娘拿什么圆场？",
+                    "options": {"A": "《论语》","B": "千字文里“外受傅训”","C": "《诗经》","D": "《三字经》"},
+                    "correct": "B",
+                    "analysis": "娘娘说千字文上有“外受傅训”，妖怪信以为真——这段趣笔体现《西游记》源自民间说书的幽默基因。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "妖怪拿出真铃要摇，悟空说自己也有铃，关键差别是什么？",
+                    "options": {"A": "大小","B": "“我的是雌的，你的是雄的”","C": "颜色","D": "数量"},
+                    "correct": "B",
+                    "analysis": "悟空说自己的是“雌铃”、妖怪的是“雄铃”，“雄铃见雌铃害怕就不灵了”——与平顶山“公母葫芦”正好反转。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "悟空三铃齐摇，放出什么？",
+                    "options": {"A": "雷雨","B": "红火、青烟、黄沙齐发","C": "冰雪","D": "毒箭"},
+                    "correct": "B",
+                    "analysis": "悟空“把三个铃一起摇”，红火、青烟、黄沙一起滚出，又念咒从巽地呼风助势，把赛太岁烧得魂飞魄散。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "赛太岁到底是什么来历？",
+                    "options": {"A": "太上老君坐骑","B": "观音菩萨的坐骑金毛犼","C": "弥勒的童子","D": "野生的妖怪"},
+                    "correct": "B",
+                    "analysis": "观音说“他就是我的坐骑金毛犼”——牧童打盹失守，金毛犼咬断锁链下凡作怪。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "观音为什么说金毛犼是来“消灾”的？",
+                    "options": {"A": "帮国王灭妖","B": "朱紫国国王当年射死射伤孔雀大明王菩萨的儿女，佛母预其“拆凤三年”，金毛犼夺后正是替他了结这段报应","C": "保护国王","D": "替悟空立功"},
+                    "correct": "B",
+                    "analysis": "国王做太子时在落凤坡射伤雄孔雀、射死雌孔雀，佛母预其报应“拆凤三年、身耽啾疾”——金毛犼下凡夺后三年，正是完成这段因果。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "三个金铃原本是什么？",
+                    "options": {"A": "赛太岁的法宝","B": "栓金毛犼的铃铛","C": "悟空的宝贝","D": "老君的金刚琢"},
+                    "correct": "B",
+                    "analysis": "金毛犼现原身，观音发现“三个金铃不见”——原来紫金铃是栓金毛犼的铃铛，所以观音说“还我铃来”。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "悟空想赖下金铃，观音用什么让他乖乖交出？",
+                    "options": {"A": "好言相劝","B": "威胁念紧箍咒","C": "用法宝收","D": "骗他"},
+                    "correct": "B",
+                    "analysis": "菩萨说“你不曾见我？念念紧箍咒”——悟空最怕紧箍咒，立刻双手奉还，正是“解铃还须系铃人”。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "金圣娘娘身上的五彩毒衣是谁送的？",
+                    "options": {"A": "观音","B": "张道陵天师（三年前预见“拆凤之忧”，变旧棕衣为五彩霞裳赠妖王）","C": "太上老君","D": "嫦娥"},
+                    "correct": "B",
+                    "analysis": "张天师说：三年前预见国王有“拆凤之忧”，取旧棕衣变作五彩霞裳赠妖王，让娘娘穿上——毒刺是棕衣的毛，保住娘娘名节。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "故事结尾埋下的伏笔与谁有关？",
+                    "options": {"A": "如来","B": "孔雀大明王菩萨（国王射了她的儿女，后文还会再现）","C": "玉帝","D": "地藏王"},
+                    "correct": "B",
+                    "analysis": "观音提到国王射的是孔雀大明王菩萨的孩子——这段因果在后面的取经路上还会再现（狮驼岭的孔雀与大鹏）。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "悟空用瞌睡______放倒侍婢春娇，再变作她的模样。",
+                    "answer": "虫",
+                    "analysis": "“瞌睡虫”是悟空的神奇毫毛所变，让人沉睡。这次用它放倒春娇，不伤性命，手法与打死有来有去不同。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "娘娘说“常言道，皇帝身上还有三个______子”。",
+                    "answer": "虱",
+                    "analysis": "“虱子”是这句俗语的梗——连皇帝身上都有虱子，大王捉虱不算出丑。这句俗话成了骗妖怪脱衣的“台阶”。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "悟空拔根______毛变作三个一模一样的假金铃。",
+                    "answer": "毫",
+                    "analysis": "“毫毛”是悟空身上的宝贝毛，能变化万物。拔一根变三个假铃，以假乱真，完成掉包计。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "悟空自称“朱子国拜请来的______公”，惹出“姓外”的笑话。",
+                    "answer": "外",
+                    "analysis": "“外公”本是外祖父的称呼，悟空拿来占便宜。赛太岁却以为是个姓“外”的人——正是《西游记》的有趣打趣。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "悟空说自己的是雌铃，妖怪的是______铃，“雄见雌就害怕”。",
+                    "answer": "雄",
+                    "analysis": "“雌雄”即公母。悟空说雄铃见雌铃害怕就不灵了——暗合赛太岁“惧内”怕娘娘的性格。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "赛太岁是观音菩萨的坐骑金毛______。",
+                    "answer": "犼",
+                    "analysis": "“金毛犼”是传说中似犬的神兽，观音的坐骑。它趁牧童打盹咬断锁链下凡，化作赛太岁。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "朱紫国国王当年在______凤坡射伤了孔雀大明王菩萨的儿女。",
+                    "answer": "落",
+                    "analysis": "“落凤坡”是国王射雀之地——射伤雄孔雀、射死雌孔雀，招来“拆凤三年”的报应，这是整件事的因果源头。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "张道陵天师把旧______衣变作五彩霞裳，娘娘穿上后浑身生刺。",
+                    "answer": "棕",
+                    "analysis": "“棕衣”即棕树皮做的蓑衣，其毛扎人。张天师变它为五彩霞裳送给妖王，娘娘穿上后毒刺护身，保住了名节。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“换个思路”】悟空顶替有来有去用“打死再变”，顶替春娇却用“瞌睡虫迷晕再变”。请谈谈：为什么同一件事也要“变着法儿”做？你如何避免“死脑筋”地重复老办法？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>重复是故事的敌人：</strong> 若悟空次次都“打死再变”，故事就索然无味。<strong>换个办法，既解决问题，又打开新局面</strong>。</p>\n                        <p class=\"mt-2\"><strong>避免死脑筋：</strong> ①同一个题目，试着换一种解法；②老办法不灵时，停下来问“还能怎么做”；③多观察别人怎么处理类似问题；④把“一个办法”拆成“几种选择”；⑤犯错不可怕，可怕的是“一招用到老”。<strong>方法越多，路就越宽；路越宽，人就越自由</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“瞒天过海”】悟空用假铃锁进衣箱，让妖怪以为宝贝还在。请谈谈：为什么“让对方相信安全”有时比“直接对抗”更有效？你如何理解“以智取胜”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>攻心胜于攻力：</strong> 妖怪亲眼“看到”铃铛锁在箱里，就彻底放松了警惕——<strong>让对方“以为安全”，往往比硬碰硬更容易赢</strong>。</p>\n                        <p class=\"mt-2\"><strong>以智取胜：</strong> ①先观察，再出手；②能“巧干”就不“蛮干”；③谈判时，先想对方最在意什么；④下棋、打球，都要“虚实结合”，让对方猜不透；⑤用智慧解决问题，既省力又服人。<strong>头脑，是比拳头更厉害的本事</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“幽默化解尴尬”】“外公”与“姓外的”这段趣笔，与打妖怪毫无关系，却让人会心一笑。请谈谈：为什么幽默能让人“苦中作乐”？你如何用幽默缓解压力？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>笑，是生活的良药：</strong> 生死相搏的战场也能讲笑话——<strong>幽默让人在苦难里喘口气，让人不被打垮</strong>。</p>\n                        <p class=\"mt-2\"><strong>用幽默减压：</strong> ①紧张时，讲个笑话给自己听；②把“糗事”讲成“段子”，一笑而过；③考试前，用玩笑话缓解焦虑；④失败时，自嘲一句“又交学费了”；⑤和幽默的朋友在一起，压力会减半。<strong>能逗自己笑的人，生活不会太苦</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“种因得果”】国王当年射雀，换来“拆凤三年”的报应。请谈谈：为什么“因果”会应验？你如何种下“好因”收获“好果”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>凡事皆有回响：</strong> 国王射雀的“因”，换来夫妻分离的“果”——<strong>今天的选择，会在明天以某种方式回到你身边</strong>。</p>\n                        <p class=\"mt-2\"><strong>种好因：</strong> ①善待同学朋友，收获友谊；②认真学习，收获成绩；③乐于助人，困难时有人帮你；④爱护环境，也爱护自己；⑤守诚信、不撒谎，别人才信你。<strong>你想收获什么，就先种下什么——因果不虚</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“成人之美”】五彩仙衣保护娘娘名节三年，让她能“完璧归赵”。请谈谈：为什么“保护他人的清白与尊严”是一种善行？你如何尊重和保护别人的尊严？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>清白与尊严，最珍贵：</strong> 一件毒衣，让娘娘三年不受玷污、回国后依然体面——<strong>保护别人的名誉，是最大的善意</strong>。</p>\n                        <p class=\"mt-2\"><strong>尊重他人尊严：</strong> ①不取笑同学的缺点和外貌；②不传播别人的隐私和秘密；③犯错时，不在大庭广众羞辱人；④背后说人好话，不当面一套背后一套；⑤看到有人被欺负，勇敢站出来。<strong>你怎样护着别人，别人就会怎样护着你</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“敬畏之心”】国王当年“好射猎”滥杀生灵，最终自食其果。请谈谈：为什么“对生命要有敬畏”？面对小动物或弱者，你如何做到“手下留情”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>生命皆可贵：</strong> 国王射的是“雀”，毁的却是别人的孩子，最终自己失去所爱——<strong>滥伤生命的人，最终会伤到自己</strong>。</p>\n                        <p class=\"mt-2\"><strong>心怀敬畏：</strong> ①不随便伤害小动物、折损草木；②见蚂蚁昆虫，给它们让条路；③对待弱小，不恃强凌弱；④以“如果我是它”来想问题；⑤敬畏生命，也敬畏规则与因果。<strong>对世界温柔的人，世界也会对他温柔</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

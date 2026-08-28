@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第五十九回精读：直面困难与巧借芭蕉扇</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第五十九回精读：直面困难与巧借芭蕉扇</h1>
+            <p class="text-lg text-gray-700 serif">“三藏路阻火焰山，行者一调芭蕉扇”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">火焰山阻路</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">翠云山借扇</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">定风丹</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">假扇真相</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 火焰山阻路 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">八百里火焰：秋天的“热”从哪来？</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    时值秋天，师徒却越走越热。八戒猜“到了日落之处”，沙僧猜“秋行夏令”，悟空笑他们胡扯。路边一片通红的庄院告诉了他们答案：前方六十里，正是八百里火焰山，寸草不生。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">一片皆红</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">红瓦红墙红门</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            路边庄院“红瓦的房舍、红砖的墙、红油的门板、红漆的板榻，一片皆红”。在《西游记》里，“<strong>红</strong>”常与<strong>红孩儿</strong>、<strong>火</strong>相关联——名字与颜色里，又藏着后文的伏笔。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">八百里火焰山</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">铜脑盖也化成汁</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            老者说：此山唤作<strong>火焰山</strong>，“无春无秋，四季皆热”，正在西方必由之路上。八百里火焰，四周<strong>寸草不生</strong>，“若过得山，就是<strong>铜脑盖、铁身躯</strong>，也要化成汁儿”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c03')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">铁扇仙的传说</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c03-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">一扇熄火，二扇生风，三扇下雨</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c03-back">
+                        <p class="text-gray-700 text-left">
+                            卖糕人说：“若知糕粉米，敬求<strong>铁扇仙</strong>。”铁扇仙有一柄<strong>芭蕉扇</strong>：一扇熄火、二扇生风、三扇下雨，百姓才能布种收割。想过去，就得借到这把扇子。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">“问”出来的办法</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空没有硬闯火焰山，而是先买糕、再打听，从卖糕人口中问出了“铁扇仙”这条线索——<strong>遇到难题，先“摸清门路”再动手</strong>，往往比蛮干省力得多。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 翠云山借扇 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">旧怨难解：铁扇公主的怒火</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空飞到西南方一千四五百里的翠云山芭蕉洞，樵夫却告诉他：这里没有“铁扇仙”，只有“铁扇公主”罗刹女，是牛魔王的妻子——正是当年红孩儿的母亲。这扇子，恐怕不好借。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">又是冤家</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">红孩儿的老娘</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            樵夫笑道：“芭蕉洞虽有，却没有个铁扇仙，有个<strong>铁扇公主</strong>，又叫罗刹女，是<strong>牛魔王之妻</strong>。”悟空心里咯噔一下：当年收伏的<strong>红孩儿</strong>正是她儿子——旧怨未了，这扇子注定难借。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">攀亲与翻脸</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">嫂嫂，老孙在此</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            悟空先高叫“<strong>牛大哥，开门</strong>”攀兄弟之谊，又躬身称“<strong>嫂嫂</strong>”。罗刹女却“如火上浇油”：“谁是你的嫂嫂！<strong>坑陷我子</strong>，正没处寻你报仇！”抄起两口青锋宝剑就砍。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c13')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">砍剑不伤</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c13-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">受得起，就借扇子</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c13-back">
+                        <p class="text-gray-700 text-left">
+                            罗刹女约定“伸过头来，等我砍上几刀，受得起就借扇子”。悟空叉手任她<strong>砍了十几剑</strong>，毫发无伤。罗刹女怕了，却反悔：“我的宝贝，<strong>原不轻借</strong>！”取出<strong>芭蕉扇</strong>一扇，把悟空扇得无影无踪。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">躲是躲不过去的</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空本可以随便报个假名蒙混，却老老实实报出“孙悟空”——因为他明白：<strong>人生路上的困难，靠“躲”是躲不过去的</strong>，只能兵来将挡、正面对上。旧怨躲不开，那就想办法化解它。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 定风丹 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">灵吉赠丹：先“站得住”再“想得到”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空被扇到小须弥山，正巧是当年降黄风怪时灵吉菩萨的道场。灵吉告诉他芭蕉扇的来历，并送出当年没用上的“定风丹”——有它在身，芭蕉扇就扇不动悟空了。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">芭蕉扇的来历</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">昆仑山天地灵宝</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            灵吉菩萨说：芭蕉扇本是<strong>昆仑山混沌开辟以来天地产成的灵宝</strong>，乃“太阴之精叶”，故能灭火。若扇着人，要<strong>飘八万四千里</strong>方息阴风——悟空因有“留云之能”，才只落到了小须弥山。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">定风丹</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">教那厮搧你不动</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            灵吉把当年降黄风怪时<strong>没用上的定风丹</strong>送给悟空，<strong>缝在衣领里</strong>。“管教那厮搧你不动”——先让悟空“站得住”，再去想办法拿扇子。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">“稳”是“赢”的第一步</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空第一次被一扇扇跑，是因为“站不稳”；有了定风丹，才能跟罗刹女周旋。<strong>面对难题，先让自己“站稳脚跟”（心态稳、基础牢），才有本钱去想办法</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 假扇真相 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">假扇误事：有经处有火，无火处无经</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空变成小虫钻进罗刹女肚中，逼她交出一把扇子，满心欢喜拿回一试——谁知第一扇火更旺，第二扇火气愈盛，第三扇火头千丈高，把悟空的腿毛都烧光了。土地点破：那是把假扇。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">变虫入腹</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">先送你个坐碗儿</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            悟空变作<strong>蟭蟟虫</strong>钻入洞中，又变成<strong>茶沫</strong>被罗刹女喝下肚。他在肚子里“先送个坐碗儿”（蹬一脚），再“送个点心”（顶一下），疼得罗刹女满地打滚，连叫“<strong>孙叔叔饶命</strong>”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">拿扇脱身</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">把嘴张三张</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            罗刹女拿出“一柄”芭蕉扇——<strong>“一柄”二字暗示扇子不止一把</strong>。悟空从她口中飞出，叮在扇上，还说“把嘴张三张我就出来”，虚晃一枪，拿着扇子道谢离去。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c33')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">有经处有火</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c33-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">无火处无经</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c33-back">
+                        <p class="text-gray-700 text-left">
+                            假扇把火扇得千丈高。八戒提议“拣没火的地方走”，唐僧却说“我只要往<strong>有经处</strong>去”。沙僧一语道破：“<strong>有经处有火，无火处无经</strong>。”土地也来了：要借真扇，须寻<strong>大力王</strong>（牛魔王）。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">躲开困难，就到不了“有经”的地方</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    沙僧的话是这一难的核心：<strong>真正有价值的目标，往往伴随困难（“有经处有火”）</strong>；贪图好走的路，就取不到真经。<strong>简单的事人人会做，难走的路才通向成长</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第五十九回“三藏路阻火焰山，行者一调芭蕉扇”讲的是借扇遇阻：火焰山挡路、铁扇公主旧怨、定风丹站稳、变虫取扇、假扇误事。这一回让我们看到：先摸底再动手、躲是躲不过去的、稳是赢的第一步、有经处有火无火处无经。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第五十九回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "师徒行到秋天，却越走越热，原因是什么？",
+                    "options": {"A": "天气反常","B": "前方六十里正是八百里火焰山，四季皆热","C": "快天黑了","D": "太阳出来了"},
+                    "correct": "B",
+                    "analysis": "老者告知：此地唤作火焰山，“无春无秋，四季皆热”，正在西去的必经之路上，八百里火焰寸草不生。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "卖糕人说，要知道糕粉米从哪里来，该求谁？",
+                    "options": {"A": "如来","B": "铁扇仙","C": "观音","D": "土地"},
+                    "correct": "B",
+                    "analysis": "卖糕人说“若知糕粉米，敬求铁扇仙”——铁扇仙有芭蕉扇，一扇熄火、二扇生风、三扇下雨，百姓才能种粮。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "铁扇仙的芭蕉扇，三扇分别有什么效果？",
+                    "options": {"A": "一扇下雨、二扇生风、三扇熄火","B": "一扇熄火、二扇生风、三扇下雨","C": "一扇刮风、二扇打雷、三扇下雨","D": "三扇都下雨"},
+                    "correct": "B",
+                    "analysis": "传说中“一扇熄火，二扇生风，三扇下雨”，百姓得雨才能布种收割——这把扇子正是过火焰山的关键。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "铁扇公主的真实身份是？",
+                    "options": {"A": "观音","B": "罗刹女，牛魔王的妻子","C": "土地婆婆","D": "女儿国女王"},
+                    "correct": "B",
+                    "analysis": "樵夫说芭蕉洞里没有铁扇仙，只有铁扇公主罗刹女，是牛魔王之妻——正是红孩儿的母亲。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "罗刹女为什么一见孙悟空就怒火中烧？",
+                    "options": {"A": "孙悟空偷了她的扇子","B": "孙悟空降伏了她的儿子红孩儿（观音收为善财童子）","C": "孙悟空打坏了她的门","D": "孙悟空抢了她的山"},
+                    "correct": "B",
+                    "analysis": "罗刹女说“坑陷我子，正没处寻你报仇”——红孩儿被观音收走做了善财童子，母子不得相见，她恨悟空入骨。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "悟空为什么没报假名，而是老实报出“孙悟空”？",
+                    "options": {"A": "忘了","B": "人生路上的困难靠躲躲不过去，只能正面对上","C": "报假名会被识破","D": "想让罗刹女害怕"},
+                    "correct": "B",
+                    "analysis": "悟空知道报名字会惹麻烦，却仍老实相告——作者借此表达：困难躲不过去，只能兵来将挡、直面解决。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "悟空被芭蕉扇第一扇扇到了哪里？",
+                    "options": {"A": "花果山","B": "小须弥山（灵吉菩萨道场）","C": "灵山","D": "天庭"},
+                    "correct": "B",
+                    "analysis": "悟空被扇得“左沉不能落地，右坠不得存身”，一直滚到天亮，落在一座山上——正是当年降黄风怪时来过的灵吉菩萨所在的小须弥山。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "灵吉菩萨送给悟空什么宝贝来克制芭蕉扇？",
+                    "options": {"A": "飞龙宝杖","B": "定风丹","C": "净瓶","D": "照妖镜"},
+                    "correct": "B",
+                    "analysis": "灵吉菩萨说当年受如来教旨得了“一粒定风丹、一柄飞龙杖”，飞龙杖降了黄风怪，定风丹没用上，如今送悟空，“管教那厮搧你不动”。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "芭蕉扇的来历是？",
+                    "options": {"A": "铁扇公主炼制的","B": "昆仑山混沌开辟以来天地产成的灵宝，乃太阴之精叶","C": "如来赐的","D": "从太上老君处偷的"},
+                    "correct": "B",
+                    "analysis": "灵吉菩萨说芭蕉扇是昆仑山混沌开辟以来天地产成的灵宝，属太阴之精叶，所以能灭火气。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "悟空第二次去翠云山，罗刹女再扇他，为什么扇不动了？",
+                    "options": {"A": "悟空变大了","B": "身上缝了定风丹","C": "罗刹女没用力","D": "扇子坏了"},
+                    "correct": "B",
+                    "analysis": "悟空把定风丹缝在衣领里，罗刹女连扇几扇，悟空“巍然不动”，还笑说“你随便怎么扇，老孙若动一动就不算汉子”。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "悟空是怎么进到罗刹女肚子里的？",
+                    "options": {"A": "从门缝钻进去","B": "变作蟭蟟虫又变茶沫，被罗刹女连茶喝下肚","C": "被吞下去的","D": "从耳朵钻进去"},
+                    "correct": "B",
+                    "analysis": "悟空拆开衣领把定风丹噙在口中，变作蟭蟟虫飞进洞，又飞到茶沫之下，被罗刹女两三口连茶喝下肚去。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "悟空在罗刹女肚子里用什么办法逼她借扇？",
+                    "options": {"A": "念咒语","B": "先送“坐碗儿”（蹬一脚），再送“点心”（顶一下）","C": "变大","D": "说话"},
+                    "correct": "B",
+                    "analysis": "悟空把脚往下一蹬，又往上一顶，疼得罗刹女小腹剧痛、心口难禁，在地上打滚，连叫“孙叔叔饶命”。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "罗刹女交出的第一把芭蕉扇，真伪如何？",
+                    "options": {"A": "真的","B": "假的——“一柄”暗示府中不止一把，这把是假的","C": "坏的","D": "半真半假"},
+                    "correct": "B",
+                    "analysis": "原著写“拿一柄芭蕉扇”，而非“拿芭蕉扇”，暗示扇子不止一把。悟空试扇，火越扇越旺，果然是把假扇。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "悟空用假扇扇火，结果如何？",
+                    "options": {"A": "火熄灭了","B": "火越扇越旺，第三扇火头千丈高，烧尽了两股毫毛","C": "下雨了","D": "起风了"},
+                    "correct": "B",
+                    "analysis": "第一扇火光烘烘腾起，第二扇火气更着百倍，第三扇火头足有千丈高，烧尽了悟空的两股毫毛——悟空这才知道是假扇。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "八戒提议绕道走，唐僧坚持要走哪条路？",
+                    "options": {"A": "没火的路","B": "“我只要往有经处去”（西方）","C": "回东土","D": "原地等待"},
+                    "correct": "B",
+                    "analysis": "唐僧说“哪边有经呢？西边有经”，坚持往有经的地方走——真正有价值的目标，不能因为困难就绕开。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "“有经处有火，无火处无经”这句话是谁说的？",
+                    "options": {"A": "唐僧","B": "沙僧","C": "八戒","D": "土地"},
+                    "correct": "B",
+                    "analysis": "沙僧点破：“有经处有火，无火处无经”——真正的目标必然伴随困难，贪图好走的路，就到不了“有经”的地方。"
+                },
+                {
+                    "id": "q17",
+                    "num": 17,
+                    "question": "土地指出，要借真扇，须寻谁？",
+                    "options": {"A": "铁扇仙","B": "大力王（牛魔王）","C": "灵吉菩萨","D": "观音"},
+                    "correct": "B",
+                    "analysis": "火焰山土地说“若要借真蕉扇，须是寻求大力王”——引出下回孙悟空二调芭蕉扇，去找牛魔王。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "火焰山“无春无______，四季皆热”，寸草不生。",
+                    "answer": "秋",
+                    "analysis": "火焰山是“无春无秋”的火热之地。师徒秋日反而遇热，正是撞上了这座四季皆热的山——季节的“反常”引出了这一难的谜底。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "铁扇仙有一柄______扇，一扇熄火、二扇生风、三扇下雨。",
+                    "answer": "芭蕉",
+                    "analysis": "“芭蕉扇”是过火焰山的关键法宝。它是昆仑山天地生成的灵宝，属太阴之精叶，故能灭火气。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "铁扇公主就是罗刹女，是______魔王之妻。",
+                    "answer": "牛",
+                    "analysis": "铁扇公主是牛魔王的妻子，也就是红孩儿的母亲。这层旧关系，让借扇之事难上加难——旧怨未解，扇子难借。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "悟空被扇到小须弥山，灵吉菩萨送他一粒______丹。",
+                    "answer": "定风",
+                    "analysis": "“定风丹”能让人“任你扇我巍然不动”。悟空把它缝在衣领里，再面对罗刹女的芭蕉扇，就站得住脚了。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "悟空变作蟭蟟虫，又变作茶______，被罗刹女连茶喝下肚。",
+                    "answer": "沫",
+                    "analysis": "悟空飞到“茶沫之下”，罗刹女两三口把茶连同虫子一起喝下——进入肚腹，悟空便可在里面“大闹天宫”逼她借扇。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "罗刹女疼得在地打滚，连叫“孙______饶命”。",
+                    "answer": "叔叔",
+                    "analysis": "罗刹女起初叫“泼猴”“孙行者”，被悟空在肚子里折腾后，改口叫“孙叔叔”——称呼的变化，写出她由怒到怕的心理转变。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "悟空用假扇扇火，火越扇越旺，烧尽了两股______。",
+                    "answer": "毫毛",
+                    "analysis": "假扇不但不灭火，第三扇火头千丈高，把悟空两股毫毛烧尽。毫毛是悟空拔毛变身的本钱，这一烧，悟空才知道上了当。"
+                },
+                {
+                    "id": "bq25",
+                    "num": 25,
+                    "question": "沙僧说：“有经处有______，无火处无经。”",
+                    "answer": "火",
+                    "analysis": "这句话是本回的点睛之笔：真正有价值的目标（“经”）往往与困难（“火”）相伴。想躲开困难，就到不了“有经”的地方。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“先摸底再动手”】悟空没有硬闯火焰山，而是买糕、打听，问出“铁扇仙”这条线索。请谈谈：为什么“先调查研究”比“盲目行动”更聪明？你在学习上如何“先摸底”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>摸底能少走弯路：</strong> 悟空若直接冲进火焰山，只会被烤成“猴干”。他先问清楚“什么能灭火、扇子在哪里、主人是谁”，才一步步找到办法。<strong>方向对了，努力才有意义</strong>。</p>\n                        <p class=\"mt-2\"><strong>学习中的“摸底”：</strong> ①考试前先看“题型和范围”，不瞎复习；②写作文前先“列提纲、查素材”；③做难题前先“读懂题意、圈关键词”；④遇到新知识，先“预习”再听讲；⑤重要的事，先“了解规则”再动手。凡事“先摸底”，事半功倍。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“躲是躲不过去的”】悟空可以报假名蒙混，却老实报出真名。请谈谈：为什么“逃避”解决不了根本问题？你遇到过“越躲越麻烦”的事吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>逃避治标不治本：</strong> 悟空就算报假名躲过这一次，旧怨还在、扇子还是要借，问题迟早还会回来。<strong>躲得过一时，躲不了一世</strong>。</p>\n                        <p class=\"mt-2\"><strong>勇敢面对：</strong> ①作业没写完，躲着不交只会越积越多；②和同学有误会，逃避只会让隔阂加深；③有不会的题，先自己试、再问人，别拖；④做错事，主动承认比藏着被发现更好；⑤把“麻烦”当成“迟早要过的关卡”，早面对早通关。<strong>真正的勇敢，不是不害怕，而是害怕也往前走</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“稳是赢的第一步”】悟空有了定风丹才站得住，才能跟罗刹女周旋。请谈谈：为什么“稳住心态”是解决难题的前提？紧张时，你如何让自己“定”下来？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>心不定则事难成：</strong> 悟空第一次被一扇扇跑，是因为“站不稳”；心稳了，才有心思想办法。<strong>人一慌，再简单的题也容易做错；心一定，再难的路也能一步步走</strong>。</p>\n                        <p class=\"mt-2\"><strong>让自己“定”下来：</strong> ①上台前深呼吸三次，告诉自己“我准备过了”；②考试紧张时，先做会做的题，找回手感；③把大目标拆小，先完成眼前一小步；④提醒自己“担心也没用，动手才有用”；⑤睡前不胡思乱想，做几组深呼吸再睡。<strong>稳得住心，才扛得住事</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“有经处有火”】沙僧说“有经处有火，无火处无经”。请谈谈：为什么“真正有价值的事，往往都不轻松”？学习中你如何“拥抱困难”而不是“绕开困难”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>有价值的路不好走：</strong> 取经要经过火焰山、盘丝洞、狮驼岭，一趟轻松的路带不回真经。学习也是一样——<strong>背单词不轻松，但词汇量上去了；做难题不轻松，但思维变强了</strong>。</p>\n                        <p class=\"mt-2\"><strong>拥抱困难：</strong> ①遇到难题先想“我又要变强了”，而不是“真倒霉”；②把困难当“闯关游戏”，一关一关过；③绕不开的难事，早做晚做都要做，不如早做；④不会就问、就查，把“卡点”变成“知识点”；⑤奖励自己：每克服一个困难，就给自己一点小鼓励。<strong>没有困难的“捷径”，往往通向不了“真经”</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“细节里的伏笔”】“拿一柄芭蕉扇”这个细节暗示扇子不止一把。请谈谈：为什么写作时“一个词都不能随便”？你如何通过细节让文章更有味道？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>一字见功力：</strong> 若写“拿芭蕉扇”就是真扇；写“拿<strong>一柄</strong>芭蕉扇”，读者细想才悟：原来还有假扇。经典作品就是这样——<strong>一个量词，都在为后文埋伏笔</strong>。</p>\n                        <p class=\"mt-2\"><strong>用细节写作：</strong> ①写人用“小动作”（紧张时抠衣角）；②写物用“准确量词、形容词”（一柄扇、一碗凉茶）；③重要线索藏在“不起眼”的地方；④写完多读几遍，问自己“这个词有没有更准的”；⑤让细节“前后呼应”。<strong>好文章的味道，常常藏在“一个词”的讲究里</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q31",
+                    "num": 31,
+                    "question": "【关于“冤家宜解不宜结”】铁扇公主因儿子被收走而恨悟空，悟空却始终称她“嫂嫂”、不伤她性命。请谈谈：为什么“以怨报怨”只会让矛盾更大？面对“结过仇”的人，我们该怎么做？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>冤冤相报何时了：</strong> 铁扇公主恨悟空“坑陷我子”，悟空知道她“思念孩子、情有可原”，始终手下留情。<strong>仇恨像滚雪球，你捅我一刀我捅你一刀，最后两败俱伤</strong>。</p>\n                        <p class=\"mt-2\"><strong>化解积怨：</strong> ①先站在对方角度想想“他为什么生气”；②不急着还手，先沟通、先讲理；③真诚道歉，也接受对方道歉；④不翻旧账，给彼此重新开始的机会；⑤学会“就事论事”，不把一次矛盾变成永久的仇。<strong>多一个朋友，少一个敌人——用善意化解仇恨，是最高明的“借扇”</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第三十六回精读：鬼王托梦</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第三十六回精读：鬼王托梦</h1>
+            <p class="text-lg text-gray-700 serif">“鬼王夜谒唐三藏，悟空神化引婴儿”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-calm')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-calm">第一章：定性存神</button>
+                <button onclick="NavigationModule.switchTab('section-dream')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-dream">第二章：鬼王托梦</button>
+                <button onclick="NavigationModule.switchTab('section-plan')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-plan">第三章：悟空设计</button>
+                <button onclick="NavigationModule.switchTab('section-baby')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-baby">第四章：立地货</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Calm -->
+        <section id="section-calm" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">定性存神：悟空的“解药”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    前面又有一座山，唐僧又害怕起来，还抱怨“怎么走了四五年还没到西天”。悟空给出了两句“心药”。点击翻转卡片，看看悟空如何开解师父。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">怕难之心</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“定性存神，自然无事”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c1-back">
+                        <p class="text-gray-700 text-left">
+                            唐僧见山就<strong>怕难</strong>：“又有一座山，须是提防魔障。”悟空却说：<strong>“只要定性存神，自然无事。”</strong>意思是：把心放平、稳住，<strong>别胡思乱想，自然平安</strong>。<strong>越提心吊胆越难过，越胡思乱想越出事</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">急于求成</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“公道自然成”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c2-back">
+                        <p class="text-gray-700 text-left">
+                            唐僧<strong>急于求成</strong>：“怎么走了四五年还没到雷音寺？”悟空笑道：<strong>“早，还没出大门呢。放心前进，还你一个公道自然成。”</strong>成功=功夫到了，<strong>功夫没到，急也没用</strong>。<strong>踏实赶路，水到渠成</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：怕难 + 急于求成 = 心乱</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    唐僧犯了两个“心”病：<strong class="text-amber-900">怕难为难</strong>（还没到就先怕）<strong class="text-amber-900">急于求成</strong>（老想“什么时候成功”）。悟空的两句解药：<strong class="text-amber-900">“定性存神”治好“怕难”</strong>，<strong class="text-amber-900">“公道自然成”治好“急躁”</strong>。考试前紧张、做事总想一步到位，都是同样的“心乱”——<strong class="text-amber-900">静下心来，一步一步做，结果自然来</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Dream -->
+        <section id="section-dream" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">鬼王托梦：乌鸡国的冤情</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    唐僧在宝林寺念经，三更时分，一阵怪风后，一个浑身湿淋淋的“人”来见他——竟是乌鸡国国王的冤魂。点击翻转卡片，看看国王蒙受了怎样的冤屈。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-d1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">冤魂来历</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-d1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">乌鸡国国王</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-d1-back">
+                        <p class="text-gray-700 text-left">
+                            来者<strong>头戴冲天冠、身穿赭黄袍、手执白玉圭</strong>——一身帝王打扮，却是<strong>浑身水淋淋</strong>。他自称<strong>乌鸡国国王</strong>：五年前国内<strong>大旱</strong>，来了个<strong>全真道士呼风唤雨</strong>，解了旱灾，国王与道士<strong>结为兄弟</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-d2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">被害经过</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-d2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">被推下琉璃井</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-d2-back">
+                        <p class="text-gray-700 text-left">
+                            阳春之日，道士<strong>哄国王到御花园八角琉璃井边“看宝贝”</strong>，趁其不备<strong>推下井中</strong>，盖石板、栽芭蕉，说国王“已死三年”。道士<strong>摇身一变，变成国王模样篡位</strong>。国王冤魂<strong>无门可诉</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">妖怪的“三大本事”与“社会批判”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    道士精读概括有三样本事：①<strong class="text-amber-900">呼风唤雨</strong>（有“本事”）②<strong class="text-amber-900">善能变化</strong>（会伪装）③<strong class="text-amber-900">关系网庞大</strong>（城隍会酒、海龙王有亲、阎罗是兄弟）连<strong class="text-amber-900">国王都被害</strong>，普通百姓<strong class="text-amber-900">更难伸冤</strong>——这正是《西游记》的<strong class="text-amber-900">“社会批判”主题</strong>：把社会上的<strong class="text-amber-900">欺压与不公</strong>写成<strong class="text-amber-900">“妖魔闹人间”</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Plan -->
+        <section id="section-plan" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">悟空设计：如何让“太子”相信？</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    国王说，妖怪变成了他的模样，谁都不信他是假的。唯一的关键证人是太子，但太子会信吗？悟空想出了一套环环相扣的妙计。点击翻转卡片，看看这套“组合拳”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-p1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">关键证人</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-p1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">太子与白玉圭</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-p1-back">
+                        <p class="text-gray-700 text-left">
+                            国王说：<strong>“我朝中还有太子是我亲生储君。”</strong>妖怪虽篡位，却<strong>不让太子见母亲</strong>——怕母子相见<strong>识破真相</strong>。国王留下<strong>信物白玉圭</strong>：妖怪变国王时，<strong>唯独没变出这件宝贝</strong>。<strong>睹物思人，太子必信</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-p2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">引太子</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-p2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“最高明的猎人，扮成猎物”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-p2-back">
+                        <p class="text-gray-700 text-left">
+                            次日太子<strong>出城打猎</strong>。悟空<strong>变作一只白兔</strong>，在太子马前乱跑，太子<strong>一箭射去</strong>，悟空<strong>一把接住箭头，带着箭跑</strong>——把太子<strong>一路引到宝林寺</strong>。<strong>“猎人扮成猎物”，主动创造机会</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“人证+物证”，一步步来</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    要让太子相信“父王是假的”，谈何容易——悟空<strong class="text-amber-900">不急着一次说破</strong>，而是：①<strong class="text-amber-900">引到寺里</strong>（创造见面的机会）②<strong class="text-amber-900">借“立地货”说出真事</strong>（先讲太子知道的事）③<strong class="text-amber-900">拿出白玉圭</strong>（物证）④<strong class="text-amber-900">让太子问母亲</strong>（人证）<strong class="text-amber-900">说服一个人，需要证据，更需要耐心与方法</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Baby -->
+        <section id="section-baby" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">立地货：会说话的“宝贝”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空让唐僧自称“进宝的和尚”，红漆盒里装着“立地货”——能知过去未来一千五百年。太子将信将疑，悟空便一步一步证明给他看。点击翻转卡片，看看“立地货”如何登场。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-b1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">立地货登场</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-b1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“上知五百年”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-b1-back">
+                        <p class="text-gray-700 text-left">
+                            唐僧按悟空计策，自称<strong>“拜佛取经进宝的和尚”</strong>，说红漆盒里的<strong>“立地货”</strong>，<strong>上知五百年、中知五百年、下知五百年</strong>。悟空<strong>变成两寸小和尚</strong>藏在盒里，一放出来便<strong>长回原身</strong>——<strong>先露一手“本事”，让太子不敢小看</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-b2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">步步为营</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-b2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“先讲你知道的”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-b2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空<strong>不先说“你父王死了”</strong>，而是<strong>先讲太子确定知道的事</strong>：五年荒旱、道士祈雨、结为兄弟……太子<strong>越听越信</strong>。再一步步说出：“你父王被推下井，三年了，<strong>现在坐在王位上的，是妖怪</strong>！”<strong>从已知推未知，最有说服力</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“立地货”的名字玄机</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    精读提到“立地货”名字可能暗藏两层意思：①<strong class="text-amber-900">“立地货”——能确立“谁才是真皇帝”</strong>，有了它就能<strong class="text-amber-900">辨明真假</strong>；②有学者认为它<strong class="text-amber-900">音近“救世主”（redeemer）</strong>——悟空正是来<strong class="text-amber-900">“搭救”乌鸡国的“救世主”</strong>。无论哪种解释，都指向同一个意思：<strong class="text-amber-900">真相终会浮出，正义终会到来</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第三十六回“鬼王夜谒唐三藏，悟空神化引婴儿”开启了“乌鸡国”故事。这一回让我们看到：怕难与急躁是“心乱”，定性存神才能过关；鬼王托梦揭示社会不公；悟空用智慧一步步让太子相信真相。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第三十六回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "面对新一座山，唐僧犯了什么“心病”？",
+                    "options": {
+                        "A": "想吃东西",
+                        "B": "怕难为难，还没上山就先害怕",
+                        "C": "想睡觉",
+                        "D": "想念妖怪"
+                    },
+                    "correct": "B",
+                    "analysis": "唐僧见山就提醒“提防魔障”，悟空指出他“怕难”——还没遇到就先害怕，越想越乱。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "悟空开解“怕难”的“心药”是：",
+                    "options": {
+                        "A": "跑得快一点",
+                        "B": "定性存神，自然无事——把心放平，别胡思乱想",
+                        "C": "多带些武器",
+                        "D": "绕道走"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空说“只要定性存神，自然无事”，越提心吊胆越难过，越胡思乱想越出事。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "唐僧抱怨“走了四五年还没到西天”，悟空笑答的五个字是：",
+                    "options": {
+                        "A": "很快就到了",
+                        "B": "公道自然成",
+                        "C": "慢慢来不急",
+                        "D": "看我的本事"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空说“放心前进，还你一个公道自然成”——功夫到了就成功，急也没用。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "“公道自然成”里的“成功”二字，精读理解为：",
+                    "options": {
+                        "A": "靠运气",
+                        "B": "功夫到了、功夫成了，就叫成功",
+                        "C": "靠别人帮忙",
+                        "D": "指日可待"
+                    },
+                    "correct": "B",
+                    "analysis": "成功=功夫到了。功夫没到就成功不了，所以不必急于求成，踏实做就是了。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "唐僧夜宿的寺院叫什么名字？",
+                    "options": {
+                        "A": "观音寺",
+                        "B": "宝林寺",
+                        "C": "金山寺",
+                        "D": "雷音寺"
+                    },
+                    "correct": "B",
+                    "analysis": "师徒借宿的是一座真正的寺院，叫宝林寺，与“碗子山波月洞”的假寺院形成对照。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "三更时分来见唐僧的“浑身水淋淋”的人是谁？",
+                    "options": {
+                        "A": "妖怪",
+                        "B": "乌鸡国国王的冤魂",
+                        "C": "夜游神",
+                        "D": "宝林寺和尚"
+                    },
+                    "correct": "B",
+                    "analysis": "来者头戴冲天冠、身穿赭黄袍、手执白玉圭，是帝王打扮的乌鸡国国王冤魂，因被推下井淹死而浑身湿淋淋。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "乌鸡国国王是如何被害的？",
+                    "options": {
+                        "A": "被妖怪用火烧死",
+                        "B": "被道士哄到御花园八角琉璃井边看宝贝，推下井中",
+                        "C": "被妖怪吃了",
+                        "D": "病死的"
+                    },
+                    "correct": "B",
+                    "analysis": "道士哄国王到八角琉璃井边看宝贝，趁其不备推下井中，盖上石板栽上芭蕉，然后变作国王篡位。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "道士的“三大本事”不包括：",
+                    "options": {
+                        "A": "呼风唤雨",
+                        "B": "善能变化",
+                        "C": "关系网庞大（城隍会酒、阎罗是兄弟）",
+                        "D": "长生不老"
+                    },
+                    "correct": "D",
+                    "analysis": "精读概括道士的三样本事：呼风唤雨、善能变化、关系网庞大。这三样让他既能篡位，又让人告不倒他。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "国王“无门可诉”的原因是：",
+                    "options": {
+                        "A": "他不想告",
+                        "B": "道士神通广大、关系网庞大，城隍海龙王东岳阎罗都是“朋友”",
+                        "C": "没有证据",
+                        "D": "他怕丢脸"
+                    },
+                    "correct": "B",
+                    "analysis": "道士与城隍会酒、与海龙王有亲、与东岳天齐为友、与十代阎罗为兄弟，冤屈无处申诉。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "“连国王都被欺负”的写法，精读指出体现了《西游记》的什么主题？",
+                    "options": {
+                        "A": "浪漫主义",
+                        "B": "社会批判与社会讽刺——把社会不公写成妖魔闹人间",
+                        "C": "神话传说",
+                        "D": "宗教宣传"
+                    },
+                    "correct": "B",
+                    "analysis": "乌鸡国是典型例子：社会上呼风唤雨、仗着关系欺负人的现象，被写成妖魔害国王。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "国王留给唐僧的信物是：",
+                    "options": {
+                        "A": "玉玺",
+                        "B": "白玉圭",
+                        "C": "金箍棒",
+                        "D": "袈裟"
+                    },
+                    "correct": "B",
+                    "analysis": "国王把白玉圭交给唐僧作“表记”（信物），因为道士变国王时唯独没变出这件宝贝，太子见了必信。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "妖怪篡位后为何不让太子见母亲？",
+                    "options": {
+                        "A": "太子太调皮",
+                        "B": "怕母子相见识破真假，走漏消息",
+                        "C": "娘娘被关起来了",
+                        "D": "母子吵架了"
+                    },
+                    "correct": "B",
+                    "analysis": "妖怪怕太子与娘娘相见后“论出长短、走了消息”，所以三年不许母子见面。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "悟空用什么办法把太子引到宝林寺？",
+                    "options": {
+                        "A": "变作一只白兔，接住太子的箭，一路引到寺前",
+                        "B": "变成妖怪引路",
+                        "C": "让唐僧去请",
+                        "D": "写一封信"
+                    },
+                    "correct": "A",
+                    "analysis": "悟空变作白兔在太子马前乱跑，太子一箭射去，悟空接住箭就跑，把太子引到宝林寺——最高明的猎人往往扮成猎物。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "唐僧自称“拜佛取经______的和尚”，为引出红漆盒里的宝贝：",
+                    "options": {
+                        "A": "化缘",
+                        "B": "进宝",
+                        "C": "传法",
+                        "D": "收徒"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空让唐僧自称“拜佛取经进宝的和尚”，这样太子自然会问“进什么宝”，从而引出“立地货”。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "悟空让太子相信“父王是假的”，采取的方法是：",
+                    "options": {
+                        "A": "直接用武力",
+                        "B": "先讲太子确定知道的事，再一步步说出真相，并给出白玉圭、让太子问母亲",
+                        "C": "让妖怪自己承认",
+                        "D": "写状纸告状"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空从已知推未知：先讲五年荒旱、道士祈雨等太子知道的事，再层层递进说出真相，人证物证俱全。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "悟空开解怕难的唐僧：只要______存神，自然无事。",
+                    "answer": "定性",
+                    "analysis": "唐僧怕前途多难，悟空开解他：「师父放心，只要定性存神，自然无事。」意思是：心安定下来、精神集中，就不会有事。「定性存神」，就是「稳住心神」——越是害怕的时候，越要「静心」。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "唐僧夜宿的寺院名叫______寺。",
+                    "answer": "宝林",
+                    "analysis": "唐僧师徒夜宿的寺院叫「宝林寺」。三更时分，乌鸡国国王的「冤魂」来求见唐僧，诉说自己被道士害死的冤屈。寺院本是「清净地」，却来了「含冤鬼」——「冤魂夜访」，正是为了「沉冤得雪」。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "三更时分来见唐僧的冤魂是______国国王。",
+                    "answer": "乌鸡",
+                    "analysis": "三更时分来见唐僧的冤魂，是「乌鸡国」国王。他三年前被一个道士推下井，道士变成了「假国王」，霸占了王位和娘娘。一个「有冤无处伸」的国王，只能求「路过的高僧」替他申冤。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "国王被道士哄到御花园______井边，推下井中。",
+                    "answer": "八角琉璃",
+                    "analysis": "国王被道士骗到御花园「八角琉璃井」边看「宝贝」，被推下井中淹死。八角琉璃井，就是「害命」的地方。堂堂一国之君，被「花言巧语」骗到井边丧命——「轻信他人」，害人不浅。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "国王留下信物______，作为太子辨真假之物。",
+                    "answer": "白玉圭",
+                    "analysis": "国王留下信物「白玉圭」（一块白玉做的礼器），托唐僧交给太子，作为「辨真假」的证据。太子看到白玉圭，才相信「眼前的父王是假的」。「物证」在手，才能「指认真凶」。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "悟空变作______，接住太子射来的箭，把他引到宝林寺。",
+                    "answer": "白兔",
+                    "analysis": "悟空变作一只「白兔」，故意引太子射箭，又把箭「衔」走，把太子引到宝林寺，听唐僧「讲真相」。用「兔子引路」，是悟空「引导太子」的妙计——「循循善诱」，比「直接说」更有效。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "红漆盒里的宝贝叫“______”，上知五百年、中知五百年、下知五百年。",
+                    "answer": "立地货",
+                    "analysis": "红漆盒里的宝贝叫「立地货」：上知五百年、中知五百年、下知五百年，一共一千五百年。悟空靠它「预知」乌鸡国的冤情——「知己知彼」，才能「运筹帷幄」。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "悟空先讲太子确定知道的事，再层层递进，这种方法叫从______推______。",
+                    "answer": "已知|未知",
+                    "analysis": "悟空先讲太子「确定知道」的事（比如「你今早射了一只白兔」），再层层递进，引出「假国王」的真相。这种「从已知推未知」的方法，是「推理」的基本功——就像做数学题，从「已知条件」推出「未知结论」。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“怕难与定性”】悟空说“定性存神，自然无事”。请谈谈：为什么“越害怕，越容易出问题”？考试前紧张时，如何让自己“定性存神”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>怕难害自己：</strong> 唐僧一遇到山就害怕，越想越乱，反而影响判断和行动。人一慌，脑子就乱，本来能做的事也做不好。</p>\n                        <p class=\"mt-2\"><strong>考试前如何定性：</strong> ①深呼吸，告诉自己要冷静；②把注意力放到“现在做什么”，而不是“万一考不好怎么办”；③考前把知识复习扎实，心里有底就不慌；④把考试当“展示自己会什么”，而不是“怕被抓住不会什么”。心静下来，水平才发挥得出来。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“急于求成”】悟空说“公道自然成”，劝唐僧别老想着“什么时候到西天”。请谈谈：为什么“急于求成”反而成不了事？你如何理解“功夫到了自然成”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>欲速则不达：</strong> 老想着“什么时候成功”，心就浮躁了，不能安心做事。就像种地，天天想着“怎么还不发芽”，不如踏踏实实浇水施肥。</p>\n                        <p class=\"mt-2\"><strong>功夫到了自然成：</strong> ①背单词别指望一天背完，每天记一点，水滴石穿；②练琴、练球，日复一日，量变产生质变；③把“结果”放下，把“过程”做好，结果自然来。成功是“水到渠成”，不是“拔苗助长”。踏实，是最快的路。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“社会批判”】乌鸡国国王被神通广大的道士害死却无处伸冤。请谈谈：《西游记》为何要把社会现象写成“妖魔闹人间”？这给你什么启发？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>借神话写现实：</strong> 作者用“妖魔鬼怪”来比喻社会上仗势欺人、关系横行、欺压百姓的人，连国王都逃不过，何况普通百姓。这表达了对不公的批判。</p>\n                        <p class=\"mt-2\"><strong>启发：</strong> ①读名著不只是读故事，还要读出“它想批评什么”；②看到不公平的事，要敢于发声、寻求正义；③做人不要学“妖怪”，不要靠关系和势力欺压别人；④相信正义终会到来，就像悟空终究会降妖。名著，是社会的镜子。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“主动创造机会”】悟空不是等太子来，而是变白兔“引”太子来。请谈谈：为什么说“机会不是等来的，是主动创造的”？学习中如何主动创造机会？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>主动创造机会：</strong> 太子不会自己来听真相，悟空就“扮猎物”把他引来。等机会，可能永远等不到；创造机会，才能把事办成。</p>\n                        <p class=\"mt-2\"><strong>学习中的主动：</strong> ①不懂就问老师，问同学（机会是自己找来的）；②主动报名比赛、参加活动，锻炼自己；③课上积极发言，让老师看到你的思考；④提前预习，遇到难题主动研究。主动的人，机会越来越多；被动的人，机会总在别人那里。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“说服的艺术”】悟空让太子相信“父王是假的”，没有直接说，而是一步步来。请谈谈：为什么“说服人”要先讲对方相信的事，再讲新的事？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>从共识出发：</strong> 悟空先讲“五年荒旱、道士祈雨”这些太子亲眼见过的事，太子觉得“这和尚说的都是真的”，才会继续听下去。先建立信任，再说新消息，对方才听得进去。</p>\n                        <p class=\"mt-2\"><strong>说服的方法：</strong> ①先找到双方都认同的点（共识）；②再慢慢引入新观点，别一开口就“你错了”；③用事实和证据说话，别只讲道理；④给对方时间和空间思考，别逼人立刻接受。说服，是“牵着对方走”，不是“推着对方走”。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“眼见为实”】妖怪变了国王的样子，连满朝文武都认不出。请谈谈：为什么“眼见”有时也不可靠？我们如何辨别真假？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>表象会骗人：</strong> 妖怪变得和国王一模一样，大家“眼见为实”，却不知是假的。骗子擅长伪装，表面的“像”不等于“真”。</p>\n                        <p class=\"mt-2\"><strong>辨别真假：</strong> ①看本质，不只看表面（言行是否一致、品格如何）；②多方核实，别只听一面之词；③重大事情找可靠的人（家长、老师、官方）确认；④留个心眼，警惕“太完美”的承诺。悟空靠“白玉圭”“问母亲”等证据辨真假。学会求证，才能不被假象骗。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“敢于伸张正义”】乌鸡国国王冤死三年，靠托梦请唐僧师徒除妖。请谈谈：为什么“相信正义、敢于求助”很重要？如果身边有不公的事，你会怎么做？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>相信正义：</strong> 国王没有放弃，他托梦求助，终于等来悟空。被欺负时，敢于说出来、找人帮忙，是勇敢的表现，不是软弱。</p>\n                        <p class=\"mt-2\"><strong>身边的不公怎么做：</strong> ①先保证自己的安全；②告诉老师、家长等可信赖的人；③留存证据（记录、截图）；④必要时寻求学校、社区的帮助；⑤看到别人被欺负，在安全范围内帮忙作证、一起反映。沉默会助长不公，开口才能带来改变。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

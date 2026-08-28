@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第二十回精读：黄风岭之险</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第二十回精读：黄风岭之险</h1>
+            <p class="text-lg text-gray-700 serif">“黄风岭唐僧有难，半山中八戒争先”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-tiger')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-tiger">第一章：黄风岭遇险</button>
+                <button onclick="NavigationModule.switchTab('section-bajie')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-bajie">第二章：八戒争先</button>
+                <button onclick="NavigationModule.switchTab('section-capture')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-capture">第三章：金蝉脱壳</button>
+                <button onclick="NavigationModule.switchTab('section-wind')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-wind">第四章：黄风怪登场</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Tiger -->
+        <section id="section-tiger" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">黄风岭：妖风起处</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    师徒三人离开高老庄继续西行，来到一座险峻的黄风岭。这里山高路险，妖气森森。点击翻转卡片，认识黄风岭的地形与第一个拦路的妖怪。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">险峻的地形</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“黄风岭”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t1-back">
+                        <p class="text-gray-700 text-left">
+                            黄风岭<strong>山高林密、怪石嶙峋</strong>，远远望去就透着<strong>凶险</strong>。悟空提醒师父小心，唐僧却不以为意，觉得“有徒弟保护，怕什么”。结果话音未落，一阵<strong>妖风</strong>就刮了过来。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">虎先锋</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">会“人形”的虎妖</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t2-back">
+                        <p class="text-gray-700 text-left">
+                            妖风过后，跳出个<strong>虎先锋</strong>——一只会变成人形的虎妖，手持钢叉，拦住去路。它奉黄风怪之命巡山，正好撞上了取经队伍，二话不说就<strong>扑向唐僧</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：掉以轻心是大敌</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    唐僧觉得“有徒弟保护，怕什么”，结果<strong class="text-amber-900">立刻遇险</strong>。这提醒我们：<strong class="text-amber-900">“觉得没事”往往是出事的前奏</strong>。越是顺利的时候，越要保持警惕、做好准备——就像过马路不能因为“车不多”就放松警惕，考试不能因为“感觉都会”就掉以轻心。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Bajie -->
+        <section id="section-bajie" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">半山中八戒争先：初显身手</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    虎先锋扑向唐僧，这次首先冲上去的不是悟空，而是新收的八戒！他挥舞九齿钉耙，与虎先锋大战。点击翻转卡片，看八戒如何“争先”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-b1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">主动请战</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-b1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“让我来会会它！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-b1-back">
+                        <p class="text-gray-700 text-left">
+                            平日里贪吃懒散的八戒，面对虎先锋却<strong>毫不含糊</strong>，主动请战、挺身而出。这说明：<strong>人都有“闪光”的时刻</strong>，关键时候，八戒也能成为可靠的战力。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-b2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">钉耙显威</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-b2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">九齿钉耙大战虎先锋</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-b2-back">
+                        <p class="text-gray-700 text-left">
+                            八戒的<strong>九齿钉耙</strong>（上宝沁金耙）威力不凡，与虎先锋打得难解难分。虎先锋渐渐招架不住，只好<strong>败下阵来，转身逃走</strong>。八戒穷追不舍，一路追进了山里。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">八戒的“两面性”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    八戒<strong class="text-amber-900">平时贪懒，战时勇敢</strong>——这正是他复杂又真实的地方。精读提醒我们：评价一个人不能“一刀切”，<strong class="text-amber-900">每个人都有长处与短处</strong>。就像班里那个爱玩的同学，可能在体育比赛时是最拼的那一个。不要因为一个人的缺点，就忽略他的优点。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Capture -->
+        <section id="section-capture" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">“金蝉脱壳”：唐僧中计被掳</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    虎先锋被八戒打跑，可它并没有真逃——它使了个“金蝉脱壳”之计，绕过八戒，把唐僧掳走了。点击翻转卡片，看看这个计谋是怎么得逞的。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">调虎离山</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“假败真诱”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c1-back">
+                        <p class="text-gray-700 text-left">
+                            虎先锋败逃，其实<strong>并非真败</strong>——它故意引开八戒，让八戒<strong>离开唐僧身边</strong>。这就叫<strong>“调虎离山”</strong>：把保护唐僧的“老虎”调走，再回头收拾“羊”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">金蝉脱壳</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“留下空壳”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c2-back">
+                        <p class="text-gray-700 text-left">
+                            虎先锋趁八戒追远，悄悄绕回，使一招<strong>“金蝉脱壳”</strong>——卷起一阵风，留下个<strong>假身/空壳</strong>，真身却<strong>卷走唐僧</strong>，一路掳回<strong>黄风洞</strong>。悟空、八戒回头一看，师父已经不见了。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“计谋”带来的启示</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    “金蝉脱壳”“调虎离山”都是《三十六计》里的<strong class="text-amber-900">计谋</strong>，本回把它们用在了妖怪身上。它提醒我们：面对狡猾的对手，<strong class="text-amber-900">不能只凭一股蛮力追打</strong>，还要<strong class="text-amber-900">保护好自己要守护的东西</strong>。八戒追敌固然勇敢，但离开岗位、放松警惕，恰恰给了对手可乘之机。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Wind -->
+        <section id="section-wind" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">追入黄风洞：黄风怪现身</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    发现师父被掳，悟空、八戒急忙追寻，一路追到黄风洞。此时，洞主黄风怪也露出了真容。点击翻转卡片，认识这位擅长“吹风”的妖怪。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-w1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">黄风怪</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-w1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">黄毛貂鼠精</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-w1-back">
+                        <p class="text-gray-700 text-left">
+                            黄风怪原是<strong>灵山脚下的黄毛貂鼠精</strong>，偷吃了琉璃盏里的灯油，逃到下界，占了黄风岭，自号“黄风大王”。它的绝活是<strong>吹三昧神风</strong>，能吹得天地昏暗、飞沙走石。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-w2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">唐僧被擒</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-w2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">洞中的“唐僧肉”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-w2-back">
+                        <p class="text-gray-700 text-left">
+                            虎先锋把唐僧献给黄风怪，献言“吃了唐僧肉长生不老”。悟空、八戒<strong>杀到黄风洞前叫阵</strong>，与虎先锋又战一场。真正的大战，才刚刚拉开序幕——下一回，黄风怪将亲自出马，吹起那场<strong>遮天蔽日的黄风</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">一环扣一环的“难”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    取经路上的“难”，<strong class="text-amber-900">从来不是孤立的</strong>：虎先锋只是“开路小卒”，真正的硬骨头是黄风怪。这一回先给读者“热身”，把悬念留到下一回。这启发我们：解决问题要<strong class="text-amber-900">看清问题的层级</strong>——表面矛盾往往只是冰山一角，揪住“源头”才能真正解决。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第二十回“黄风岭唐僧有难，半山中八戒争先”拉开了“黄风怪”故事的序幕。这一回让我们看到：警惕心不能丢、团队配合要到位、对手往往会“用计”而不只是“用强”。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第二十回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "唐僧在黄风岭遇险前，是怎样的心态？",
+                    "options": {
+                        "A": "非常害怕，不敢前进",
+                        "B": "觉得“有徒弟保护，怕什么”，有些掉以轻心",
+                        "C": "想绕道而行",
+                        "D": "想留在原地等天亮"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空提醒前方山高险恶，唐僧却不以为意，觉得有徒弟保护就没事。结果话音未落，妖风刮来，唐僧立刻遇险。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "在黄风岭首先拦路的是哪个妖怪？",
+                    "options": {
+                        "A": "黄风怪",
+                        "B": "虎先锋（虎妖）",
+                        "C": "熊罴怪",
+                        "D": "白骨精"
+                    },
+                    "correct": "B",
+                    "analysis": "首先跳出的是虎先锋，一只会变人形的虎妖，手持钢叉，奉黄风怪之命巡山，拦住了取经队伍。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "面对虎先锋，首先冲上去战斗的是谁？",
+                    "options": {
+                        "A": "悟空",
+                        "B": "唐僧",
+                        "C": "八戒",
+                        "D": "白龙马"
+                    },
+                    "correct": "C",
+                    "analysis": "这次是八戒“争先”——他主动请战，挥舞九齿钉耙与虎先锋大战，把虎先锋打得败走。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "八戒使用的兵器是：",
+                    "options": {
+                        "A": "金箍棒",
+                        "B": "九齿钉耙（上宝沁金耙）",
+                        "C": "降妖宝杖",
+                        "D": "月牙铲"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒的兵器是九齿钉耙，又名上宝沁金耙，威力不凡，是他在天庭任天蓬元帅时就有的武器。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "八戒追赶虎先锋，结果中了什么计？",
+                    "options": {
+                        "A": "空城计",
+                        "B": "调虎离山——虎先锋假败引开八戒，趁机掳走唐僧",
+                        "C": "美人计",
+                        "D": "反间计"
+                    },
+                    "correct": "B",
+                    "analysis": "虎先锋并非真败，而是故意引开八戒，让保护唐僧的“老虎”离开岗位，再回头掳走唐僧。这就是调虎离山。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "虎先锋掳走唐僧用的招数叫：",
+                    "options": {
+                        "A": "金蝉脱壳",
+                        "B": "抛砖引玉",
+                        "C": "借刀杀人",
+                        "D": "声东击西"
+                    },
+                    "correct": "A",
+                    "analysis": "虎先锋卷风留下假身/空壳，真身却掳走唐僧，这叫“金蝉脱壳”——留下空壳迷惑对手，真身早已脱走。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "唐僧被虎先锋掳到了哪里？",
+                    "options": {
+                        "A": "黑风洞",
+                        "B": "黄风洞",
+                        "C": "云栈洞",
+                        "D": "盘丝洞"
+                    },
+                    "correct": "B",
+                    "analysis": "虎先锋把唐僧掳回黄风洞，献给了洞主黄风怪。悟空、八戒一路追到黄风洞前叫阵。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "黄风怪的本相是什么？",
+                    "options": {
+                        "A": "黄毛貂鼠精，偷吃灵山灯油后逃到下界",
+                        "B": "老虎精",
+                        "C": "黄鼠狼精",
+                        "D": "豹子精"
+                    },
+                    "correct": "A",
+                    "analysis": "黄风怪原是灵山脚下的黄毛貂鼠精，偷吃了琉璃盏里的灯油，逃到下界，占了黄风岭，自号黄风大王。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "黄风怪的绝活是：",
+                    "options": {
+                        "A": "喷火",
+                        "B": "吹三昧神风，能吹得天地昏暗、飞沙走石",
+                        "C": "放毒气",
+                        "D": "吐水"
+                    },
+                    "correct": "B",
+                    "analysis": "黄风怪最厉害的本事是吹“三昧神风”，能吹得天昏地暗、飞沙走石，连悟空的眼睛都被吹坏过（后面情节）。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "本回中，虎先锋与黄风怪的关系是：",
+                    "options": {
+                        "A": "父子",
+                        "B": "先锋（小卒）与洞主（大王）的主从关系",
+                        "C": "兄弟",
+                        "D": "对手"
+                    },
+                    "correct": "B",
+                    "analysis": "虎先锋是黄风怪手下的小妖，负责巡山，抓到唐僧后献给黄风怪邀功。它是“开路小卒”，黄风怪才是硬骨头。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "八戒“平时贪懒，战时勇敢”的特点，精读认为这说明：",
+                    "options": {
+                        "A": "八戒很虚伪",
+                        "B": "评价一个人不能“一刀切”，每个人都有长处与短处",
+                        "C": "八戒只会装样子",
+                        "D": "八戒并不靠谱"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒平时贪吃懒散，关键时刻却能挺身而出。这提醒我们看人要全面，不能因缺点就否定一个人的价值。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "唐僧被掳的根本教训，精读强调的是：",
+                    "options": {
+                        "A": "悟空保护不力",
+                        "B": "掉以轻心、放松警惕，给了对手可乘之机",
+                        "C": "黄风怪太厉害",
+                        "D": "不该走黄风岭"
+                    },
+                    "correct": "B",
+                    "analysis": "唐僧觉得“有徒弟保护”就放松警惕，八戒追敌时也离开了师父身边。警惕心不足、防守出现空档，才让对手得逞。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "“金蝉脱壳”“调虎离山”出自中国古代的哪部兵书智慧？",
+                    "options": {
+                        "A": "《孙子兵法》",
+                        "B": "《三十六计》",
+                        "C": "《道德经》",
+                        "D": "《论语》"
+                    },
+                    "correct": "B",
+                    "analysis": "调虎离山、金蝉脱壳都是《三十六计》中的计谋。《西游记》把这类兵法智慧融入神魔故事，读来别有趣味。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "本回的情节结构上，虎先锋之战主要起什么作用？",
+                    "options": {
+                        "A": "决定整个故事结局",
+                        "B": "为后文黄风怪登场做铺垫，起到“热身”和制造悬念的作用",
+                        "C": "与主线无关",
+                        "D": "专门展示八戒贪吃"
+                    },
+                    "correct": "B",
+                    "analysis": "虎先锋只是“开路小卒”，真正的强敌是黄风怪。这一回先以虎先锋之战热身、掳走唐僧制造悬念，把高潮留到下一回。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "面对“层层设防”的对手（小妖—大王、明枪—暗计），取经队伍本回最欠缺的是：",
+                    "options": {
+                        "A": "武力",
+                        "B": "团队配合与警惕心——防守出现空档、各管各的",
+                        "C": "地图",
+                        "D": "马匹"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒追敌、悟空被调开，唐僧身边无人保护，团队分工配合出现漏洞。面对狡猾对手，配合与防守比单打独斗更重要。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "唐僧师徒在______岭遇险，首先拦路的是______。",
+                    "answer": "黄风|虎先锋",
+                    "analysis": "唐僧师徒到黄风岭，先是虎先锋跳出来拦路，和八戒、悟空打斗，最后被八戒一耙打死。但虎先锋只是「先锋」，真正厉害的是洞主黄风怪。先有小妖试探，再有大妖出手，这是妖怪的「标准套路」。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "八戒使用的兵器是______钉耙。",
+                    "answer": "九齿",
+                    "analysis": "猪八戒的兵器是「九齿钉耙」（九齿钉钯），重五千零四十八斤，是太上老君亲手打造、玉帝赐给天蓬元帅的宝贝。别以为钉耙是「农具」，它可是天庭的「神器」——只是到了八戒手里，偶尔也用来「耙地」。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "虎先锋用“______”之计引开八戒，趁机掳走唐僧。",
+                    "answer": "调虎离山",
+                    "analysis": "虎先锋和八戒、悟空打斗时，故意用「调虎离山」之计：假装败逃，把悟空、八戒引开，自己却趁机回到洞口，把落单的唐僧掳走。这一计说明：正面打不过，就用「计谋」——做事要防着「声东击西」。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "虎先锋掳走唐僧时，用的是“______”之术，留下空壳迷惑对手。",
+                    "answer": "金蝉脱壳",
+                    "analysis": "虎先锋掳走唐僧时用了「金蝉脱壳」术：留下一个空壳迷惑对手，真身早已带人逃走。悟空、八戒回来看守时才发现「中计」——这也提醒我们：眼见不一定为实，要看「本质」而不是「表象」。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "唐僧被掳进了______洞，洞主是______。",
+                    "answer": "黄风|黄风怪",
+                    "analysis": "唐僧被掳进黄风洞，洞主就是黄风怪。黄风怪本是灵山脚下的一只黄毛貂鼠精，偷吃了琉璃盏里的清油，怕被捉拿，逃到下界作怪。能在灵山脚下听经的妖精，来头都不小——「高手在民间」。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "黄风怪原是______山脚下的黄毛______精。",
+                    "answer": "灵|貂鼠",
+                    "analysis": "黄风怪原是灵山脚下（如来佛祖讲经的灵鹫山）的黄毛貂鼠精，因为偷吃灯油、听佛讲经成了精，偷油后逃下界。它来自灵山，所以「底子」不浅，吹出的三昧神风连悟空都受不了——「出身」高，本事也大。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "黄风怪的绝活是吹______，能吹得天地昏暗。",
+                    "answer": "三昧神风",
+                    "analysis": "黄风怪的绝活是吹「三昧神风」：这风一吹，天地昏暗、走石飞沙，连悟空都被吹得「火眼金睛」肿得睁不开眼。三昧本指「定力」，这妖的「神风」却专门吹乱别人的「定」——面对强大的「歪门邪道」，硬碰硬会吃亏，要找「克星」。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "唐僧遇险前说“有______保护，怕什么”，结果立刻出了事。",
+                    "answer": "徒弟",
+                    "analysis": "唐僧在黄风岭前说「有徒弟保护，怕什么」，结果话音刚落就出了事——虎先锋把他掳走了。这告诉我们：越是有「靠山」、有「底气」的时候，越不能麻痹大意；得意忘形，往往就是危险的开始。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“警惕心”】唐僧觉得“有徒弟保护，怕什么”，结果立刻遇险。请谈谈：为什么越觉得“没事”的时候，越要小心？生活中哪些场景需要我们保持警惕？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>警惕心不可丢：</strong> 唐僧放松警惕，恰好给了妖怪可乘之机。安全感和大意往往只有一线之隔，“没事”的感觉最容易让人放松防守。</p>\n                        <p class=\"mt-2\"><strong>生活中的警惕：</strong> ①过马路无论车多车少都遵守交规；②不轻信陌生人的话、不跟陌生人走；③上网不随意点陌生链接、不泄露个人信息；④考试不因为“感觉都会”就疏于复习。警惕不是胆小，而是对自己负责。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“全面看人”】八戒平时贪吃懒散，关键时刻却勇敢争先。请谈谈：为什么评价一个人不能“一刀切”？你有没有遇到过“看似不起眼，关键时很厉害”的人？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>人都有多面性：</strong> 八戒贪懒是事实，勇敢争先也是事实。用一次表现或一个缺点给一个人“定性”，容易看错人。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> 班里话少的同学可能在数学上很厉害；平时调皮的同学可能在运动会上最拼；看着马虎的同学可能画画特别细心。学会全面观察、欣赏他人长处，也是尊重他人、广交朋友的方法。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“用计与防计”】虎先锋用“调虎离山”“金蝉脱壳”掳走唐僧。请谈谈：为什么说“光有勇敢还不够，还要有智慧”？我们该如何识破别人的“花招”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>勇敢+智慧才可靠：</strong> 八戒打跑虎先锋很勇敢，却因不辨虚实中了调虎离山之计。勇而无谋，容易被人利用。</p>\n                        <p class=\"mt-2\"><strong>识破花招：</strong> ①多想一步：对方为什么这样做？有没有其他目的？②不轻信“天上掉馅饼”（如陌生人给的“好处”）；③保护好自己的“要害”（如个人信息、原则、身边重要的人和事）；④吃一堑长一智，从教训中总结规律。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“团队配合”】唐僧被掳，正是因为八戒追敌、悟空被调开，唐僧身边无人保护。请谈谈：团队中“分工与守位”为什么重要？在小组合作中，怎样做到既积极又不“擅离职守”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>分工守位的重要：</strong> 每个岗位都有意义，离开自己的“位置”，整个团队就可能出现漏洞。八戒冲锋虽然勇敢，却忘了保护师父才是首要任务。</p>\n                        <p class=\"mt-2\"><strong>小组合作：</strong> ①明确分工，各司其职，不抢别人的活也不丢自己的活；②行动前沟通，不要“自作主张”跑去做别的事；③遇到突发情况，先保证核心任务（如保护师父/按时交作业）不受影响。积极和守位，两者可以兼得。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“问题的层级”】虎先锋只是“小卒”，真正的强敌是黄风怪。请谈谈：为什么说“要解决根本问题，就要看清问题的层级与源头”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>抓源头才治本：</strong> 打赢虎先锋只是暂时解围，不除掉黄风怪，师徒就过不了黄风岭。表面的“小麻烦”背后，往往藏着真正的“大问题”。</p>\n                        <p class=\"mt-2\"><strong>联系学习：</strong> 一道题错了，光改答案没用，要找到错因（是概念不懂、计算粗心还是审题不清）；成绩下滑，不只是“没考好”，要分析是方法、状态还是时间管理出了问题。揪住源头，才能真正解决。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“对手也会用计”】妖怪不仅武艺高强，还会用计谋。请谈谈：为什么“把对手想得聪明一点”是成熟的表现？这对你准备比赛、考试有什么启发？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>把对手想聪明些：</strong> 低估对手，容易轻敌犯错。唐僧师徒就因轻敌付出了代价。认真研究对手、做好万全准备，才是尊重对手也尊重自己。</p>\n                        <p class=\"mt-2\"><strong>准备比赛考试：</strong> ①不因为“上次考得好”就松懈；②预想可能出现的难点、新题型，提前准备；③多准备“备选方案”（如时间不够先做哪题）；④对自己严一点，把困难想在前头，真到上场就不慌。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“悬念与阅读”】本回在唐僧被掳、黄风怪现身时戛然而止，留下悬念。请谈谈：好的故事为什么需要“悬念”？你在写作中怎么运用悬念吸引读者？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>悬念的力量：</strong> 悬念让读者“放不下”，急着想知道“后来呢”。本回结尾黄风怪要登场、唐僧性命攸关，读者自然想继续读下去。</p>\n                        <p class=\"mt-2\"><strong>写作中的悬念：</strong> ①在关键处“刹车”，把结果留到后面揭晓；②先抛出一个疑问（如“门后到底是什么？”）；③设置误会或反常现象，慢慢解开；④结尾用“钩子”句子（如“他万万没想到，这只是开始……”）。悬念不是故弄玄虚，而是引导读者思考的“钓竿”。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

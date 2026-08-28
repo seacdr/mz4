@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第六十回精读：智取真扇与因果前定</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第六十回精读：智取真扇与因果前定</h1>
+            <p class="text-lg text-gray-700 serif">“牛魔罢战赴华筵，行者二调芭蕉扇”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">火焰山之谜</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">积雷山会牛魔</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">假扮牛魔王</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">得扇识破</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 火焰山之谜 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">真相大白：这把火竟是悟空自己放的</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    土地告诉悟空：火焰山不是牛魔王放的，而是五百年前悟空大闹天宫时，一脚踢倒太上老君的八卦炉，掉下的几块带余火的砖化成的。一饮一啄，莫非前定。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">因果前定</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">大圣放的火？</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            土地说：“这火原是大圣放的。”悟空大怒，土地解释：500年前大闹天宫，悟空<strong>蹬倒八卦炉</strong>，掉落的几块砖“内有余火”，到此处化为<strong>火焰山</strong>。今天的困难，原来是当年自己种下的因。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">土地的来历</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">兜率宫守炉道人</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            土地本是<strong>兜率宫守炉的道人</strong>，因老君怪他失手，被贬到火焰山做了土地——所以他才是一副<strong>道士打扮</strong>。他盼悟空借到真扇，永除火患，自己也好“赦罪归天”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c03')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">牛魔王的下落</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c03-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">入赘玉面公主</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c03-back">
+                        <p class="text-gray-700 text-left">
+                            土地说：牛魔王撇下罗刹女，去了<strong>积雷山摩云洞</strong>——万岁狐王死后留下女儿<strong>玉面公主</strong>，家有百万家私，两年前“情愿倒赔家私，招赘牛魔王为夫”。要借真扇，须把牛魔王请回来。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">“一饮一啄，莫非前定”</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空遇到火焰山，翻来查去，竟是自己当年大闹天宫时“踢倒八卦炉”留下的果。<strong>你今天做的事，会成为明天的路</strong>——种下什么因，就会收获什么果，所以要谨慎当下。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 积雷山会牛魔 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">大力王不只有大力：缜密的老大哥</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空到积雷山寻牛魔王，先吓退玉面公主，又见了牛魔王。这个当年的“七兄弟之首”，面对爱妾撒娇有耐心，三言两语就推断出事情全貌——心思缜密，绝非莽夫。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">吓退玉面公主</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">翠云山来的？</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            悟空假称“<strong>翠云山铁扇公主请来邀牛魔王</strong>”，玉面公主大怒：“牛王自到我家不到两年……<strong>年供柴、月供米</strong>，早被我买断了！”悟空故意掣棒一吓，把她赶回摩云洞，引路。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">七兄弟旧谊</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">长兄还认得小弟？</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            当年悟空大闹天宫，与六位妖王结为<strong>七兄弟</strong>，牛魔王是老大。悟空自称“小弟”施礼，牛魔王却先翻旧账：“你为什么在火云洞害了我的<strong>牛圣婴</strong>？”悟空解释红孩儿已被观音收为善财童子、得了正果。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c13')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">缜密的牛魔王</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c13-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">朋友妻不可欺</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c13-back">
+                        <p class="text-gray-700 text-left">
+                            牛魔王一听说悟空要借扇，立刻推断：“你一定先欺我<strong>山妻</strong>（铁扇公主）不肯借，又来扰我<strong>爱妾</strong>（玉面公主）。朋友妻不可欺，朋友妾不可灭！”——他绝不只有大力，还<strong>极其机智多谋</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">沉稳是一种力量</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    牛魔王外形五大三粗，却会安抚爱妾、能冷静分析、懂人情世故。<strong>真正的高手，不只靠蛮力，更靠脑子</strong>。悟空这次面对的，是一个“有脑子”的劲敌。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 假扮牛魔王 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">巧计夺兽：变蟹探潭，变牛骗扇</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    牛魔王赴碧波潭宴会，悟空变清风跟踪，又变螃蟹潜入水底，偷了他的坐骑“碧水金晶兽”，摇身一变，冒充牛魔王回芭蕉洞——一番软语温存，套出了真扇的秘密。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">变蟹探潭</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">横行介士</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            悟空不擅水战，变作<strong>螃蟹</strong>跳入碧波潭，被龙子龙孙捉住。老龙喝问“何处野蟹，敢在尊客前横行”，悟空自称“<strong>横行介士</strong>”，装作初来不懂礼数，被饶了一命。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">盗兽骗扇</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">碧水金晶兽</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            悟空解下<strong>碧水金晶兽</strong>的缰绳，跨上坐骑，变成<strong>牛魔王的模样</strong>回到芭蕉洞。罗刹女久别重逢，喜不自胜，全无提防。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c23')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">套出真扇</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c23-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">杏叶儿大小的宝扇</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c23-back">
+                        <p class="text-gray-700 text-left">
+                            悟空假扮牛魔王，得知真扇藏在罗刹女<strong>口中</strong>，“只有杏叶儿大小”。使用口诀：<strong>左手大指捏住柄上第七缕红丝，念一声咒语</strong>，扇子就长到一丈二尺——如意变化，正是宝贝。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">演戏演全套</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空变牛魔王，从骑马、问候到“捶胸顿足骂孙行者”，演得滴水不漏。<strong>做事要成，就得把每个细节做到位</strong>——装龙像龙、装虎像虎，骗过对手才能拿到想要的结果。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 得扇识破 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">真扇到手，却只学会了“变大”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空拿到真扇现出本相，罗刹女气得跌倒在地。可他只学了“变大”的口诀，没学“变小”的，一丈二尺的大扇只能扛在肩上走。牛魔王发现坐骑被盗，立刻推断出真相，提剑追来。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">只学一半</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">一丈二尺，扛着走</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            悟空“只讨了一个长的方法，没讨他小的口诀”——扇子变大后就<strong>收不回去了</strong>，只能扛着这丈二长的大扇往回走，行动不便，也为被牛魔王追上埋下伏笔。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">牛魔追来</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">脑子转得飞快</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            牛魔王宴罢发现坐骑被盗，立刻推断：“那猴子<strong>变作蟹精来打探，偷了我的兽，必去骗芭蕉扇</strong>！”提上铁扇公主的两把青钢剑，直奔火焰山——他要用智谋把扇子骗回去。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">半懂最容易坏事</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空只学会了“变大”，却没学会“变小”，给自己添了大麻烦。<strong>学习最忌“一知半解”</strong>——弄懂一半就以为自己会了，往往会在关键时刻掉链子。要学，就学全套、学透彻。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第六十回“牛魔罢战赴华筵，行者二调芭蕉扇”讲的是二借真扇：火焰山来历揭秘、积雷山会牛魔王、变蟹盗兽、假扮牛魔王骗扇、只学一半被识破。这一回让我们看到：因果前定、沉稳是力量、演戏演全套、半懂最容易坏事。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第六十回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "火焰山是怎么形成的？",
+                    "options": {"A": "牛魔王放的火","B": "悟空500年前踢倒八卦炉，掉下的带余火的砖化成","C": "太上老君烧的","D": "天生的"},
+                    "correct": "B",
+                    "analysis": "土地说：悟空500年前大闹天宫，蹬倒八卦炉，掉落的几块砖“内有余火”，在此化为火焰山——一饮一啄，莫非前定。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "火焰山土地原本是什么身份？",
+                    "options": {"A": "牛魔王的仆人","B": "兜率宫守炉的道人","C": "观音的弟子","D": "玉帝的将军"},
+                    "correct": "B",
+                    "analysis": "土地本是兜率宫守炉道人，因老君怪他失手被贬下凡，做了火焰山土地，所以一副道士打扮。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "牛魔王撇下罗刹女后，去了哪里、做了什么？",
+                    "options": {"A": "回了老家","B": "入赘积雷山摩云洞，招赘给玉面公主","C": "去天庭做官","D": "去南海修行"},
+                    "correct": "B",
+                    "analysis": "万岁狐王死后留下女儿玉面公主，家有百万家私，两年前“情愿倒赔家私，招赘牛魔王为夫”。牛魔王就此撇下结发妻子。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "悟空为什么先去找牛魔王而不是直接再借扇？",
+                    "options": {"A": "罗刹女搬家了","B": "土地说请回牛魔王，罗刹女才肯真心借出真扇","C": "牛魔王有钥匙","D": "悟空想叙旧"},
+                    "correct": "B",
+                    "analysis": "土地说罗刹女若不想借，硬要也没用；若能请回牛魔王，罗刹女才肯真心借出真扇，永除火患。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "玉面公主听说“铁扇公主派人来请牛魔王”后，是什么反应？",
+                    "options": {"A": "很高兴","B": "大怒，说牛魔王已被她“买断”","C": "害怕","D": "逃走"},
+                    "correct": "B",
+                    "analysis": "玉面公主大怒：“牛王自到我家不到两年……年供柴月供米，早被我买断了。”她不愿牛魔王再回铁扇公主处。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "悟空与牛魔王是什么旧交情？",
+                    "options": {"A": "结拜兄弟，牛魔王是老大","B": "仇人","C": "师徒","D": "不认识"},
+                    "correct": "A",
+                    "analysis": "悟空大闹天宫时与六位妖王结为七兄弟，牛魔王排行老大（平天大圣），所以悟空称他“长兄”。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "牛魔王质问悟空害了谁？",
+                    "options": {"A": "玉面公主","B": "自己的儿子牛圣婴（红孩儿）","C": "铁扇公主","D": "老龙王"},
+                    "correct": "B",
+                    "analysis": "牛魔王问悟空为何在火云洞“害了”他的儿子牛圣婴（红孩儿）。悟空解释红孩儿已被观音收为善财童子，得了正果。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "牛魔王用哪句话指责悟空“欺妻扰妾”？",
+                    "options": {"A": "“欺人太甚”","B": "“朋友妻不可欺，朋友妾不可灭”","C": "“礼尚往来”","D": "“以牙还牙”"},
+                    "correct": "B",
+                    "analysis": "牛魔王指出悟空先欺“山妻”铁扇公主，又扰“爱妾”玉面公主，引“朋友妻不可欺，朋友妾不可灭”的俗语来斥责他。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "悟空变作什么潜入碧波潭探听？",
+                    "options": {"A": "小鱼","B": "螃蟹","C": "虾米","D": "乌龟"},
+                    "correct": "B",
+                    "analysis": "悟空不擅水战，变作一只螃蟹跳入碧波潭，被龙子龙孙捉住后自称“横行介士”，装作不懂礼数被饶命。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "悟空偷了牛魔王的什么坐骑去假冒他？",
+                    "options": {"A": "白龙马","B": "碧水金晶兽","C": "青牛","D": "麒麟"},
+                    "correct": "B",
+                    "analysis": "牛魔王赴宴时把坐骑碧水金晶兽拴在牌楼下，悟空解下缰绳骑上，变成牛魔王模样回芭蕉洞骗扇。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "真正的芭蕉扇平时藏在哪里？",
+                    "options": {"A": "箱子里","B": "罗刹女的口中（只有杏叶儿大小）","C": "墙上挂着","D": "牛魔王身上"},
+                    "correct": "B",
+                    "analysis": "罗刹女“口中吐出，只有杏叶儿大小”——芭蕉扇是如意宝贝，能变大变小，真扇一直藏在罗刹女口中。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "让芭蕉扇变大的口诀要领是什么？",
+                    "options": {"A": "念“急急如律令”","B": "左手大指捏住柄上第七缕红丝，念一声咒语","C": "吹一口气","D": "滴一滴水"},
+                    "correct": "B",
+                    "analysis": "罗刹女教“假牛魔王”：“左手大指捏着柄上第七缕红丝，念一声咒语”，扇子就长到一丈二尺。悟空牢记在心。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "悟空拿到真扇后，为什么只能扛着走？",
+                    "options": {"A": "太重了","B": "只学了“变大”的口诀，没学“变小”的口诀","C": "扇子坏了","D": "想炫耀"},
+                    "correct": "B",
+                    "analysis": "悟空“只讨了一个长的方法，没讨他小的口诀”，扇子变大后收不回去，只能扛着丈二大扇往回走。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "牛魔王发现坐骑被盗后，立刻推断出什么？",
+                    "options": {"A": "扇子丢了","B": "孙悟空变蟹探潭、盗兽冒充自己骗扇","C": "玉面公主偷的","D": "老龙王偷的"},
+                    "correct": "B",
+                    "analysis": "牛魔王脑子飞快：“那猴子千般伶俐，定是变作蟹精打探，偷了我的兽，去我山妻处骗芭蕉扇！”立刻提剑追赶。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "牛魔王去追赶时，拿了谁的兵器？",
+                    "options": {"A": "自己的混铁棍","B": "铁扇公主的两把青钢剑","C": "玉面公主的剑","D": "龙王的枪"},
+                    "correct": "B",
+                    "analysis": "牛魔王的兵器不在身边，女童说“拿你奶奶的兵器来”——捧出铁扇公主的两把青钢剑，牛魔王抄剑直奔火焰山。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "从本回看，牛魔王最突出的特点是什么？",
+                    "options": {"A": "只有蛮力","B": "心思缜密、机智多谋、沉稳有城府","C": "胆小怕事","D": "冲动暴躁"},
+                    "correct": "B",
+                    "analysis": "牛魔王安抚爱妾有耐心、听几句话就能推断全貌、坐骑被盗立刻猜中真相——他绝不只有大力，更有机智多谋。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "火焰山是悟空500年前蹬倒八______炉，掉砖化成。",
+                    "answer": "卦",
+                    "analysis": "“八卦炉”是太上老君炼悟空的地方。悟空踢倒丹炉掉下带余火的砖，落地化为火焰山——今天的困难源于当年的冲动。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "牛魔王撇下罗刹女，入赘积雷山______云洞。",
+                    "answer": "摩",
+                    "analysis": "“摩云洞”是玉面公主的居所。牛魔王入赘此处，被玉面公主“年供柴月供米”供养，两三年不归。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "悟空变作螃蟹，自称“横______介士”。",
+                    "answer": "行",
+                    "analysis": "“横行介士”是螃蟹的雅称——螃蟹横着走，所以叫“横行”。“介士”有甲壳之意。悟空借这个名字装傻脱身，写得妙趣横生。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "牛魔王赴宴的坐骑叫______水金晶兽。",
+                    "answer": "碧",
+                    "analysis": "“碧水金晶兽”是牛魔王的独特坐骑，拴在碧波潭牌楼下。悟空偷骑它冒充牛魔王，才骗过了罗刹女。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "真芭蕉扇藏在罗刹女口中，只有______叶儿大小。",
+                    "answer": "杏",
+                    "analysis": "真扇平时只有“杏叶儿大小”，念咒才变大——如意宝贝能大能小。这个细节也说明：前回罗刹女给的假扇是另一把。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "让扇子变大的口诀：左手大指捏住柄上第______缕红丝。",
+                    "answer": "七",
+                    "analysis": "“第七缕红丝”是使用芭蕉扇的关键细节。悟空牢记口诀拿到真扇，却只学了变大、没学变小，反成麻烦。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "悟空只学了“变大”的口诀，没学“______”的口诀。",
+                    "answer": "变小",
+                    "analysis": "半懂最容易坏事：悟空只会把扇子变大，收不回去，只能扛着丈二大扇走，给牛魔王追上夺扇留下机会。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "牛魔王说：“朋友妻不可欺，朋友______不可灭。”",
+                    "answer": "妾",
+                    "analysis": "这句俗语是说：朋友的妻子和妾都不能欺辱。牛魔王用它指责悟空“欺山妻、扰爱妾”，占着道义高地。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“因果前定”】火焰山竟是悟空当年踢倒八卦炉留下的“果”。请谈谈：为什么“种什么因，得什么果”？你有过“当初一时冲动，后来付出代价”的经历吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>因果不虚：</strong> 悟空当年踢倒八卦炉，五百年后自己路过火焰山被堵路——<strong>你做过的事，迟早会以某种方式回到你身上</strong>。好事如此，坏事亦然。</p>\n                        <p class=\"mt-2\"><strong>种好“因”：</strong> ①今天认真读书，是给未来的自己铺路；②今天偷懒拖延，明天就要加倍还；③对人和气，朋友会越来越多；④随手乱扔垃圾，环境会越来越差；⑤每一件“小事”都在积累“果”。<strong>想收获什么，就先种下什么</strong>——这是最简单也最公平的“因果”。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“沉稳是力量”】牛魔王面对爱妾撒娇不发火，听几句话就能推断全貌。请谈谈：为什么“遇事不急、沉得住气”的人更厉害？你如何修炼自己的“沉稳”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>沉稳的人看得远：</strong> 牛魔王没有一上来就乱发火，而是先安抚玉面公主，再冷静分析“我妻子那儿不可能有雷公嘴男子”——<strong>心一乱，判断就错；心一稳，思路就清</strong>。</p>\n                        <p class=\"mt-2\"><strong>修炼沉稳：</strong> ①遇到急事，先“停三秒”再开口；②被冤枉时，不急着争辩，先听完整；③考试遇到难题，深呼吸，先做会的；④把“我要赢”换成“我要把事情做好”；⑤遇事先问“为什么”，再想“怎么办”。<strong>沉稳不是天生的，是一次次“忍住冲动”练出来的</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“演戏演全套”】悟空变牛魔王，从坐骑到谈吐、到“捶胸顿足骂孙行者”演得滴水不漏。请谈谈：为什么“细节到位”才能成事？做事时，你如何关注细节？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>细节决定成败：</strong> 悟空若只是长得像牛魔王，一开口就露馅；他连“骂孙行者”的情绪都演到位，罗刹女才信以为真。<strong>成败往往藏在一个个不起眼的细节里</strong>。</p>\n                        <p class=\"mt-2\"><strong>关注细节：</strong> ①写字注意笔顺和工整；②做题看清“单位、条件、问什么”；③打扫卫生不放过角落；④与人约定记清时间和地点；⑤写完作业再“检查一遍”。<strong>把细节做到位，大事自然成了</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“半懂最容易坏事”】悟空只学了“变大”的口诀，没学“变小”的，给自己添了大麻烦。请谈谈：为什么“一知半解”比“完全不会”更危险？学习中如何做到“学透彻”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>半懂最坑人：</strong> 完全不会的人会老老实实求教；一知半解的人却自以为“会了”，真到用的时候才露馅。<strong>悟空就是吃了“学一半”的亏，扛着大扇子跑不了路</strong>。</p>\n                        <p class=\"mt-2\"><strong>学透彻的方法：</strong> ①学完一个知识点，合上书“自己讲一遍”；②“知其然”，还要“知其所以然”（为什么这么做）；③做错的题，弄懂“错在哪”，不只看对答案；④问自己“还有哪些是没掌握的”；⑤多练变式题，换个问法还会做，才算真会。<strong>学到“半桶水”最容易晃荡；学到“满”，才稳稳当当</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“知己知彼”】悟空摸清了牛魔王的去向、坐骑、性格，才能将计就计。请谈谈：为什么“了解对手”是取胜的前提？面对竞争或挑战，你如何“摸清情况”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>知己知彼，百战不殆：</strong> 悟空先跟踪牛魔王，摸清他的行踪（碧波潭）、坐骑（碧水金晶兽）、性格，才敢变牛魔王去骗扇。<strong>盲目上阵，往往碰得头破血流</strong>。</p>\n                        <p class=\"mt-2\"><strong>摸清情况的方法：</strong> ①比赛前，研究对手的“强项和弱项”；②考试前，摸清“题型和重点”；③演讲前，了解“听众想听什么”；④做项目前，先看“别人怎么做的”；⑤多问“多听多观察”，信息就是力量。<strong>多一分了解，就多一分把握</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“牛魔王的好与坏”】牛魔王对玉面公主温柔、对铁扇公主有担当，却又是抛弃发妻的“负心汉”。请谈谈：为什么“一个人不能只看一面”？如何全面、客观地评价别人？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>人有多面：</strong> 牛魔王安抚爱妾有耐心、承诺“夺回宝贝给夫人出气”有担当，可他又抛弃结发妻子入赘富家。<strong>没有“全好”或“全坏”的人，只有多面的、复杂的人</strong>。</p>\n                        <p class=\"mt-2\"><strong>全面评价别人：</strong> ①不因为“一件事”就给一个人定性；②多观察他在不同场合的表现；③先听“双方说法”，不偏听偏信；④把“优点”和“缺点”分开看；⑤评价别人时，先想想“我了解他多少”。<strong>看人要“看全面”，做人要“取长补短”</strong>——这也是写作中塑造立体人物的秘诀。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

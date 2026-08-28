@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第四十一回精读：观音缚红孩</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第四十一回精读：观音缚红孩</h1>
+            <p class="text-lg text-gray-700 serif">“大圣殷勤拜南海，观音慈善缚红孩”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-mask')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-mask">第一章：假扮牛魔王</button>
+                <button onclick="NavigationModule.switchTab('section-birth')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-birth">第二章：生日破绽</button>
+                <button onclick="NavigationModule.switchTab('section-array')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-array">第三章：莲台之阵</button>
+                <button onclick="NavigationModule.switchTab('section-collect')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-collect">第四章：善财童子</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Mask -->
+        <section id="section-mask" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">假扮牛魔王：将计就计</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空得知红孩儿要请牛魔王来吃唐僧肉，决定“先下手为强”——摇身一变，假扮牛魔王去会“儿子”。点击翻转卡片，看看这场“父子相认”如何演。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-m1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">变“爹”的便利</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-m1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“摇身变牛魔王”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-m1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空化作苍蝇得知红孩儿<strong>欲请牛魔王</strong>，决定<strong>提前变作牛魔王</strong>。与前几次不同：<strong>牛魔王是“旧识”</strong>，悟空<strong>熟知其形象、神通</strong>，<strong>无需去其洞府，可直接模仿</strong>。<strong>知己知彼，才能以假乱真</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-m2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">“父子”相见</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-m2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“儿啊，快来！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-m2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空变出小妖<strong>假装打猎队伍</strong>迎接。红孩儿率众迎接，<strong>行礼称父</strong>。悟空故意<strong>“劝阻”吃唐僧</strong>：“孙行者神通广大，惹不得！”又说<strong>“雷斋日”不宜动荤</strong>——<strong>用“吃斋”拖时间</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：“演得像”的秘诀</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    悟空假扮牛魔王，<strong class="text-amber-900">姿态、神情、言行都在“演”</strong>。<strong class="text-amber-900">“演得像”=懂对方</strong>：了解牛魔王<strong class="text-amber-900">的形象、脾气、说话方式</strong>，才能骗过红孩儿。学习中这叫<strong class="text-amber-900">“换位思考”</strong>：<strong class="text-amber-900">读文章想“作者为什么这么写”</strong>，<strong class="text-amber-900">做数学想“出题人考什么”</strong>，<strong class="text-amber-900">跟人沟通想“对方在乎什么”</strong>。<strong class="text-amber-900">看透“底牌”，才能接好“招”</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Birth -->
+        <section id="section-birth" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">生日破绽：一个“破绽”露了馅</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    红孩儿越看越疑：父亲突改吃斋不合常理，且六健将明明还没到牛魔王家，怎么就“半路相遇”？于是他抛出一个“杀手锏”问题。点击翻转卡片，看看红孩儿如何识破“假爹”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-b1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">起疑的三点</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-b1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“父王有些不对”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-b1-back">
+                        <p class="text-gray-700 text-left">
+                            红孩儿<strong>起了疑心</strong>：①父亲<strong>突然改吃斋</strong>，不合常理；②问六健将<strong>迎请地点</strong>——还没到牛魔王家，<strong>半路相遇，可疑</strong>；③观察外形虽似，<strong>言语却不符</strong>。他<strong>令群妖备械，等信号围攻</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-b2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">生日之问</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-b2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“我生辰几何？”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-b2-back">
+                        <p class="text-gray-700 text-left">
+                            红孩儿<strong>假托张天师相面</strong>，问<strong>自己的出生年月日</strong>。悟空<strong>心里暗笑</strong>，却答：“年纪大记不清，明天回家<strong>问你娘</strong>。”红孩儿<strong>大怒</strong>：“父王常说我有<strong>同天不老之寿</strong>，岂会忘？”——<strong>破绽彻底暴露</strong>！
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“细节，最能暴露真假”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    悟空<strong class="text-amber-900">形象学得再像，“生日”这样的细节却答不上来</strong>。<strong class="text-amber-900">假的东西，常在“细节”处露馅</strong>。①<strong class="text-amber-900">作文编的细节经不起追问</strong>；②<strong class="text-amber-900">背书只记“大概”一抠字眼就卡壳</strong>；③<strong class="text-amber-900">做事只做“表面”，深问就穿帮</strong>。<strong class="text-amber-900">真功夫=细节功夫：学就要学透，做就要做实</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Array -->
+        <section id="section-array" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">莲台之阵：甘露水与天罡刀</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空现出本相，向观音求助。观音一听妖怪竟敢变作自己模样，大怒——把净瓶掷入海中！点击翻转卡片，看看观音如何布下天罗地网。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-a1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">怒掷净瓶</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-a1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“敢变我？”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-a1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空禀报红孩儿之事，观音一听<strong>妖怪敢变作自己模样</strong>，<strong>大怒，把净瓶掷入东海</strong>！（悟空吓得毛骨悚然）净瓶由<strong>海龟驮回</strong>，瓶中<strong>已盛满整片大海之水</strong>——悟空<strong>搬不动</strong>。悟空暗自戏称海龟“<strong>养家看瓶的夯货</strong>”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-a2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">天罡刀莲台</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-a2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“千叶莲台”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-a2-back">
+                        <p class="text-gray-700 text-left">
+                            菩萨说：<strong>三昧真火唯甘露水可灭</strong>——“<strong>心火需佛法降伏</strong>”。她命<strong>惠岸向托塔李天王借来三十六把天罡刀</strong>，念咒<strong>化作千叶莲台</strong>，<strong>端坐其上</strong>。又令土地神<strong>撤离三百里内生灵</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“心火还需‘心药’医”</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    龙王<strong class="text-amber-900">用“水”灭不了“心火”</strong>，观音用<strong class="text-amber-900">“甘露+佛法”</strong>才能真正降伏。<strong class="text-amber-900">对付“心的问题”，要用“心的办法”</strong>。①<strong class="text-amber-900">生气时“硬压”不如“说清楚、换角度想”</strong>；②<strong class="text-amber-900">害怕时“硬扛”不如“了解它、面对它”</strong>；③<strong class="text-amber-900">分心时“强迫”不如“定目标、做计划”</strong>。<strong class="text-amber-900">懂了“心”的规律，才能管好自己</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Collect -->
+        <section id="section-collect" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">善财童子：从“红孩儿”到“观音弟子”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    观音在悟空手心写个“迷”字，教他诈败诱敌。红孩儿中计，追上莲台，坐上“刀尖宝座”，被彻底降伏。点击翻转卡片，看看这场“教育”如何完成。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">迷字诱敌</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“许败不许胜”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c1-back">
+                        <p class="text-gray-700 text-left">
+                            观音用<strong>杨柳枝蘸甘露</strong>在悟空手心写个“<strong>迷</strong>”字，授意<strong>许败不许胜</strong>，<strong>引红孩儿前来</strong>。悟空<strong>骂“好儿子把老子赶出门”</strong>，打破大门激怒红孩儿，战四五回合<strong>即诈败</strong>。红孩儿着<strong>“迷”字幻术</strong>，<strong>执意追赶</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">收为善财</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“一步一拜”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c2-back">
+                        <p class="text-gray-700 text-left">
+                            红孩儿<strong>枪刺莲台，反坐刀尖</strong>，刀变<strong>倒须钩</strong>，无法拔出，<strong>哀告求饶</strong>。观音<strong>剃发留三髻</strong>，赐名“<strong>善财童子</strong>”。又取出<strong>金箍</strong>（紧箍予悟空、禁箍予黑熊、<strong>金箍今用</strong>），<strong>金箍一变五</strong>，套<strong>头顶与四肢</strong>。命他<strong>一步一拜从火云洞拜到珞珈山</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“真正的强大，是‘收服’而不是‘消灭’”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    观音<strong class="text-amber-900">没有杀红孩儿，而是“度化”他</strong>——<strong class="text-amber-900">把“野性”收成“善用”</strong>。这提醒我们：①<strong class="text-amber-900">对“犯错”的孩子，教育比惩罚更有力量</strong>；②<strong class="text-amber-900">自己的“缺点”，与其硬压，不如“引导”到正道</strong>；③<strong class="text-amber-900">“服气”比“害怕”更长久</strong>——红孩儿最后<strong class="text-amber-900">真心拜服，成为善财童子</strong>。<strong class="text-amber-900">化“敌”为“友”，才是最高明的赢</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第四十一回“大圣殷勤拜南海，观音慈善缚红孩”给红孩儿一难画上句号。这一回让我们看到：要懂对方才能“演得像”、细节最能暴露真假、心的问题要用心的办法、真正的强大是“化敌为友”。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第四十一回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "悟空为何决定“变作牛魔王”？",
+                    "options": {
+                        "A": "想见老友",
+                        "B": "得知红孩儿要请牛魔王共食唐僧，决定先冒充牛魔王将计就计",
+                        "C": "牛魔王派他来",
+                        "D": "他想当牛魔王"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空化作苍蝇得知红孩儿要请牛魔王吃唐僧，决定抢先变作牛魔王去“哄儿子”。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "悟空假扮牛魔王与金角大王故事中“变老母”相比，这次的优势是：",
+                    "options": {
+                        "A": "不需要变身",
+                        "B": "牛魔王是旧识，悟空熟知其形象神通，可直接模仿",
+                        "C": "红孩儿认识悟空",
+                        "D": "观音帮忙"
+                    },
+                    "correct": "B",
+                    "analysis": "这次不必先杀“老母”再去，因牛魔王是悟空旧识，外形习性都熟，可直接扮。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "悟空假扮牛魔王后，用什么借口“拖延”吃唐僧？",
+                    "options": {
+                        "A": "唐僧太瘦",
+                        "B": "“雷斋日”不宜动荤，劝红孩儿改日再吃",
+                        "C": "要等八戒来",
+                        "D": "唐僧有传染病"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空以“雷斋日”不宜开荤为由缓兵，还劝红孩儿“孙行者惹不得”。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "红孩儿起疑心的第一个“破绽”是：",
+                    "options": {
+                        "A": "父亲个子不对",
+                        "B": "父亲突然改吃斋，不合常理",
+                        "C": "父亲不会说话",
+                        "D": "父亲变矮了"
+                    },
+                    "correct": "B",
+                    "analysis": "红孩儿察觉“父王突改吃斋”不合常理，又疑心六健将还没到家、半路相遇太巧。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "红孩儿用什么问题“验爹”？",
+                    "options": {
+                        "A": "家里的地契",
+                        "B": "自己的出生年月日（假托张天师相面）",
+                        "C": "母亲的名字",
+                        "D": "牛魔王的兵器"
+                    },
+                    "correct": "B",
+                    "analysis": "红孩儿假托“张天师相面”问自己生辰，悟空答“记不清，问你娘”，当场露馅。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "悟空被识破后，红孩儿怎样反应？",
+                    "options": {
+                        "A": "认悟空为叔",
+                        "B": "怒斥“父王常言我有同天不老之寿，岂会忘”，发信号让群妖围攻",
+                        "C": "请悟空吃饭",
+                        "D": "放走唐僧"
+                    },
+                    "correct": "B",
+                    "analysis": "红孩儿抓住悟空“记不清生日”的破绽，认定是假爹，发暗号令群妖围上。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "悟空被揭穿后，临走时说了句什么趣话？",
+                    "options": {
+                        "A": "“我不服”",
+                        "B": "“当了一回爹”",
+                        "C": "“再见”",
+                        "D": "“你等着”"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空现出原形持棒而出，临走戏称“当了一回爹”，得意洋洋，尽显顽皮。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "观音听说妖怪“敢变作自己模样”后，做了什么事？",
+                    "options": {
+                        "A": "大笑",
+                        "B": "大怒，把净瓶掷入东海（瓶中盛满海水）",
+                        "C": "合掌念经",
+                        "D": "不理不睬"
+                    },
+                    "correct": "B",
+                    "analysis": "观音大怒，把净瓶掷入海中，净瓶由海龟驮回，已盛满整片大海之水。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "观音用来降服红孩儿的“刀”是从谁那里借来的？",
+                    "options": {
+                        "A": "玉帝",
+                        "B": "托塔李天王（三十六把天罡刀）",
+                        "C": "二郎神",
+                        "D": "哪吒"
+                    },
+                    "correct": "B",
+                    "analysis": "观音命惠岸向托塔李天王借来三十六把天罡刀，念咒化作千叶莲台。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "观音教悟空“诈败诱敌”时，在悟空手心写了什么字？",
+                    "options": {
+                        "A": "“火”",
+                        "B": "“迷”",
+                        "C": "“水”",
+                        "D": "“打”"
+                    },
+                    "correct": "B",
+                    "analysis": "观音用杨柳枝蘸甘露在悟空掌心写“迷”字，红孩儿中幻术，执意追赶。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "红孩儿“坐上莲台”后发生了什么？",
+                    "options": {
+                        "A": "成了菩萨",
+                        "B": "误坐刀尖，刀变倒须钩，无法拔出，流血求饶",
+                        "C": "被接去天宫",
+                        "D": "成了龙王"
+                    },
+                    "correct": "B",
+                    "analysis": "红孩儿误把莲台当宝座盘坐，实则坐于刀尖，观音念咒刀变倒须钩，他无法拔出。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "观音给红孩儿起的法名是：",
+                    "options": {
+                        "A": "金蝉子",
+                        "B": "善财童子",
+                        "C": "惠岸行者",
+                        "D": "木叉"
+                    },
+                    "correct": "B",
+                    "analysis": "观音为红孩儿剃发留三髻，赐名“善财童子”，收为座下弟子。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "本回中观音用了“金箍”。原著中三箍的去向分别是：",
+                    "options": {
+                        "A": "紧箍予悟空、禁箍予黑熊怪、金箍予红孩儿",
+                        "B": "都给了悟空",
+                        "C": "金箍予唐僧",
+                        "D": "禁箍予八戒"
+                    },
+                    "correct": "A",
+                    "analysis": "原著中紧箍给了悟空，禁箍收了黑熊怪，金箍这次用于降服红孩儿。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "观音命红孩儿“一步一拜”做什么？",
+                    "options": {
+                        "A": "拜唐僧",
+                        "B": "从火云洞一路拜到珞珈山，磨其心性",
+                        "C": "拜悟空",
+                        "D": "回火焰山"
+                    },
+                    "correct": "B",
+                    "analysis": "观音命红孩儿一步一拜从火云洞拜到珞珈山，才肯收法，意在磨炼其心性。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "本回结尾埋下的“伏笔”是：",
+                    "options": {
+                        "A": "八戒要回家",
+                        "B": "牵出牛魔王与罗刹女，预示火焰山等后续劫难",
+                        "C": "唐僧要还俗",
+                        "D": "悟空要当皇帝"
+                    },
+                    "correct": "B",
+                    "analysis": "红孩儿是牛魔王与罗刹女之子，此难牵出二人，为后续火焰山、芭蕉扇等故事埋下伏笔。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "悟空摇身变作______，去见红孩儿。",
+                    "answer": "牛魔王",
+                    "analysis": "悟空摇身变作「牛魔王」的样子，去火云洞「骗」红孩儿。他想「冒充父亲」把红孩儿骗出洞来。可红孩儿「精得很」，一问「生日」，悟空「答不上来」，露了馅——「假冒」最怕「盘根问底」。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "悟空以“______斋日”不宜动荤为由拖延。",
+                    "answer": "雷",
+                    "analysis": "悟空以「雷斋日不宜动荤」为由，劝红孩儿「改日再吃唐僧肉」。红孩儿将信将疑。悟空这是「拖延战术」：先稳住红孩儿，再去请「观音」来降妖——「缓兵之计」，给「救兵」争取时间。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "红孩儿假托______天师相面，问自己的生日。",
+                    "answer": "张",
+                    "analysis": "红孩儿「精明」得很：他假托「张天师相面」，问悟空（假牛魔王）「自己的生日」。悟空「牛魔王」不知道「儿子」生日，自然「答非所问」，立刻露馅——「细节」最能检验「真假」。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "红孩儿说父王常言自己有同天不老之______。",
+                    "answer": "寿",
+                    "analysis": "红孩儿说：「父王常说，我有同天不老之寿。」——「同天不老」，是红孩儿从「假父亲」嘴里「套」出来的「破绽」：牛魔王怎么会说这种话？悟空答不上来，只好「现出原形」——「套话」是一门「高级技术」。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "观音命______向托塔李天王借来三十六把______刀。",
+                    "answer": "惠岸|天罡",
+                    "analysis": "观音命「惠岸行者」向托塔李天王借来「三十六把天罡刀」，布置成「莲花台」的机关，专等红孩儿上钩。观音「谋定而后动」，把「天罡刀阵」藏在「莲花」里——「外柔内刚」，以「慈」降「魔」。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "观音在悟空手心写“______”字，授意许败不许胜。",
+                    "answer": "迷",
+                    "analysis": "观音在悟空手心写一个「迷」字，授意他「许败不许胜」——故意「迷」惑红孩儿，让他「得意忘形」，一步步走进「莲花台」。这个「迷」字，是「诱敌深入」的「战略」——「示弱」，是为了「制胜」。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "观音用______水灭三昧真火，说“心火需______降伏”。",
+                    "answer": "甘露|佛法",
+                    "analysis": "观音用「甘露水」灭「三昧真火」，说「心火需佛法降伏」。三昧真火是「心火」，凡水灭不了，只有「佛法」（甘露）才能降伏——「心病还需心药医」，降「火」先要「降心」。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "观音为红孩儿剃发，赐名“______童子”，套上______箍。",
+                    "answer": "善财|金",
+                    "analysis": "观音为红孩儿剃发，赐名「善财童子」，又给他套上「金箍」，收在身边「管教」。从「圣婴大王」到「善财童子」，红孩儿「皈依」了佛门——「收编」，比「消灭」更有智慧。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“换位思考”】悟空能“演得像”牛魔王，因为他了解牛魔王。请谈谈：为什么“懂别人”很重要？你在学习中如何“换位思考”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>懂别人才能配合：</strong> 悟空了解牛魔王的外形、脾气，才骗得过红孩儿。与人打交道也一样——知道对方想什么、在乎什么，才能说到点子上。</p>\n                        <p class=\"mt-2\"><strong>学习的换位思考：</strong> ①读文章，想“作者为什么这样写”；②做数学，想“出题人想考哪个知识点”；③写作文，想“读者看了会不会明白”；④和同学相处，想“如果我是他”。换位思考不是“猜心”，而是“用心理解”，能让学习更高效、相处更融洽。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“细节”】悟空被“生日”这个细节考倒了。请谈谈：为什么“细节决定成败”？如何养成“注意细节”的习惯？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>细节见真章：</strong> 外形可以装，细节装不了。悟空回答不了“生日”，就证明是假的。学习中，细节也常常决定对错成败。</p>\n                        <p class=\"mt-2\"><strong>养成好习惯：</strong> ①做题看清单位、符号、关键词；②写字注意笔画、标点、格式；③背书连“字眼”一起记，不偷懒；④检查作业逐题核对，不扫一眼就完事；⑤做事先列清单，避免遗漏。把“细心”练成习惯，关键时刻就不会“差一点点”。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“心药医心火”】三昧真火是“心火”，凡水浇不灭，要甘露和佛法。请谈谈：为什么“管好情绪”要用对方法？你如何处理自己的“心火”（生气、着急）？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>情绪要“疏导”：</strong> 三昧真火是“心火”，硬泼水反而更旺。人的情绪也一样，越“硬压”越容易爆发，需要“对的方法”疏导。</p>\n                        <p class=\"mt-2\"><strong>处理情绪的方法：</strong> ①生气时先“暂停”，深呼吸十下再说话；②把委屈说出来，写下来，别憋着；③换角度想：这件事一年后还重要吗；④跑跑步、听听歌，让情绪“流”出去；⑤找信任的人聊一聊。会管理情绪的人，不是没有情绪，而是不被情绪控制。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“巧计诱敌”】观音用“迷”字+诈败，不费吹灰之力收服红孩儿。请谈谈：为什么“智取”往往胜过“强攻”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>智取省力又高效：</strong> 硬拼三昧真火，悟空都败了；观音设“迷”字局，让红孩儿自己“送上门”，这叫“请君入瓮”。</p>\n                        <p class=\"mt-2\"><strong>生活中的“智取”：</strong> ①不想熬夜做作业，就白天提高效率；②背不下的单词，用“联想记忆”比死背快；③和同学争执，先“冷静一下”比硬顶有效；④想改掉坏习惯，用“替代法”（想玩手机就运动十分钟）。聪明地想办法，往往能四两拨千斤。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“化敌为友”】观音没有消灭红孩儿，而是收他为“善财童子”。请谈谈：为什么“收服”比“消灭”更有智慧？你在生活中如何“化敌为友”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>收服=双赢：</strong> 消灭只是“少了一个敌人”，收服却是“多了一个帮手”。红孩儿成了善财童子，不再是祸害。这是最高明的赢。</p>\n                        <p class=\"mt-2\"><strong>化敌为友的方法：</strong> ①和闹矛盾的同学，找机会把误会说开；②看到别人的优点，真诚夸一句；③发生争执，先道歉缓和，再讲道理；④不记仇、不报复，用善意化解敌意。朋友多一个，路就宽一分。真正的强者，能把“对手”变成“队友”。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“磨炼心性”】观音让红孩儿“一步一拜”到珞珈山。请谈谈：为什么“必要的磨炼”能让人成长？你经历过哪些“磨炼后进步”的事？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>磨炼炼心：</strong> 红孩儿骄横自大，观音让他一步一拜，磨去傲气、生出恭敬。没有磨炼，人容易“恃才傲物”，难成大器。</p>\n                        <p class=\"mt-2\"><strong>磨炼后的进步：</strong> ①练字枯燥，坚持下来字变漂亮；②跑步很累，坚持下来体能变好；③背古文很苦，背会后作文变有文采；④比赛输过，才知道怎么练。把“磨炼”看成“锻炼”，每一次辛苦都在悄悄帮你变强。咬牙走过最难的路，你会感谢那个不放弃的自己。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“因材施教”】对悟空用紧箍、对黑熊用禁箍、对红孩儿用金箍，观音“看人下菜”。请谈谈：为什么“因人而异的方法”更有效？你希望别人如何对待你？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>因人而异：</strong> 三个徒弟性格不同，观音用不同的“箍”来约束，就像老师对不同学生用不同方法。没有“万能药”，只有“对症方”。</p>\n                        <p class=\"mt-2\"><strong>联系自己：</strong> ①接受每个人的不同，不要求别人都按你的方式来；②想想自己是“吃软”还是“吃硬”，需要什么帮助就主动说出来；③向老师、家长表达“我希望这样被帮助”；④也学会“看人下菜”：对怕羞的同学多鼓励，对毛躁的同学多提醒。真正会沟通的人，懂得“对什么人说什么话、用什么法”。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

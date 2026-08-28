@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第八十二回精读：追根溯源与守诺</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第八十二回精读：追根溯源与守诺</h1>
+            <p class="text-lg text-gray-700 serif">“心猿始识得丹头，姹女终还归本性”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">肚中脱身</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">三进无底洞</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">上天告状</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">天兵擒妖</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 肚中脱身 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">为何不在肚子里把妖怪弄死？</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    唐僧被妖怪送出洞，悟空还留在她肚子里。八戒嫌“脏杀人”，催他出来。悟空用金箍棒变作枣核钉撑住妖怪上颚，纵身跳出，与她再战。八戒、沙僧问：干嘛不直接在肚子里弄死她？悟空没明说——他顾着“好汉的身份”，不愿用暗招杀敌，要正面交锋。可妖怪又脱右脚鞋变替身，把唐僧连人带马再次抓走了。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">枣核钉脱身</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">撑住上颚，跳出肚来</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            悟空要出来，又怕妖怪咬他，便把铁棒吹仙气变作<strong>枣核钉撑住她的上颚</strong>，纵身跳出——连从肚子里出来，每次写法都不一样。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">好汉身份</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">不在肚里暗杀</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            八戒说“在肚子里弄死她多省事”，悟空却<strong>不愿以暗害的方式杀敌</strong>——他要正面交锋，不失好汉身份。<strong>有本事的人，赢得堂堂正正</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">赢得堂堂正正</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空明明能在肚子里弄死妖怪，却选择光明正大地打。<strong>真正的强者，不只赢结果，更要赢得干净、赢得体面</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 三进无底洞 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">妖怪搬家了，却留下了“香火牌位”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空第三次进无底洞，发现洞里静悄悄、全无人迹——妖怪搬家了！他正跺脚捶胸，忽然闻到一阵香风，循着进去，看见一张供桌，供着“尊父李天王之位”“尊兄哪吒三太子位”。悟空大喜：这妖精是李天王之女、哪吒之妹！找着根儿了，不用自己救，拿牌子告状去。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">搬家</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">八戒的“搬家”玩笑成真</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            早先八戒打趣“如来是不是搬家了不给我们经”，如今<strong>妖怪真搬家了</strong>——洞内周围三百余里，她科学众多，换了个谁也找不到的地方。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">牌位香炉</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">尊父李天王之位</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            悟空循香风找到供桌，上供<strong>“尊父李天王之位”“尊兄哪吒三太子位”</strong>——这妖精是<strong>托塔天王李靖之女、哪吒三太子之妹</strong>。悟空大喜：<strong>找着根儿，妖怪必能降</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">降妖，先找“根儿”</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空不去瞎搜，而是顺着“牌位”找到妖怪的来处。<strong>解决难题，先要找到问题的根源——根儿在哪，答案就在哪</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 上天告状 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">孙悟空写状纸，告李天王</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空拿着牌位香炉上天告状：原告孙悟空、东土取经僧唐僧徒弟；告托塔天王李靖、哪吒“闺门不谨”，纵女下界成妖、迷害人命、掳走唐僧。玉帝批旨，命太白金星带悟空去云楼宫召李天王。李天王勃然大怒，说自己只有三子一女、女儿才七岁，反把悟空捆了。关键时刻哪吒道破真相——那确实是他“结拜义妹”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">状纸</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">告状要有理有据</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            悟空写状纸头头是道：<strong>先写原告是谁、身份是什么；再写告谁、告什么事；最后写具体详情和罪名</strong>——“闺门不谨，纵女成精，迷害人命，掳走唐僧”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">义女真相</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">金鼻白毛老鼠精</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            哪吒道破：那女怪本是<strong>金鼻白毛老鼠精</strong>，三百年前偷吃如来香花灯烛，本该处死，如来慈悲饶命，她<strong>念恩拜李天王为父、拜哪吒为兄</strong>——是结拜的恩女，不是亲妹妹。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">讲道理，要讲证据</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空告状不靠蛮力，靠“牌位、香炉”这些证据说话。<strong>有理有据，才站得住脚；空口无凭，谁也说服不了</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 天兵擒妖 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">一日官司十日打，不如直接下界降妖</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    李天王要砍悟空，太白金星从中调解：天上打一天官司，下界就过一年——唐僧早被逼着成亲了。不如李天王点兵，随悟空下界降妖，官司不打。悟空答应“一言既出，驷马难追”。天王、哪吒领兵下界，在天兵搜寻下，妖怪藏身的隐秘小洞被小妖暴露，天兵一拥而上——用妖索捆了老鼠精，救出唐僧马匹行李。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">一日官司十日打</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">天上一天，下界一年</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            太白金星说：打官司“<strong>一日官司十日打</strong>”，<strong>天上一日、下界一年</strong>——你打完官司，唐僧儿子都生完了。不如点兵下界降妖，快去快回。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">妖索擒妖</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">三进无底洞，终获全胜</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            天兵在东南角落发现<strong>另一个隐蔽小洞</strong>（无底洞里再打一层），小妖探头暴露了位置——天兵一拥而上，用<strong>妖索</strong>捆了老鼠精，救出唐僧、马匹和行李。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">轻重缓急，心里有数</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空本想打官司出气，听金星一算“时间账”，立刻同意先降妖。<strong>分清什么最要紧、什么可以放一放，才是真正会办事</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第八十二回“心猿始识得丹头，姹女终还归本性”讲的是无底洞收尾：悟空不愿在肚中暗杀妖怪，妖怪却用花鞋替身再抓唐僧；三进无底洞，发现妖怪供着“李天王之位”的牌位，悟空上天告状；哪吒道破真相——妖怪是义女金鼻白毛老鼠精；太白金星一句“天上一日、下界一年”点醒悟空，李天王点兵下界，用妖索捆了妖怪、救出唐僧。这一回让我们看到：赢得堂堂正正、降妖先找根儿、讲道理要讲证据、分清轻重缓急。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第八十二回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "悟空从妖怪肚子里出来，用什么撑住她的上颚？",
+                    "options": {"A": "金箍棒变作枣核钉","B": "铁棍","C": "石头","D": "手"},
+                    "correct": "A",
+                    "analysis": "悟空把铁棒吹仙气“变作一个枣核钉儿，撑住他的上颚”，再纵身跳出——防她咬合。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "悟空为什么不在妖怪肚子里直接弄死她？",
+                    "options": {"A": "打不过","B": "顾着“好汉的身份”，不愿用暗害的方式杀敌，要正面交锋","C": "唐僧不让","D": "肚子太臭"},
+                    "correct": "B",
+                    "analysis": "八戒劝他“爬开肚皮出来不了账”，悟空却要正面打——他不想用暗招，失了英雄气概。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "妖怪第二次脱了什么变替身逃走的？",
+                    "options": {"A": "左脚花鞋（上次）→这次是右脚花鞋","B": "手镯","C": "头发","D": "腰带"},
+                    "correct": "A",
+                    "analysis": "上次在寺院她脱左脚花鞋，这次脱右脚花鞋变替身——左右各用一次，真身化清风再次抓走唐僧，连马也掳了。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "悟空第三次进无底洞，发现洞里怎么样了？",
+                    "options": {"A": "妖怪在等他","B": "静悄悄全无人迹，妖怪搬家了","C": "着火了","D": "被水淹了"},
+                    "correct": "B",
+                    "analysis": "悟空闯进洞，发现“里面静悄悄，全无人迹”，桌椅家伙全没了——妖怪把唐僧转移，搬家了。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空是怎么发现妖怪来历的？",
+                    "options": {"A": "问土地","B": "闻到香风，找到供着“尊父李天王之位”的牌位香炉","C": "妖怪自己说","D": "算出来的"},
+                    "correct": "B",
+                    "analysis": "悟空正跺脚，忽闻香风，循进去见供桌——上供“尊父李天王之位”“尊兄哪吒三太子位”，一下找到了妖怪的根儿。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "悟空得知妖怪来历后，决定怎么做？",
+                    "options": {"A": "自己找","B": "拿牌位香炉上天告状，找李天王要人","C": "等妖怪回来","D": "放火"},
+                    "correct": "B",
+                    "analysis": "悟空说“不用我们救了，找这牌子要人就行”——他拿了牌位香炉做证据，上天告状。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "悟空状纸上告的是谁？",
+                    "options": {"A": "玉帝","B": "托塔天王李靖和哪吒三太子（“闺门不谨，纵女成精害众”）","C": "如来","D": "太白金星"},
+                    "correct": "B",
+                    "analysis": "悟空告李天王父子“闺门不谨”，纵使女儿下界成精，在陷空山无底洞迷害人命、掳走唐僧。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "李天王一开始为什么敢捆孙悟空？",
+                    "options": {"A": "他是大官","B": "他认定自己只有三子一女、女儿才七岁，认为悟空诬告","C": "玉帝让他捆","D": "悟空犯了天条"},
+                    "correct": "B",
+                    "analysis": "李天王说自己只有三个儿子、一个七岁的女儿真英，绝不可能下界成妖——认定悟空“诬告”，下令捆了猴头。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "哪吒为什么说李天王确实有个“女儿”在下界？",
+                    "options": {"A": "亲生的","B": "那是结拜义女：金鼻白毛老鼠精，300年前偷吃如来香花灯烛被饶命，拜李天王为父","C": "收养的","D": "记错了"},
+                    "correct": "B",
+                    "analysis": "老鼠精偷吃如来香花灯烛，本该处死，如来慈悲饶命——她念恩“拜父王为父，拜孩儿为兄”，是结拜的恩女。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "老鼠精有三个名字，其中本名是什么？",
+                    "options": {"A": "地涌夫人","B": "金鼻白毛老鼠精（原形）","C": "半截观音","D": "玉面公主"},
+                    "correct": "B",
+                    "analysis": "她的本名是“金鼻白毛老鼠精”——一只金鼻子白毛的老鼠；偷香灯后改叫“半截观音”，下界自称“地涌夫人”。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "“半截观音”这个名字呼应了黑松林的什么细节？",
+                    "options": {"A": "她的武器","B": "她半截埋土、半截捆树的绑法（有一半在地下）","C": "她的住处","D": "她的长相"},
+                    "correct": "B",
+                    "analysis": "她偷了香灯有了佛法，改叫“半截观音”——因为“有一半在地下”，正呼应黑松林那“埋半截、绑半截”的怪绑法。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "“地涌夫人”这个名字呼应了什么？",
+                    "options": {"A": "她的兵器","B": "黑松林地底咕嘟嘟冒出的那股黑气","C": "她的手下","D": "她的法术"},
+                    "correct": "B",
+                    "analysis": "“地涌”即从地底涌出——正呼应黑松林“林南地下一股黑气咕嘟嘟冒上来”，前后非常严谨。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "悟空被捆后，为什么还要“被捆着抬去见玉帝”？",
+                    "options": {"A": "走不动","B": "他得理不饶人：你捆错人，得给我个说法，官司才算赢","C": "想省事","D": "怕李天王"},
+                    "correct": "B",
+                    "analysis": "悟空说“你把我捆了，你得给我个说法……把我就这么捆着去见玉帝”——得理不饶人，先输后赢。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "太白金星为什么劝悟空别打官司？",
+                    "options": {"A": "打不赢","B": "“一日官司十日打”，天上一日、下界一年——打完官司唐僧早被逼着成亲了","C": "太花钱","D": "玉帝不让"},
+                    "correct": "B",
+                    "analysis": "金星说打官司拖得久，天上一日下界一年——为出气耽误救唐僧，不值。不如天王点兵下界降妖，快去快回。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "悟空答应不告状，是怎么承诺的？",
+                    "options": {"A": "发毒誓","B": "“我也是个大丈夫，一言既出驷马难追”","C": "写保证书","D": "签合同"},
+                    "correct": "B",
+                    "analysis": "悟空说“我也是个大丈夫，一言既出驷马难追”——该捣蛋时捣蛋、该耍赖时耍赖，关键事上有底线讲信用。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "天兵是怎么找到藏起来的妖怪的？",
+                    "options": {"A": "妖怪自己投降","B": "在东南角落发现隐蔽小洞，小妖探头暴露了位置","C": "用照妖镜","D": "烧山"},
+                    "correct": "B",
+                    "analysis": "无底洞里“再打一层”有个隐蔽小洞，小妖拥挤时探头被天兵发现——悟空率天兵一拥而上，用妖索捆了妖怪。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "悟空用铁棒变作枣______钉，撑住妖怪上颚跳出肚来。",
+                    "answer": "核",
+                    "analysis": "“枣核钉”就是枣核形状的钉子——悟空用它撑开妖怪的嘴，防她咬，好从容脱身。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "妖怪脱右脚花______变替身，再次抓走唐僧。",
+                    "answer": "鞋",
+                    "analysis": "上次用左脚、这次用右脚——“花鞋替身”是老鼠精的看家本领，左右各用一次，骗得悟空扑空。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "悟空找到供着“尊父李______王之位”的牌位。",
+                    "answer": "天",
+                    "analysis": "“李天王”即托塔天王李靖——牌位暴露了妖怪与天庭的关系，悟空这才找到根儿。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "老鼠精本名是金鼻白毛老______精。",
+                    "answer": "鼠",
+                    "analysis": "“金鼻白毛老鼠精”是她的原形——老鼠善打洞，难怪她在无底洞里又打了层小洞躲藏。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "她偷吃如来的香花灯______，本该处死，如来饶她一命。",
+                    "answer": "烛",
+                    "analysis": "“香花灯烛”是灵山供佛之物。她偷吃后有了佛法，改叫“半截观音”，这是她故事的开端。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "她下界后自称“______涌夫人”。",
+                    "answer": "地",
+                    "analysis": "“地涌”指从地底涌出——呼应黑松林地底冒黑气的细节，名字与情节环环相扣。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "太白金星说“一日______司十日打”，天上一日、下界一年。",
+                    "answer": "官",
+                    "analysis": "“官司”即诉讼。金星用这个俗语说明打官司拖得久——为出气耽误救唐僧，不值当。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "天兵用______索捆了老鼠精，救出唐僧。",
+                    "answer": "妖",
+                    "analysis": "“妖索”是捉妖用的绳索——李天王奉玉帝之命下界拿妖，捆了老鼠精及其党羽回天宫复命。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“光明正大”】悟空明明能在肚子里弄死妖怪，却选择正面交锋。请谈谈：为什么“赢得堂堂正正”比“赢得不择手段”更值得尊重？你如何做到“凭实力赢”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>赢的方式，决定赢的价值：</strong> 悟空不愿“暗害”妖怪，要正面打——<strong>靠实力和正当手段赢，才赢得起别人的尊重</strong>。</p>\n                        <p class=\"mt-2\"><strong>凭实力赢：</strong> ①考试靠真才实学，不靠作弊；②比赛靠训练，不靠耍花招；③竞争时守住底线，不用损人手段；④输了也服气，赢了也不得意；⑤把“赢得漂亮”当成习惯。<strong>堂堂正正的输，也好过不干不净的赢</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“追根溯源”】悟空找到“牌位”就找到了妖怪的根儿。请谈谈：为什么“找到问题的根源”比“头疼医头”更有效？你如何找到学习问题的“病根”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>治标更要治本：</strong> 悟空不瞎搜，顺着牌位找到“李天王”——<strong>找到根源，问题就解决了一半</strong>。</p>\n                        <p class=\"mt-2\"><strong>找病根：</strong> ①成绩不好，别只怪“粗心”，想想“哪个知识点没懂”；②做错题，问“错在哪一步、为什么错”；③把问题拆开，找到“源头”那一个；④对症下药：基础不牢就补基础，方法不对就换方法；⑤定期复盘，把病根一个个清掉。<strong>找到根的病，才治得好</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“讲证据”】悟空告状靠牌位香炉这些“物证”，不靠空口白话。请谈谈：为什么“说话要有证据”？你如何做到“有理有据”地表达自己？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>空口无凭，物证为据：</strong> 悟空拿出牌位香炉，玉帝才肯批旨——<strong>有理有据的话，才有分量</strong>。</p>\n                        <p class=\"mt-2\"><strong>有理有据：</strong> ①说“我觉得”之前，先准备“事实是什么”；②引数据、举例子，别只讲感觉；③有疑问时，找证据求证，不瞎猜；④表达时先讲事实、再讲道理、最后提建议；⑤听到别人的话，也先问“证据呢”。<strong>会拿证据说话的人，走到哪里都站得住脚</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“分清轻重缓急”】悟空本想打官司出气，听金星一算“时间账”就同意先降妖。请谈谈：为什么“分清轻重缓急”很重要？你如何安排自己的时间？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>先做要紧的，再做想做的：</strong> 悟空放下“出气”，先去救师傅——<strong>会排序的人，才不会被小事拖住大事</strong>。</p>\n                        <p class=\"mt-2\"><strong>安排时间：</strong> ①先把“重要又紧急”的做完（如作业、复习）；②再做“重要不紧急”的（如锻炼、阅读）；③“紧急不重要”的尽量快速处理；④“不重要不紧急”的（如刷手机）放最后；⑤列清单，按顺序打勾。<strong>把时间花在刀刃上，一天就变长了</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“守信重诺”】悟空答应不告状，就“一言既出驷马难追”。请谈谈：为什么“说到做到”是做人最基本的信用？你如何做到“言而有信”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>信用，是一张无形的名片：</strong> 悟空答应金星不告状、下界降妖，就说到做到——<strong>说话不算话的人，一次就输光信任</strong>。</p>\n                        <p class=\"mt-2\"><strong>言而有信：</strong> ①答应别人的事，记在本子上，不遗忘；②做不到的事，一开始就别乱答应；③临时有变，提前说明、真诚道歉；④答应就尽力做，不敷衍；⑤把“说到做到”当成自己的招牌。<strong>信用攒起来很慢，丢起来却很快</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“恩怨与是非”】妖怪本是李天王的“义女”，却在下界害人。请谈谈：为什么“关系”不能掩盖“是非”？你如何看待“徇私情”与“讲原则”的矛盾？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>亲归亲，理归理：</strong> 老鼠精是李天王义女，但她害人就是害人——<strong>哪吒照样奉旨拿她，这才是大是大非</strong>。</p>\n                        <p class=\"mt-2\"><strong>徇私情与讲原则：</strong> ①朋友犯错，帮他改，不帮他瞒；②亲友“走后门”，要敢于说不；③“他是我朋友”不能成为“他没错”的理由；④讲原则一时得罪人，长远赢得尊重；⑤真正的朋友，会感谢你的“正直”。<strong>包庇是害人，较真是爱人</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第三回精读：学艺与断魔</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第三回精读：学艺与断魔</h1>
+            <p class="text-lg text-gray-700 serif">"悟彻菩提真妙理，断魔归本合元神"</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-stage')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-stage">第一章：学艺四阶段</button>
+                <button onclick="NavigationModule.switchTab('section-sell')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-sell">第二章：卖弄与被逐</button>
+                <button onclick="NavigationModule.switchTab('section-demon')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-demon">第三章：断魔归本</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+
+        <!-- Section 1: Four Stages of Learning -->
+        <section id="section-stage" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">孙悟空学艺的四个阶段</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    在菩提祖师门下，孙悟空经历了从基础磨炼到掌握神通的完整学习过程。这四个阶段不仅是法术的习得，更是心性成长的阶梯。点击下方卡片，探索每个阶段的深层含义。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                <div class="reveal-card bg-white p-6 rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-stage1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">第一阶段：洒扫应对（六七年）</h3>
+                    </div>
+                    <div class="p-6" id="card-stage1-front">
+                        <p class="text-gray-600 text-center mb-4">学习内容：扫地锄园、养花修树、讲经论道、习字焚香</p>
+                        <p class="text-amber-700 font-bold text-center">(点击揭秘此阶段的真正目的)</p>
+                    </div>
+                    <div class="p-6 hidden bg-amber-50" id="card-stage1-back">
+                        <p class="text-gray-700 text-left">
+                            <strong>表面看似无用，实则至关重要：</strong><br>
+                            1. <strong>磨性子</strong>：让心沉下来，培养定力<br>
+                            2. <strong>打基础</strong>：对道法内容混个脸熟、耳熟<br>
+                            3. <strong>培养习惯</strong>：建立修行的日常节奏<br><br>
+                            <strong>启示：</strong>即使是天地精华的孙悟空，也必须经历基础磨炼。教育中"无用之用"往往最为关键。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="reveal-card bg-white p-6 rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-stage2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">第二阶段：听懂妙音</h3>
+                    </div>
+                    <div class="p-6" id="card-stage2-front">
+                        <p class="text-gray-600 text-center mb-4">表现：抓耳挠腮、眉花眼笑、手舞足蹈</p>
+                        <p class="text-amber-700 font-bold text-center">(点击揭秘此阶段的深层含义)</p>
+                    </div>
+                    <div class="p-6 hidden bg-amber-50" id="card-stage2-back">
+                        <p class="text-gray-700 text-left">
+                            <strong>悟性开发的标志：</strong><br>
+                            • 能听懂老师讲的"好在哪里"<br>
+                            • 成为老师的"知音"，理解话外深意<br>
+                            • 六七年的基础学习终于开花结果<br><br>
+                            <strong>哑谜对话：</strong>悟空以"吃了七次饱桃"暗示七年时光，展现悟性与急切求道之心。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="reveal-card bg-white p-6 rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-stage3')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">第三阶段：长生口诀与七十二变</h3>
+                    </div>
+                    <div class="p-6" id="card-stage3-front">
+                        <p class="text-gray-600 text-center mb-4">三更密授、打破盘中暗谜</p>
+                        <p class="text-amber-700 font-bold text-center">(点击揭秘长生之道的核心)</p>
+                    </div>
+                    <div class="p-6 hidden bg-amber-50" id="card-stage3-back">
+                        <p class="text-gray-700 text-left">
+                            <strong>长生口诀核心：</strong><br>
+                            "显密圆通真妙诀，惜修性命无他说。都来总是精气神，谨固牢藏休漏泄。"<br><br>
+                            <strong>两大修炼原则：</strong><br>
+                            1. 守住先天精气神，防止耗散<br>
+                            2. 摒除邪欲，内心清凉空明<br><br>
+                            <strong>三灾利害：</strong>每五百年一次雷、火、风灾，需学七十二变以"变通"应对。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="reveal-card bg-white p-6 rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-stage4')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">第四阶段：筋斗云</h3>
+                    </div>
+                    <div class="p-6" id="card-stage4-front">
+                        <p class="text-gray-600 text-center mb-4">朝游北海暮苍梧，一筋斗十万八千里</p>
+                        <p class="text-amber-700 font-bold text-center">(点击揭秘筋斗云的象征意义)</p>
+                    </div>
+                    <div class="p-6 hidden bg-amber-50" id="card-stage4-back">
+                        <p class="text-gray-700 text-left">
+                            <strong>筋斗云特点：</strong><br>
+                            • 因悟空惯于翻跟斗，祖师特传此法<br>
+                            • 一个筋斗即十万八千里<br><br>
+                            <strong>心灵象征：</strong><br>
+                            • 心念瞬息万里，神游四方<br>
+                            • 看到远方景象，心即刻到达<br>
+                            • 代表心灵的自由与超越时空的能力
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-4 serif">学艺历程的心灵映射</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+                    <div class="bg-white p-4 rounded border border-amber-200">
+                        <div class="text-2xl font-bold text-amber-900 mb-2">洒扫应对</div>
+                        <div class="text-sm text-gray-600">沉心静气·磨炼意志</div>
+                    </div>
+                    <div class="bg-white p-4 rounded border border-amber-200">
+                        <div class="text-2xl font-bold text-amber-900 mb-2">听懂妙音</div>
+                        <div class="text-sm text-gray-600">悟性开发·知音共鸣</div>
+                    </div>
+                    <div class="bg-white p-4 rounded border border-amber-200">
+                        <div class="text-2xl font-bold text-amber-900 mb-2">长生变化</div>
+                        <div class="text-sm text-gray-600">守精气神·变通应对</div>
+                    </div>
+                    <div class="bg-white p-4 rounded border border-amber-200">
+                        <div class="text-2xl font-bold text-amber-900 mb-2">筋斗云</div>
+                        <div class="text-sm text-gray-600">心念万里·自由自在</div>
+                    </div>
+                </div>
+                <p class="text-gray-700 mt-6 text-left max-w-3xl mx-auto">
+                    <strong>核心启示：</strong>孙悟空的本领实则是心灵能力的开发——长生不老对应心灵超越时间磨损，七十二变对应心随境转的适应能力，筋斗云对应心念的瞬间跳跃。整个学艺过程，本质上是"修心"的过程。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: Selling Off and Expulsion -->
+        <section id="section-sell" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">道高一尺，魔高一丈</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    学成本领后，孙悟空的心态发生了变化。本事越大，越容易滋生傲慢与卖弄之心。本章节探讨"卖弄"背后的心理机制，以及菩提祖师为何坚决将悟空逐出师门。
+                </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
+                <h3 class="text-lg font-bold mb-4 text-center serif">卖弄松树的场景还原</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                        <div class="font-bold text-amber-900 mb-2">起因</div>
+                        <p class="text-sm text-gray-700">众童子请教悟空缘法，悟空答："一者师父传得好，二者我学得勤。"开始显露骄傲。</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                        <div class="font-bold text-amber-900 mb-2">经过</div>
+                        <p class="text-sm text-gray-700">众人请其展示变化，悟空摇身一变成为松树，众人鼓掌喝彩，喧哗惊动祖师。</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                        <div class="font-bold text-amber-900 mb-2">结果</div>
+                        <p class="text-sm text-gray-700">祖师怒斥："口开神气散，舌动是非生"，并质问："这个功夫你敢在人前卖弄！"</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-red-50 p-6 rounded-xl border-l-4 border-red-600">
+                    <h4 class="font-bold text-lg mb-3 text-red-900">祖师的深刻警示</h4>
+                    <ul class="space-y-3 text-gray-700 text-sm">
+                        <li><strong>• 口开神气散：</strong>多言耗散精气神，违背长生口诀中"谨固牢藏休漏泄"的原则</li>
+                        <li><strong>• 舌动是非生：</strong>言语引发是非纷争，破坏修行人的沉稳心境</li>
+                        <li><strong>• 卖弄招祸：</strong>好东西拿出来显摆，别人想要你给不给？不给就结怨，性命难保</li>
+                        <li><strong>• 妙法不可轻传：</strong>"不欲至人传妙诀，空言口困舌头干"，须择有缘之人</li>
+                    </ul>
+                </div>
+                <div class="bg-amber-50 p-6 rounded-xl border-l-4 border-amber-600">
+                    <h4 class="font-bold text-lg mb-3 text-amber-900">被逐的深层原因</h4>
+                    <ul class="space-y-3 text-gray-700 text-sm">
+                        <li><strong>• 心态变质：</strong>有了好胜心、炫耀心，不再适合修行</li>
+                        <li><strong>• 必生不良：</strong>祖师预言"你这一去定生不良"——本事大+心不正=大祸</li>
+                        <li><strong>• 需要社会毒打：</strong>只有经历世间磨砺，才能认识到自己的错误</li>
+                        <li><strong>• 断绝师承：</strong>不准说自己是祖师徒弟，避免连累师门</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif">核心哲理：世上无难事，只怕有心人</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-gray-700 mb-4">
+                            悟空临别时，祖师曾说："世上无难事，只怕有心人。"这句话贯穿了整个学艺过程——只要有坚定的志向，再难的事情都能做成。
+                        </p>
+                        <p class="text-gray-700">
+                            诗中云：<span class="serif italic text-amber-900">"举世无人肯立志，立志修玄玄自明。"</span>世界上很多人不愿意立志修心，但只要你有足够志向，看似再难的事情终能成功。
+                        </p>
+                    </div>
+                    <div class="bg-white p-4 rounded border border-gray-200">
+                        <h4 class="font-bold text-gray-800 mb-2">归途诗偈</h4>
+                        <p class="serif text-gray-700 italic mb-2">"去时凡骨凡胎重，得道身轻体亦轻。"</p>
+                        <p class="serif text-gray-700 italic mb-2">"两岸猿声啼不住，轻舟已过万重山。"</p>
+                        <p class="text-sm text-gray-600 mt-3">
+                            从凡胎到得道，不仅是身体的轻盈，更是心灵的解脱。但真正的考验才刚刚开始……
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Defeating the Demon King -->
+        <section id="section-demon" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">水脏洞与混世魔王</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空回到花果山，发现洞府被混世魔王占据，水帘洞变成了"水脏洞"。这场战斗不仅是外在的降妖除魔，更是内在的"断魔归本"——清除心上尘埃，恢复本真清净。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+                    <h3 class="text-xl font-bold mb-4 serif text-blue-900">水脏洞的象征意义</h3>
+                    <p class="text-gray-700 mb-4 text-sm">
+                        "水脏洞"之名极具深意——原本清澈的水帘洞，因魔王占领而变得污浊。这象征着：
+                    </p>
+                    <ul class="space-y-2 text-gray-700 text-sm">
+                        <li><strong>• 心蒙尘埃：</strong>清净本性被世俗欲望污染</li>
+                        <li><strong>• 禅宗呼应：</strong>神秀偈语"身是菩提树，心如明镜台，时时勤拂拭，勿使惹尘埃"</li>
+                        <li><strong>• 长生口诀：</strong>"屏除邪欲得清凉"——邪欲不除，心不清凉</li>
+                    </ul>
+                    <p class="text-gray-700 mt-4 text-sm">
+                        混世魔王代表来自世俗百态的心魔，必须清除才能恢复本心。
+                    </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+                    <h3 class="text-xl font-bold mb-4 serif text-red-900">混世魔王的浅薄</h3>
+                    <p class="text-gray-700 mb-4 text-sm">
+                        魔王评价敌人的标准暴露了其低能：
+                    </p>
+                    <ul class="space-y-2 text-gray-700 text-sm">
+                        <li><strong>• 关注外表：</strong>"怎生打扮，有什么兵器"</li>
+                        <li><strong>• 轻视悟空：</strong>"身不满四尺，年不过三旬，没有兵器"</li>
+                        <li><strong>• 世俗见解：</strong>认为年轻、矮小、无装备就没有本事</li>
+                    </ul>
+                    <p class="text-gray-700 mt-4 text-sm italic">
+                        真正的高手不依赖外在装备——有志不在年高，本事不在身形。
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-6 serif text-center">战斗过程与神通展现</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded border border-amber-200">
+                        <div class="font-bold text-amber-900 mb-2 text-center">第一阶段</div>
+                        <p class="text-xs text-gray-700">魔王不屑用刀，欲徒手展示拳法。结果"长拳空大短促监牢"，被悟空轻易击中。</p>
+                    </div>
+                    <div class="bg-white p-4 rounded border border-amber-200">
+                        <div class="font-bold text-amber-900 mb-2 text-center">第二阶段</div>
+                        <p class="text-xs text-gray-700">魔王持板儿大钢刀劈头就砍，悟空急撤身躲过，刀砍了个空。</p>
+                    </div>
+                    <div class="bg-white p-4 rounded border border-amber-200">
+                        <div class="font-bold text-amber-900 mb-2 text-center">第三阶段</div>
+                        <p class="text-xs text-gray-700">悟空施展"身外身法"：拔毫毛嚼碎喷去，变作三千二百小猴围攻，夺刀将魔王砍为两段。</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 mt-6 text-center text-sm">
+                    <strong>毫毛变化的深意：</strong>"应物随心"——心看到什么就能想到什么，这是心灵的核心能力之一。
+                </p>
+            </div>
+
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif">"断魔归本合元神"的真谛</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-gray-700 mb-4">
+                            回目"悟彻菩提真妙理，断魔归本合元神"两句各讲一件事：
+                        </p>
+                        <ul class="space-y-3 text-gray-700 text-sm">
+                            <li><strong>上句：</strong>在菩提祖师处悟道，掌握长生、变化、筋斗云等妙法，开发心灵各种能力</li>
+                            <li><strong>下句：</strong>击败混世魔王，清除心魔，使心回归本源清净</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-gray-700 mb-4">
+                            "尽归一体"的深意：
+                        </p>
+                        <ul class="space-y-3 text-gray-700 text-sm">
+                            <li><strong>• 火烧水脏洞：</strong>把污浊之地烧得枯干，彻底净化</li>
+                            <li><strong>• 收回毫毛：</strong>三千二百小猴收归本体，只留下原本被抓的三五十只</li>
+                            <li><strong>• 心灵整合：</strong>去除外侵之魔，恢复内心统一与本真</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="text-gray-700 mt-6 italic text-center serif">
+                    "断魔归本"不是消灭所有魔障，而是初步完成修道历程。未来的路上，新的魔障还会不断出现……
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第三回讲述了孙悟空学艺成长与初战魔障的故事。本练习册结合精读讲义设计，涵盖选择题、填空题和问答题，帮助你在答题过程中深入理解"学艺四阶段"、"卖弄之害"与"断魔归本"的深层含义，启发对学习方法、心性修养与社会认知的思考。
+                </div>
+            </div>
+
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第三回原文精讲内容构建</p>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            choiceQuestions: [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "孙悟空在菩提祖师处学艺的第一阶段持续了六七年，学习内容包括洒扫应对、讲经论道、习字焚香、养花修树等。关于这一阶段的学习目的，下列说法最准确的是：",
+                    "options": {
+                        "A": "这些杂务是为了惩罚孙悟空的顽劣性格，让他体会劳动的艰辛",
+                        "B": "主要是为了磨炼心性、沉下心来，同时打下基础知识的基础",
+                        "C": "因为菩提祖师暂时没有合适的法术可教，只能用杂务打发时间",
+                        "D": "这些技能是修仙成道的必备法术，可以直接用于降妖除魔"
+                    },
+                    "correct": "B",
+                    "analysis": "原著中明确指出，洒扫应对等基础工作是为了'磨性子'，让心沉下来，培养定力，同时对道法内容混个脸熟。这正是教育中'无用之用'的体现。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "当菩提祖师问孙悟空'你一道洞中多少时了'，悟空回答'弟子不知多少'，只说'在山后打柴吃七次饱桃'。这种回答方式体现了：",
+                    "options": {
+                        "A": "孙悟空真的不知道过了多少年，因为他是个猴子不懂计算时间",
+                        "B": "悟空故意装傻充愣，想试探老师的反应",
+                        "C": "这是一种'打哑谜'的表达方式，暗示已等了七年的急切心情",
+                        "D": "悟空忘记了时间，因为他在山中过得太快乐了"
+                    },
+                    "correct": "C",
+                    "analysis": "悟空并非不知道时间，而是用'吃了七次饱桃'这种隐喻方式表达等待之久，类似'去了八趟厕所'的抱怨语气。这是师徒间'打哑谜'对话的典型例子。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "菩提祖师向孙悟空介绍'术'、'流'、'静'、'动'等旁门左道时，悟空每次都问同一个问题。这个问题是：",
+                    "options": {
+                        "A": "学这个需要多长时间？",
+                        "B": "这般可得长生吗？",
+                        "C": "这个法术厉害吗？",
+                        "D": "学费贵不贵？"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空的根本目标是长生不老，所以无论祖师介绍什么旁门，他都追问'这般可得长生吗'。这体现了他目标明确、不偏离初心的特点。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "菩提祖师敲孙悟空头三下、倒背着手走入内室、关上中门的举动，实际上是一个'哑谜'。这个哑谜的含义是：",
+                    "options": {
+                        "A": "祖师非常生气，要惩罚孙悟空",
+                        "B": "祖师暗示悟空三更时分从后门进来，秘密传授大道",
+                        "C": "祖师不想再教悟空，让他离开",
+                        "D": "这是一个测试，看悟空是否会偷学"
+                    },
+                    "correct": "B",
+                    "analysis": "'打三下'暗示'三更三点'，'倒背着手走入内室'暗示'在我屋里告诉你'，'关上中门'暗示'不从正门走从后门进来'。悟空识破此谜，得以深夜密授长生口诀。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "菩提祖师传授的长生口诀核心内容是'显密圆通真妙诀，惜修性命无他说。都来总是精气神，谨固牢藏休漏泄'。根据口诀，实现长生的关键是：",
+                    "options": {
+                        "A": "每天练习特定的呼吸吐纳功法",
+                        "B": "服用金丹和仙丹",
+                        "C": "守住先天精气神，摒除邪欲保持内心清凉",
+                        "D": "拜入名师门下学习高深法术"
+                    },
+                    "correct": "C",
+                    "analysis": "口诀明确指出长生之道在于'谨固牢藏休漏泄'——守住精气神不外泄，以及'屏除邪欲得清凉'——控制后天欲望，保持内心空明清净。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "菩提祖师告诉孙悟空，即使修成长生不老之法，仍需防备'三灾利害'。这三灾分别是：",
+                    "options": {
+                        "A": "水灾、火灾、风灾",
+                        "B": "雷灾、火灾、风灾",
+                        "C": "天灾、地灾、人灾",
+                        "D": "病灾、老灾、死灾"
+                    },
+                    "correct": "B",
+                    "analysis": "原著中明确指出三灾为：每五百年一次雷灾、再过五百年火灾、又五百年风灾。这是因为长生之法'夺天地之造化'，为天地所不容，故降灾害。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "孙悟空选择学习七十二变而非三十六变的原因是：",
+                    "options": {
+                        "A": "七十二变更容易学习",
+                        "B": "祖师推荐他学七十二变",
+                        "C": "悟空说'弟子愿多里捞摸'，哪个多就学哪个",
+                        "D": "三十六变已经被其他师兄学完了"
+                    },
+                    "correct": "C",
+                    "analysis": "悟空的选择体现了他贪多求全的性格特点——'多里捞摸'。这也为后来他惹是生非埋下伏笔：本事越大，若心不正，危害越大。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "菩提祖师传授孙悟空'筋斗云'的原因是：",
+                    "options": {
+                        "A": "筋斗云是最快的飞行法术",
+                        "B": "其他弟子都不会筋斗云",
+                        "C": "悟空惯于翻跟斗而非跺足起飞，因此因材施教",
+                        "D": "筋斗云最容易学习"
+                    },
+                    "correct": "C",
+                    "analysis": "祖师观察到别人腾云都是'跌足而起'，而悟空是'翻个跟头'，因此特传筋斗云。这体现了因材施教的教育智慧。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "孙悟空在众人面前变成松树，引来喝彩，惊动了菩提祖师。祖师对此事的反应是：",
+                    "options": {
+                        "A": "很高兴，表扬悟空学有所成",
+                        "B": "无所谓，认为这只是小把戏",
+                        "C": "非常愤怒，斥责悟空卖弄，并将他逐出师门",
+                        "D": "担心悟空的法术不够纯熟"
+                    },
+                    "correct": "C",
+                    "analysis": "祖师怒斥'口开神气散，舌动是非生'，质问'这个功夫你敢在人前卖弄'，并说'你这一去定生不良'，坚决将悟空逐出师门。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "菩提祖师将孙悟空逐出师门的根本原因是：",
+                    "options": {
+                        "A": "悟空违反了门规",
+                        "B": "悟空的天赋不够，无法继续深造",
+                        "C": "悟空有了卖弄心、好胜心，心态已不适合修行",
+                        "D": "祖师担心悟空会超过自己"
+                    },
+                    "correct": "C",
+                    "analysis": "悟空卖弄松树的行为暴露了他内心的不安定——有了炫耀、好胜之心。祖师深知'本事大+心不正=大祸'，因此让他下山经历社会毒打，重新认识自己。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "菩提祖师临别时嘱咐孙悟空'你这一去定生不良'，并且不准他说出自己的师承。这是因为：",
+                    "options": {
+                        "A": "祖师害怕被仇家找到",
+                        "B": "祖师不想承担教导责任",
+                        "C": "悟空心态已偏，必将惹祸，避免连累师门",
+                        "D": "祖师已经不认识这个徒弟了"
+                    },
+                    "correct": "C",
+                    "analysis": "祖师预言悟空'定生不良'是基于对他心态的判断——卖弄心、好胜心已生，加上本事大，必然惹祸。不准说师承是为了避免牵连师门。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "孙悟空回到花果山后，发现洞府被混世魔王占据，水帘洞变成了'水脏洞'。'水脏洞'的象征意义是：",
+                    "options": {
+                        "A": "洞里水质变差了",
+                        "B": "心蒙尘埃，清净本性被世俗欲望污染",
+                        "C": "魔王喜欢脏乱的环境",
+                        "D": "水帘洞年久失修变脏了"
+                    },
+                    "correct": "B",
+                    "analysis": "'水脏洞'象征心上蒙尘，被魔占领。这呼应禅宗神秀偈语'时时勤拂拭，勿使惹尘埃'，以及长生口诀中'屏除邪欲得清凉'的理念。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "混世魔王评价孙悟空的标准是'身不满四尺，年不过三旬，没有兵器'，因此轻视他。这反映了：",
+                    "options": {
+                        "A": "魔王有识人之明",
+                        "B": "世俗价值观的浅薄——以外表、年龄、装备评判实力",
+                        "C": "魔王确实实力强大，不需要重视对手",
+                        "D": "魔王想激怒孙悟空"
+                    },
+                    "correct": "B",
+                    "analysis": "真正的高手不依赖外在条件。魔王关注外表打扮和兵器，暴露了其浅薄的世俗见解。'有志不在年高'，实力不在身形装备。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "孙悟空打败混世魔王时使用的神通是'身外身法'，具体做法是：",
+                    "options": {
+                        "A": "召唤天兵天将助战",
+                        "B": "拔一把毫毛嚼碎喷去，变作三千二百个小猴",
+                        "C": "使用金箍棒横扫千军",
+                        "D": "念咒语请来神仙帮忙"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空拔毫毛嚼碎喷去，叫声'变'，化作三千二百小猴围攻魔王。这体现了'应物随心'的心灵能力——心想到什么就能变出什么。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "回目'悟彻菩提真妙理，断魔归本合元神'的上下两句分别指的是：",
+                    "options": {
+                        "A": "上句讲学艺，下句讲回家",
+                        "B": "上句讲在菩提祖师处悟道开发心灵能力，下句讲击败魔王清除心魔回归本心",
+                        "C": "上句讲理论，下句讲实践",
+                        "D": "上句讲道家，下句讲佛家"
+                    },
+                    "correct": "B",
+                    "analysis": "上句指在菩提祖师处掌握长生、变化、筋斗云等妙法，开发心灵能力；下句指击败混世魔王，清除心魔，使心回归本源清净，实现心灵整合。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "孙悟空学艺过程中，菩提祖师强调'世上无难事，只怕有心人'。这句话在文中的深层含义是：",
+                    "options": {
+                        "A": "只要有心，任何困难都能克服",
+                        "B": "只要有坚定的志向，再难的事情都能成功",
+                        "C": "用心做事就会有好结果",
+                        "D": "有心人会得到上天帮助"
+                    },
+                    "correct": "B",
+                    "analysis": "这句话贯穿整个学艺过程，强调立志的重要性。诗中云'举世无人肯立志，立志修玄玄自明'——只要有坚定志向，看似再难的事终能成功。"
+                },
+                {
+                    "id": "q17",
+                    "num": 17,
+                    "question": "孙悟空的筋斗云一个筋斗可达十万八千里。从心灵象征的角度看，筋斗云代表的是：",
+                    "options": {
+                        "A": "飞行的速度",
+                        "B": "心灵的自由与超越时空的能力",
+                        "C": "逃跑的本领",
+                        "D": "炫耀的资本"
+                    },
+                    "correct": "B",
+                    "analysis": "筋斗云象征心念瞬息万里——看到远方景象，心即刻到达。这代表心灵的自由自在、超越时空限制的能力，是心灵开发的重要标志。"
+                },
+                {
+                    "id": "q18",
+                    "num": 18,
+                    "question": "菩提祖师传授长生口诀时说'不遇至人传妙诀，空言口困舌头干'。这句话的意思是：",
+                    "options": {
+                        "A": "没有遇到好人，说了也白说",
+                        "B": "如果没有遇到足够有悟性的人，再玄妙的口诀传出去也白传",
+                        "C": "说话太多会口干舌燥",
+                        "D": "妙诀不能随便告诉别人"
+                    },
+                    "correct": "B",
+                    "analysis": "真道玄妙，非有悟性者不可理解。如果传给不懂的人，会被误解、乱传播，反而破坏大道的本来面目。因此妙法必须择有缘之人而传。"
+                }
+            ],
+            blankQuestions: [
+                {
+                    "id": "b1",
+                    "num": 1,
+                    "question": "孙悟空学艺第一阶段学习的内容包括：洒扫应对、进退周旋、讲经论道、习字焚香，闲时还要______、______。（每空填四字）",
+                    "answer": "扫地锄园|养花修树",
+                    "analysis": "原著描述悟空在最初六七年主要做这些基础工作，目的是磨性子、打基础。"
+                },
+                {
+                    "id": "b2",
+                    "num": 2,
+                    "question": "孙悟空用'______'的方式暗示自己在菩提祖师处已经待了七年。",
+                    "answer": "吃了七次饱桃|山后打柴吃七次饱桃",
+                    "analysis": "这是典型的'打哑谜'表达方式，既暗示了时间，又表达了等待的急切心情。"
+                },
+                {
+                    "id": "b3",
+                    "num": 3,
+                    "question": "菩提祖师敲悟空头三下、倒背着手走入内室、关上中门，这个'哑谜'暗示悟空在______时分从______门进来受教。",
+                    "answer": "三更|后",
+                    "analysis": "'打三下'即三更三点，'倒背着手走入内室'暗示在后屋，'关上中门'暗示不走正门走后门。"
+                },
+                {
+                    "id": "b4",
+                    "num": 4,
+                    "question": "长生口诀的核心是：'都来总是______，谨固牢藏休______。'",
+                    "answer": "精气神|漏泄",
+                    "analysis": "这句口诀强调守住先天精气神不外泄，是实现长生的关键之一。"
+                },
+                {
+                    "id": "b5",
+                    "num": 5,
+                    "question": "长生修炼的另一关键是：'______邪欲得______。'",
+                    "answer": "屏除|清凉",
+                    "analysis": "控制后天欲望，保持内心空明清净，是长生修炼的另一核心原则。"
+                },
+                {
+                    "id": "b6",
+                    "num": 6,
+                    "question": "'三灾利害'分别是：每五百年一次______灾，再过五百年______灾，又五百年______灾。",
+                    "answer": "雷|火|风",
+                    "analysis": "这是因为长生之法'夺天地之造化'，为天地所不容，故每五百年降一次灾害。"
+                },
+                {
+                    "id": "b7",
+                    "num": 7,
+                    "question": "孙悟空选择学习______般变化，原因是他说'弟子愿______'。",
+                    "answer": "七十二|多里捞摸",
+                    "analysis": "悟空贪多求全的性格在此体现，也为后来惹祸埋下伏笔。"
+                },
+                {
+                    "id": "b8",
+                    "num": 8,
+                    "question": "菩提祖师传授孙悟空______云，一个筋斗可达______里。",
+                    "answer": "筋斗|十万八千",
+                    "analysis": "因悟空惯于翻跟斗，祖师因材施教特传此法，象征心念瞬息万里。"
+                },
+                {
+                    "id": "b9",
+                    "num": 9,
+                    "question": "祖师怒斥悟空卖弄时说了两句话：'______神气散，______是非生。'",
+                    "answer": "口开|舌动",
+                    "analysis": "这两句话揭示了多言的危害——耗散精气神，引发是非纷争。"
+                },
+                {
+                    "id": "b10",
+                    "num": 10,
+                    "question": "菩提祖师临别时预言悟空'______'，并不准他说出自己的师承。",
+                    "answer": "这一去定生不良|你这一去定生不良",
+                    "analysis": "这是基于对悟空心态的判断——卖弄心、好胜心已生，加上本事大，必然惹祸。"
+                },
+                {
+                    "id": "b11",
+                    "num": 11,
+                    "question": "孙悟空回到花果山后发现洞府被______占据，水帘洞变成了______。",
+                    "answer": "混世魔王|水脏洞",
+                    "analysis": "'水脏洞'象征心上蒙尘，被魔占领，需要清除才能恢复本心清净。"
+                },
+                {
+                    "id": "b12",
+                    "num": 12,
+                    "question": "孙悟空打败混世魔王时使用了______法，拔毫毛变作了______个小猴。",
+                    "answer": "身外身|三千二百",
+                    "analysis": "这体现了'应物随心'的心灵能力——心想到什么就能变出什么。"
+                },
+                {
+                    "id": "b13",
+                    "num": 13,
+                    "question": "回目'悟彻菩提真妙理，______合元神'中，空白处应填______。",
+                    "answer": "断魔归本|断魔归本",
+                    "analysis": "'断魔归本'指击败魔王、清除心魔，使心回归本源清净。"
+                },
+                {
+                    "id": "b14",
+                    "num": 14,
+                    "question": "归途诗偈云：'去时凡骨凡胎重，______。'后两句是：'举世无人肯立志，______。'",
+                    "answer": "得道身轻体亦轻|立志修玄玄自明",
+                    "analysis": "这首诗强调了立志修心的重要性——只要有坚定志向，再难的事都能成功。"
+                },
+                {
+                    "id": "b15",
+                    "num": 15,
+                    "question": "菩提祖师说真道玄妙，'不遇______传妙诀，空言口困舌头干'。",
+                    "answer": "至人",
+                    "analysis": "'至人'指足够有悟性、能理解大道的人。妙法必须择有缘之人而传。"
+                }
+            ],
+            essayQuestions: [
+                {
+                    id: "e1",
+                    num: 1,
+                    question: "孙悟空学艺的第一阶段做了六七年杂活（洒扫应对、养花修树等）。有人认为这是浪费时间，有人认为这是必要的磨炼。你如何看待这个问题？结合你自己的学习经历谈谈。",
+                    answerHtml: `
+                    <p class="font-bold text-amber-900 mb-2">【参考答案与思路】</p>
+                    <p><strong>观点：</strong> 这不是浪费时间，而是必要的磨炼。</p>
+                    <p class="mt-2"><strong>解析：</strong></p>
+                    <p class="mt-2"><strong>第一，能够磨炼性子，让人沉下心来，培养定力和耐心。</strong>就像学习乐器，一开始需要反复练习基本功，看似枯燥，实际上是在为后续进阶打基础。</p>
+                    <p class="mt-2"><strong>第二，打好基础：</strong> 通过日常接触，让悟空对道法内容“混个脸熟、耳熟”，逐渐建立基本认知框架。很多知识当时看似无用，却可能在未来某个时刻突然“顿悟”。</p>
+                    <p class="mt-2"><strong>第三，培养习惯：</strong> 通过长期、规律的日常生活，建立良好的学习和生活节奏。</p>
+                    <p class="mt-2"><strong>结合自己的经历：</strong> 比如我刚开始学钢琴时，老师让我反复练习音阶和指法，当时觉得无聊，甚至想跳过。但后来发现，正是这些基本功让我能够流畅演奏复杂曲目。如果没有基础训练，直接学习曲子只会事倍功半。</p>
+                    <p class="mt-2"><strong>启示：</strong> 学习中不要急于求成，要重视基础训练。“无用之用”往往最为关键。</p>
+                    `
+                },
+                {
+                    id: "e2",
+                    num: 2,
+                    question: "菩提祖师用“打哑谜”的方式传授长生口诀，而不是直接在课堂上公开讲授。你认为这种教育方式有什么好处？为什么真法不能随便传授给所有人？",
+                    answerHtml: `
+                    <p class="font-bold text-amber-900 mb-2">【参考答案与思路】</p>
+                    <p><strong>好处：</strong></p>
+                    <p class="mt-2"><strong>1. 筛选有缘之人：</strong> 只有足够聪明、有悟性的人才能识破哑谜，这能够确保真法传给真正能理解的人。</p>
+                    <p class="mt-2"><strong>2. 加深印象：</strong> 通过自己破解谜题获得的知识，比被动接受的知识更加深刻，也会更加珍惜。</p>
+                    <p class="mt-2"><strong>3. 保护大道：</strong> 避免被不理解的人误解、错误传播，导致“谬种流传”，破坏大道本来的面目。</p>
+                    <p class="mt-2"><strong>为什么不能随便传授：</strong></p>
+                    <p class="mt-2"><strong>1. 更加珍惜：</strong> 轻易得到的东西，人们往往不会珍惜。通过考验获得的知识，学习者会更加重视。</p>
+                    <p class="mt-2"><strong>2. 理解能力不同：</strong> 真道玄妙，没有足够悟性的人可能无法理解，强行传授反而容易造成误解。</p>
+                    <p class="mt-2"><strong>3. 存在潜在危害：</strong> 如果被心术不正的人学会，可能被用于作恶，造成更大的危害。</p>
+                    <p class="mt-2"><strong>启示：</strong> 真正有价值的知识需要匹配相应的品格和能力。教育应该因材施教，而不是“一刀切”。</p>
+                    `
+                },
+                {
+                    id: "e3",
+                    num: 3,
+                    question: "孙悟空因为当众变松树卖弄本领而被逐出师门。有人认为祖师太严厉了，有人认为这是必要的教训。你支持哪种观点？为什么？",
+                    answerHtml: `
+                    <p class="font-bold text-amber-900 mb-2">【参考答案与思路】</p>
+                    <p><strong>观点：</strong> 我支持祖师的做法，认为这是必要的教训。</p>
+                    <p class="mt-2"><strong>1. 心态已经发生偏差：</strong> 卖弄本领的行为暴露了悟空内心的不安定，说明他已经产生了炫耀心和好胜心。如果这种心态继续发展，修行很可能会走偏。</p>
+                    <p class="mt-2"><strong>2. 存在潜在危害：</strong> “本事大+心不正=大祸”。祖师预见悟空将来“定生不良”，让他早点下山经历磨炼，比留在山上继续错误发展更好。</p>
+                    <p class="mt-2"><strong>3. 保护师门：</strong> 祖师要求悟空不准说出师承，避免给师门带来牵连，也体现了为师者的责任感。</p>
+                    <p class="mt-2"><strong>4. 挫折也是成长的一部分：</strong> 有些道理只有通过真实的挫折才能真正明白。悟空需要走入社会、经历磨炼，重新认识自己的能力和心性。</p>
+                    <p class="mt-2"><strong>结合现实：</strong> 就像一个学生取得了一些成绩后骄傲自满、到处炫耀，如果不及时纠正，将来可能犯下更大的错误。适当的挫折教育是必要的。</p>
+                    <p class="mt-2"><strong>启示：</strong> 有能力更要修心性。谦逊低调、内敛沉稳，才是长久之道。</p>
+                    `
+                },
+                {
+                    id: "e4",
+                    num: 4,
+                    question: "“水脏洞”象征“心蒙尘埃”。在你的生活中，有哪些因素可能会让你的“心”变“脏”？你打算如何“时时勤拂拭”？",
+                    answerHtml: `
+                    <p class="font-bold text-amber-900 mb-2">【参考答案与思路】</p>
+                    <p><strong>可能让心变“脏”的因素：</strong></p>
+                    <p class="mt-2"><strong>1. 过度追求物质：</strong> 沉迷于攀比消费、追求名牌，容易忽视精神成长。</p>
+                    <p class="mt-2"><strong>2. 网络信息过载：</strong> 长时间刷短视频、八卦新闻，容易让人变得浮躁不安。</p>
+                    <p class="mt-2"><strong>3. 嫉妒与攀比：</strong> 看到别人比自己优秀就心生嫉妒，容易失去内心的平静。</p>
+                    <p class="mt-2"><strong>4. 懒惰与拖延：</strong> 明知道应该做的事情却不断逃避，容易产生愧疚感和自我否定。</p>
+                    <p class="mt-2"><strong>5. 负面情绪积累：</strong> 抱怨、愤怒、焦虑等情绪如果不及时疏导，也会蒙蔽本心。</p>
+                    <p class="mt-2"><strong>“时时勤拂拭”的方法：</strong></p>
+                    <p class="mt-2"><strong>1. 定期反思：</strong> 每天睡前花十分钟回顾当天的言行，检视自己是否存在不当之处。</p>
+                    <p class="mt-2"><strong>2. 减少干扰：</strong> 限制手机使用时间，多读书、运动，培养健康的兴趣爱好。</p>
+                    <p class="mt-2"><strong>3. 感恩练习：</strong> 每天记录三件值得感恩的事情，培养积极心态。</p>
+                    <p class="mt-2"><strong>4. 冥想静坐：</strong> 通过深呼吸、冥想等方式让自己安静下来，减少杂念。</p>
+                    <p class="mt-2"><strong>5. 与良师益友交流：</strong> 和积极向上的人相处，互相提醒，共同进步。</p>
+                    <p class="mt-2"><strong>启示：</strong> 修心是一辈子的事情，需要持续努力。就像房间需要经常打扫一样，心也需要定期清理。</p>
+                    `
+                },
+                {
+                    id: "e5",
+                    num: 5,
+                    question: "孙悟空学艺的四个阶段（洒扫应对→听懂妙音→长生变化→筋斗云）对你的学习有什么启发？你认为学习应该遵循什么样的规律？",
+                    answerHtml: `
+                    <p class="font-bold text-amber-900 mb-2">【参考答案与思路】</p>
+                    <p><strong>四个阶段的启发：</strong></p>
+                    <p class="mt-2"><strong>1. 基础先行：</strong> 先做好“洒扫应对”的基本功，不要急于求成。就像学习英语要先掌握单词和语法，不能一开始就直接阅读原著。</p>
+                    <p class="mt-2"><strong>2. 培养悟性：</strong> 通过基础学习逐渐达到“听懂妙音”的阶段，开始理解知识背后的内在逻辑和规律。这需要时间和积累。</p>
+                    <p class="mt-2"><strong>3. 掌握核心：</strong> 基础扎实之后，再学习“长生口诀”这样的核心原理，而不是只掌握零散的技巧。</p>
+                    <p class="mt-2"><strong>4. 灵活运用：</strong> 最后达到“筋斗云”的境界，能够灵活应用知识，做到举一反三、触类旁通。</p>
+                    <p class="mt-2"><strong>学习规律：</strong></p>
+                    <p class="mt-2"><strong>1. 循序渐进：</strong> 从易到难、从基础到高级，不能急于跳级。</p>
+                    <p class="mt-2"><strong>2. 知行合一：</strong> 学了要用，用了再学，让理论与实践相结合。</p>
+                    <p class="mt-2"><strong>3. 反思总结：</strong> 定期回顾所学内容，提炼规律，逐渐形成自己的知识体系。</p>
+                    <p class="mt-2"><strong>4. 保持好奇：</strong> 像悟空一样保持求知欲和探索精神。</p>
+                    <p class="mt-2"><strong>5. 修心为本：</strong> 学习的最终目的不仅是获取技能，也包括完善人格、提升境界。</p>
+                    <p class="mt-2"><strong>启示：</strong> 学习是一场马拉松，而不是百米冲刺。只有耐得住寂寞、重视积累，才能真正获得长远的成长。</p>
+                    `
+                },
+                {
+                    id: "e6",
+                    num: 6,
+                    question: "菩提祖师说“世上无难事，只怕有心人”。结合孙悟空的经历和你自己的生活，谈谈你对这句话的理解。",
+                    answerHtml: `
+                    <p class="font-bold text-amber-900 mb-2">【参考答案与思路】</p>
+                    <p><strong>理解：</strong> “有心人”指的是有坚定志向、能够持之以恒的人。只要有坚定的决心，再困难的事情也有可能完成。</p>
+                    <p class="mt-2"><strong>孙悟空的经历：</strong></p>
+                    <p class="mt-2"><strong>1. 漂洋过海：</strong> 一个猴子独自渡海、穿越南赡部洲，历时十来年寻找仙师。如果没有坚定的志向，不可能坚持到最后。</p>
+                    <p class="mt-2"><strong>2. 坚持六七年杂活：</strong> 甘心做六七年看似普通的杂活，如果没有远大目标作为支撑，早就可能放弃。</p>
+                    <p class="mt-2"><strong>3. 破解哑谜：</strong> 深夜识破祖师的哑谜并获得真传，依靠的是悟性、专注和执着。</p>
+                    <p class="mt-2"><strong>4. 不断成长：</strong> 从石猴到齐天大圣，再到斗战胜佛，整个过程充满磨难，但悟空始终没有放弃成长。</p>
+                    <p class="mt-2"><strong>生活中的例子：</strong></p>
+                    <p class="mt-2">比如学习骑自行车，一开始不断摔倒，但坚持练习后最终能够熟练掌握；攻克数学难题时，通过反复思考、查阅资料、请教老师，最终也能找到解决方法；学习乐器时，每天坚持练习，从最初的磕磕绊绊到后来能够流畅演奏，也是坚持带来的成长。</p>
+                    <p class="mt-2"><strong>启示：</strong></p>
+                    <p class="mt-2"><strong>1. 立志为先：</strong> 先明确目标，才能获得坚持下去的动力。</p>
+                    <p class="mt-2"><strong>2. 不怕困难：</strong> 遇到困难是正常的，关键是不要轻易放弃。</p>
+                    <p class="mt-2"><strong>3. 享受过程：</strong> 在不断克服困难的过程中，收获的不只是最终结果，还有能力、经验和心性的成长。</p>
+                    <p class="mt-2">正如诗中所说：“举世无人肯立志，立志修玄玄自明。”很多时候，并不是事情本身太难，而是人没有坚定的志向。一旦真正立下目标并坚持行动，再难的道路也有可能走通。</p>
+                    `
+                }
+            ]
+        };
+
+        // Initialize the application when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

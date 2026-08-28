@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第二十八回精读：黑松林逢魔</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第二十八回精读：黑松林逢魔</h1>
+            <p class="text-lg text-gray-700 serif">“黑松林三藏逢魔，波月洞公主解困”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-no-wukong')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-no-wukong">第一章：失去悟空</button>
+                <button onclick="NavigationModule.switchTab('section-cave')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-cave">第二章：波月洞遭擒</button>
+                <button onclick="NavigationModule.switchTab('section-princess')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-princess">第三章：公主解困</button>
+                <button onclick="NavigationModule.switchTab('section-letter')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-letter">第四章：宝象国传书</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: No Wukong -->
+        <section id="section-no-wukong" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">失去悟空之后：取经路变“险”了</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空被赶回花果山后，唐僧、八戒、沙僧继续西行。少了悟空的火眼金睛和金箍棒，取经队伍立刻陷入了危险。点击翻转卡片，看看“没有悟空”的后果。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-n1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">队伍的变化</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-n1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">少了一双“火眼金睛”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-n1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空一走，队伍<strong>失去了最能识破妖怪的“眼睛”</strong>，也失去了<strong>最锋利的“武器”</strong>。八戒、沙僧虽能打，却<strong>看不出妖怪的变化</strong>，遇上狡猾的妖怪，队伍立刻险象环生。<strong>团队里每个人的价值，往往在“失去”时才看得清</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-n2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">黑松林</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-n2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“妖气冲天”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-n2-back">
+                        <p class="text-gray-700 text-left">
+                            师徒来到<strong>碗子山黑松林</strong>，这里<strong>妖气弥漫</strong>。换作平时，悟空早就<strong>察觉并提醒</strong>了。可现在，没人发现异常，唐僧还<strong>执意要进林</strong>——果然，一阵风起，<strong>妖怪卷走了唐僧</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：失去才知可贵</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    悟空在时，唐僧嫌他“乱杀人”；悟空一走，唐僧<strong class="text-amber-900">立刻陷入险境</strong>。<strong class="text-amber-900">很多人和事，常常在失去之后，才明白它有多重要</strong>。这提醒我们：<strong class="text-amber-900">珍惜身边的人，珍惜那些默默保护你的人</strong>，不要等失去了才后悔。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Cave -->
+        <section id="section-cave" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">波月洞：黄袍怪与“奎木狼”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    抓走唐僧的是黄袍怪。它来头不小——本是天庭二十八宿之一的“奎木狼星”，因与披香殿玉女有旧情，下凡为妖。点击翻转卡片，认识这位“有故事的妖怪”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">黄袍怪</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">奎木狼星下凡</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c1-back">
+                        <p class="text-gray-700 text-left">
+                            黄袍怪原是<strong>天庭二十八宿之“奎木狼星”</strong>，因与<strong>披香殿玉女</strong>相爱，私自下凡，占了<strong>碗子山波月洞</strong>。那玉女转世成了<strong>宝象国公主百花羞</strong>，被黄袍怪掳来做<strong>压寨夫人</strong>。<strong>神仙也有“下凡历劫”的故事</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">波月洞</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“吃唐僧肉”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c2-back">
+                        <p class="text-gray-700 text-left">
+                            黄袍怪把唐僧<strong>掳进波月洞</strong>，准备<strong>“洗剥干净，蒸了吃”</strong>。唐僧<strong>叫苦不迭</strong>：“要是悟空在，何至于此！”失去悟空后，唐僧这才<strong>深切体会到徒弟的重要</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“妖怪”也有两面</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    黄袍怪虽是妖怪，却<strong class="text-amber-900">对百花羞百依百顺、痴情一片</strong>。这说明《西游记》里的妖怪并不都是“脸谱化”的坏人——他们有<strong class="text-amber-900">欲望、情感、苦衷</strong>。看人看事，<strong class="text-amber-900">不要简单地“贴标签”</strong>，试着理解背后的<strong class="text-amber-900">动机与故事</strong>，才能看得更全面。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Princess -->
+        <section id="section-princess" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">公主解困：一封“求救信”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    就在唐僧性命危急之时，黄袍怪的妻子、宝象国公主百花羞出手相救。她不但救下唐僧，还托他带一封家书回国。点击翻转卡片，看看公主的善良与智慧。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-p1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">百花羞</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-p1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">善良的“压寨夫人”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-p1-back">
+                        <p class="text-gray-700 text-left">
+                            百花羞是<strong>宝象国公主</strong>，十三年前被黄袍怪<strong>掳到洞中</strong>，虽然成了“夫人”，却<strong>日夜思念故国与父母</strong>。她<strong>不忍唐僧被吃</strong>，便假意劝黄袍怪“先别吃，放了这和尚”，<strong>冒险救下唐僧</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-p2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">托书求救</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-p2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“请父皇救我！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-p2-back">
+                        <p class="text-gray-700 text-left">
+                            公主写下一封<strong>家书</strong>，详细写明自己被掳的遭遇，<strong>托唐僧带回宝象国</strong>，请父王<strong>派兵来救</strong>。唐僧<strong>欣然答应</strong>，带着书信，<strong>逃离波月洞</strong>，直奔宝象国。<strong>一封信，牵起了两国/两界的救援行动</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“善良+智慧”的公主</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    百花羞救唐僧，既<strong class="text-amber-900">出于善良</strong>（不忍害人），也<strong class="text-amber-900">带着智慧</strong>（借唐僧之手传书求救）。<strong class="text-amber-900">善良需要方法</strong>：光有好心却横冲直撞，往往救不了人；用<strong class="text-amber-900">巧妙的办法</strong>，才能把“善意”变成“实效”。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Letter -->
+        <section id="section-letter" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">宝象国传书：一石激起千层浪</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    唐僧逃出波月洞，赶到宝象国，把公主的家书呈给国王。国王得知女儿尚在人世、却被妖怪掳走，又惊又喜又痛。点击翻转卡片，看看这场“传书”引发的连锁反应。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-l1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">宝象国</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-l1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">国王见信</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-l1-back">
+                        <p class="text-gray-700 text-left">
+                            唐僧来到<strong>宝象国</strong>，呈上<strong>百花羞的家书</strong>。国王<strong>又惊又喜</strong>：惊的是女儿被妖怪掳走，喜的是<strong>女儿还活着</strong>。他<strong>泪流满面</strong>，立刻请求唐僧师徒<strong>去救公主</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-l2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">新的任务</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-l2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">八戒、沙僧领命</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-l2-back">
+                        <p class="text-gray-700 text-left">
+                            国王请八戒、沙僧去波月洞<strong>救回公主</strong>。两人<strong>拍胸脯答应</strong>，前往碗子山。<strong>没有悟空的队伍，要独自面对黄袍怪</strong>——一场硬仗即将打响，也为下一回“八戒被擒、沙僧被抓”埋下伏笔。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">一封信的“蝴蝶效应”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    百花羞的一封家书，<strong class="text-amber-900">牵动了唐僧、国王、八戒、沙僧</strong>乃至后文的整个救援行动。生活中也常有这种<strong class="text-amber-900">“蝴蝶效应”</strong>：一个小小的善意举动、一句及时的传话、一次勇敢的求助，都可能<strong class="text-amber-900">改变一个人的命运</strong>。<strong class="text-amber-900">不要小看“小举动”，善意会传递，求助不可耻</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第二十八回“黑松林三藏逢魔，波月洞公主解困”发生在悟空被赶走之后。唐僧立刻陷入险境，也让我们看到：团队里每个人都很重要，善良需要智慧，而“失去才知可贵”是人生常有的遗憾。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第二十八回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "唐僧师徒失去悟空后，第一处遇险的地方是哪里？",
+                    "options": {
+                        "A": "白虎岭",
+                        "B": "碗子山黑松林",
+                        "C": "五庄观",
+                        "D": "流沙河"
+                    },
+                    "correct": "B",
+                    "analysis": "唐僧、八戒、沙僧来到碗子山黑松林，这里妖气弥漫，唐僧执意进林，结果被妖怪卷走。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "抓走唐僧的妖怪是谁？",
+                    "options": {
+                        "A": "白骨精",
+                        "B": "黄袍怪",
+                        "C": "虎先锋",
+                        "D": "黑熊怪"
+                    },
+                    "correct": "B",
+                    "analysis": "抓走唐僧的是黄袍怪，它盘踞在碗子山波月洞，把唐僧掳走准备吃掉。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "黄袍怪的真实身份是：",
+                    "options": {
+                        "A": "奎木狼星（天庭二十八宿之一）下凡",
+                        "B": "黄毛貂鼠精",
+                        "C": "蜘蛛精",
+                        "D": "牛魔王"
+                    },
+                    "correct": "A",
+                    "analysis": "黄袍怪本是天庭二十八宿中的奎木狼星，因与披香殿玉女有旧情，私自下凡为妖。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "黄袍怪的妻子、波月洞的“压寨夫人”是：",
+                    "options": {
+                        "A": "高翠兰",
+                        "B": "宝象国公主百花羞",
+                        "C": "女儿国国王",
+                        "D": "铁扇公主"
+                    },
+                    "correct": "B",
+                    "analysis": "黄袍怪的妻子是宝象国公主百花羞（披香殿玉女转世），十三年前被他掳到洞中。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "百花羞救下唐僧的原因，主要是：",
+                    "options": {
+                        "A": "怕黄袍怪吃坏肚子",
+                        "B": "不忍唐僧被吃，出于善良，也想借唐僧之手传书回国求救",
+                        "C": "想跟唐僧离开",
+                        "D": "讨厌黄袍怪"
+                    },
+                    "correct": "B",
+                    "analysis": "百花羞既不忍唐僧被吃（善良），也想借唐僧把家书带回宝象国、请父王救自己（智慧）。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "百花羞托唐僧带回国的是什么？",
+                    "options": {
+                        "A": "一件宝物",
+                        "B": "一封家书（求救信）",
+                        "C": "一封信给黄袍怪",
+                        "D": "一件衣服"
+                    },
+                    "correct": "B",
+                    "analysis": "百花羞写下一封家书，写明自己被掳的遭遇，托唐僧带回宝象国，请父王派兵来救。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "唐僧把信送到宝象国后，国王的反应是：",
+                    "options": {
+                        "A": "不相信",
+                        "B": "又惊又喜又痛，得知女儿还活着，立刻请唐僧师徒去救",
+                        "C": "把唐僧关起来",
+                        "D": "认为女儿已死"
+                    },
+                    "correct": "B",
+                    "analysis": "国王得知女儿被妖怪掳走但还活着，又惊又喜，泪流满面，立刻请求唐僧师徒去救公主。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "宝象国国王最终请谁去救公主？",
+                    "options": {
+                        "A": "悟空",
+                        "B": "八戒、沙僧",
+                        "C": "观音",
+                        "D": "李天王"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空不在队伍里，国王便请八戒、沙僧去波月洞救公主，两人拍胸脯答应，一场硬仗即将打响。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "唐僧在波月洞中感叹“要是悟空在，何至于此”，说明了：",
+                    "options": {
+                        "A": "唐僧想教训悟空",
+                        "B": "失去悟空后，才深切体会到徒弟的重要",
+                        "C": "悟空贪玩",
+                        "D": "唐僧后悔赶走八戒"
+                    },
+                    "correct": "B",
+                    "analysis": "唐僧身处险境，才后悔赶走悟空。很多人和事，往往在失去后才明白它有多重要。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "失去悟空后，取经队伍最大的“短板”是：",
+                    "options": {
+                        "A": "不会挑担",
+                        "B": "失去了最能识破妖怪变化的“火眼金睛”和最强战力",
+                        "C": "不会念经",
+                        "D": "没有马"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒、沙僧虽能打，却看不出妖怪的变化。失去悟空的火眼金睛，队伍立刻险象环生。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "黄袍怪虽是妖怪，却对百花羞“痴情一片”。精读认为这说明：",
+                    "options": {
+                        "A": "妖怪也可以当女婿",
+                        "B": "《西游记》里的妖怪不都是脸谱化坏人，也有情感与苦衷，不能简单贴标签",
+                        "C": "黄袍怪是好人",
+                        "D": "百花羞有福气"
+                    },
+                    "correct": "B",
+                    "analysis": "黄袍怪有痴情的一面，也有吃人的恶行。看人看事不能“贴标签”，要理解背后的动机与故事，看得更全面。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "百花羞救唐僧，精读概括为“善良+智慧”，其中“智慧”体现在：",
+                    "options": {
+                        "A": "她会法术",
+                        "B": "借唐僧之手传书回国，用巧妙办法把善意变成实效",
+                        "C": "她骗过了所有人",
+                        "D": "她偷偷给唐僧银子"
+                    },
+                    "correct": "B",
+                    "analysis": "百花羞不只“放走唐僧”，还托他带信，把个人善意转化为真正的救援行动。善良需要方法，才能见效。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "“一封信牵动了多方救援”，精读称这种效应为：",
+                    "options": {
+                        "A": "多米诺骨牌",
+                        "B": "蝴蝶效应——一个小举动可能改变很多人的命运",
+                        "C": "空城计",
+                        "D": "声东击西"
+                    },
+                    "correct": "B",
+                    "analysis": "百花羞的一封信，牵动唐僧、国王、八戒沙僧乃至整个救援行动。小小的善意举动，可能改变命运——不要小看“小举动”。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "从“赶走悟空”到“唐僧遇险”，精读最想提醒我们：",
+                    "options": {
+                        "A": "悟空不能离开",
+                        "B": "珍惜身边的人，珍惜默默保护你的人，不要等失去才后悔",
+                        "C": "唐僧太笨",
+                        "D": "妖怪太厉害"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空在时唐僧嫌他“乱杀人”，悟空一走立刻陷入险境。失去才知可贵，要珍惜身边的人和守护你的人。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "本回结尾“八戒、沙僧领命救公主”，为后文埋下的伏笔是：",
+                    "options": {
+                        "A": "两人成功救回公主",
+                        "B": "两人实力不足，将被黄袍怪所擒，取经团队陷入更大危机",
+                        "C": "国王要收他们当驸马",
+                        "D": "唐僧自己救出公主"
+                    },
+                    "correct": "B",
+                    "analysis": "没有悟空的队伍独自面对黄袍怪，八戒、沙僧实力不足，下一回将遭擒，团队陷入危机，也引出“请悟空回来”的后续。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "唐僧师徒在______山黑松林遇到妖怪，唐僧被掳进______洞。",
+                    "answer": "碗子|波月",
+                    "analysis": "唐僧师徒在「碗子山」黑松林遇到妖怪，唐僧被掳进「波月洞」。碗子山、波月洞，是黄袍怪的「老巢」。这里的妖怪黄袍怪，正是「奎木狼」星下凡——「天上的星宿」下界为妖，来头不小。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "黄袍怪原是______星下凡，与披香殿______有旧情。",
+                    "answer": "奎木狼|玉女",
+                    "analysis": "黄袍怪原是天上二十八宿之一的「奎木狼」星，因为与披香殿侍奉的「玉女」（仙女）私通，怕被天庭发现，双双下凡：玉女转世为百花羞公主，奎木狼变作黄袍怪。这段「前世姻缘」，是这一难的重要背景。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "黄袍怪的妻子是______国公主______。",
+                    "answer": "宝象|百花羞",
+                    "analysis": "黄袍怪的妻子是宝象国公主「百花羞」。百花羞原是披香殿玉女转世，与奎木狼有一段「旧情」，但她已经「不记得前世」，只觉得自己被妖怪「强掳」了十三年。前世的情缘，今生的怨恨，造化弄人。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "百花羞______下唐僧，托他带______回国求救。",
+                    "answer": "救|家书",
+                    "analysis": "百花羞趁黄袍怪不在，救下唐僧，托他带一封「家书」回国，请父王发兵救她。百花羞的善良带着「智慧」：她不是硬碰硬，而是借「传书」借力打力——把善意变成「实际行动」。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "唐僧把信送到______国，国王又惊又喜，请______、______去救公主。",
+                    "answer": "宝象|八戒|沙僧",
+                    "analysis": "唐僧把信送到宝象国，国王又惊又喜，请八戒、沙僧去「救公主」。可八戒、沙僧打不过黄袍怪，救不回公主，还让唐僧也被变成老虎——「没有悟空」的取经队伍，就像「没有主心骨」的团队。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "唐僧在洞里感叹：“要是______在，何至于此！”",
+                    "answer": "悟空",
+                    "analysis": "唐僧在洞里感叹：「要是悟空在，何至于此！」——当初他「恨逐美猴王」，如今才明白悟空的重要性。这就像生活中，有些「宝贵的人」在身边时不觉得，失去后才追悔莫及。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "失去悟空后，队伍失去了最能识破妖怪的“______”。",
+                    "answer": "火眼金睛",
+                    "analysis": "失去悟空后，队伍失去了最能「识破妖怪」的「火眼金睛」：八戒、沙僧看不出黄袍怪的真身，唐僧也被「反咬」变成老虎。一个团队的「判断力」一旦缺失，就会步步受骗。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "百花羞的善良带着______，借唐僧传书，把善意变成实效。",
+                    "answer": "智慧",
+                    "analysis": "百花羞的善良带着「智慧」：她救唐僧、传家书，不是盲目行善，而是「借力打力」，想办法自救。这告诉我们：善良很重要，但「有智慧的善良」才能真正解决问题——好心要配上好方法。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“失去才知可贵”】唐僧赶走悟空后立刻遇险，才后悔“要是悟空在”。请谈谈：为什么我们常常“失去才知可贵”？如何学会“珍惜当下”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>为什么失去才知可贵：</strong> 人在“拥有”时容易习惯、忽略它的价值，直到失去才痛觉可惜。唐僧习惯了悟空保护，直到身处险境才明白其重要。</p>\n                        <p class=\"mt-2\"><strong>珍惜当下：</strong> ①经常想想“如果ta不在了会怎样”，换位感受；②对父母、老师、朋友及时表达感谢；③珍惜“现在”的人和时光，不等到“以后”；④及时化解矛盾，不留遗憾。把每一天都当成“值得珍惜的一天”，就不会总在失去后后悔。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“团队的价值”】失去悟空后，队伍立刻陷入危险。请谈谈：为什么说“团队里每个人都很重要”？你有没有“少了一个人，事情就办不成”的经历？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>每个人都很重要：</strong> 悟空能识妖降妖，八戒能下水打架，沙僧能挑担护师，唐僧定方向——少了一个，队伍就有短板。团队不是“谁都能被替代”。</p>\n                        <p class=\"mt-2\"><strong>我的经历：</strong> 比如大扫除少了一个人，卫生区就没人管；接力赛少了最后一棒就输；小组汇报缺了记录的，内容就不完整。看到身边每个人的价值，尊重每个岗位，团队才能拧成一股绳。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“善良与智慧”】百花羞既善良又聪明，把“好心”变成“实效”。请谈谈：为什么说“只有好心的善良是不够的”？如何“聪明地善良”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>好心需要方法：</strong> 光有好心、横冲直撞，可能帮倒忙（比如直接跟黄袍怪硬拼，反而害了自己和唐僧）。百花羞用“传书求救”的办法，才真正帮到人。</p>\n                        <p class=\"mt-2\"><strong>聪明地善良：</strong> ①帮人先看“怎么帮才有效、才安全”；②自己能力不够时，求助更有能力的人；③救急不救懒，帮人也要帮到点子上；④善意要落实到“对方真正需要”的行动上。善良+智慧，才能温暖又可靠。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“不贴标签”】黄袍怪是妖怪，却对妻子痴情。请谈谈：为什么评价一个人不能“非黑即白、贴标签”？如何更全面地看待他人？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>人是复杂的：</strong> 黄袍怪有痴情的一面，也有作恶的一面；就像再好的人也有缺点，再坏的人也可能有苦衷。把人简单分成“好人/坏人”，容易看错、误会。</p>\n                        <p class=\"mt-2\"><strong>全面看人：</strong> ①看行为也要看动机、看处境；②不因为一个缺点否定一个人，也不因一个优点就全盘接受；③多听、多看、多了解，别急着下结论；④学习别人的优点，警惕别人的缺点。成熟的目光，是“理解复杂，保持判断”。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“求助不可耻”】百花羞被困多年，通过“传书”向父王求助。请谈谈：为什么说“在自己解决不了时，主动求助是勇敢和智慧”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>求助是能力：</strong> 百花羞被困洞里，靠自己逃不出去，便机智地向父王求援。承认“我需要帮助”，比硬撑更有智慧，也更有效。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> 学习遇到不懂的，问老师同学；遇到危险，报警或找大人；心里难过，向家人朋友倾诉。先自己尝试，解决不了就勇敢求助。学会“借力”，路会走得更顺。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“蝴蝶效应”】公主的一封家书，牵动了多方的救援。请谈谈：为什么说“小小的善意举动，也可能改变命运”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>小举动有大影响：</strong> 一封家书救了唐僧、也救了公主自己。现实中，一句安慰、一次提醒、一个帮忙，都可能在别人心里种下希望，甚至改变ta的一生。</p>\n                        <p class=\"mt-2\"><strong>我的行动：</strong> 对同学的一句鼓励，可能让ta重拾信心；发现危险及时提醒，可能避免事故；帮人捡起掉落的物品，可能让ta赶上公交。别吝啬善意，你永远不知道它会在哪里“开花结果”。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“责任与担当”】唐僧答应百花羞传书，一路把信送到宝象国。请谈谈：为什么“答应别人的事要办到”是一种珍贵的品质？如何做一个“靠谱”的人？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>守信可贵：</strong> 唐僧承诺传书，就一路冒险把信送到，没有半途而废。答应别人的事办不到，会让人失望、失去信任；办到了，就是“靠谱”的证明。</p>\n                        <p class=\"mt-2\"><strong>做靠谱的人：</strong> ①答应前慎重——做不到就别轻易答应；②答应后尽力做到，不找借口；③实在做不到，提前说明并道歉、想办法补救；④把“受人之托，忠人之事”当作自己的标准。靠谱，是最高级的“人品名片”。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

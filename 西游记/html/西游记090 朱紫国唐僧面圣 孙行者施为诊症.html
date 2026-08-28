@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第六十八回精读：望闻问切与医者仁心</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第六十八回精读：望闻问切与医者仁心</h1>
+            <p class="text-lg text-gray-700 serif">“朱紫国唐僧面圣，孙行者施为诊症”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">繁华朱紫国</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">揭榜戏八戒</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">请医之礼</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">望闻问切</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 繁华朱紫国 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">久不坐朝的国王，今天要出黄榜</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    夏暑时节，师徒来到朱紫国——一座繁华不亚大唐的城池。到会同馆住下，唐僧问国王可在殿上，馆吏却说：万岁爷久不坐朝，今日恰逢黄道良辰，正与百官商议出黄榜。这繁华的城池背后，藏着什么？
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">不亚大唐</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">人物整齐，言语清朗</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            朱紫国“人物整齐，言语清朗，真不亚于大唐世界”——<strong>从东土一路西来，见过妖魔鬼怪、各种国度，难得见到这么繁华正常的地方</strong>。可越是繁华，越显得“久不坐朝”可疑。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">久不坐朝</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">黄道良辰出皇榜</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            馆吏说：万岁爷<strong>久不坐朝</strong>，今天刚好上朝，正与百官商议<strong>出黄榜</strong>。国王不上朝、急着出告示——<strong>两个线索连在一起，故事就不会风平浪静了</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">反常之处，必有文章</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    一个繁华的国家，国王却久不坐朝、忽然要出黄榜——<strong>“反常”正是故事的钩子</strong>。读书如此，观察生活也一样：越是“不对劲”的地方，越值得深究。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 揭榜戏八戒 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">美食诱八戒上街，黄榜塞进他怀里</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    馆中做饭缺调料，悟空用“大烧饼、糖糕、蒸酥油食”勾起八戒的馋虫，哄他上街。鼓楼下众人争看黄榜——国王重病三年，求天下贤士医治，愿“将社稷平分”。悟空吹风惊散人群，隐身揭榜，把榜文塞进打瞌睡的八戒怀中。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">皇榜求医</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">愿将社稷平分</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            黄榜说：国王<strong>重病卧床、咽炎日久难全</strong>，太医无策，普招天下贤士。若有人能医好，<strong>“愿将社稷平分，决不虚示”</strong>——一场大病，竟要拿半个国家作谢礼。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">八戒背锅</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">榜文塞进怀里</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            悟空用美食骗八戒同去，又让他靠墙等着；自己吹阵风惊散众人，<strong>隐身揭榜，折好塞进打瞌睡的八戒怀中</strong>。众人见八戒怀中露出纸角，认定是他接的榜——<strong>悟空斗八戒，总能逗出喜剧效果</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">高明的“安排”</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空不自己“送上门”去揭榜，而是借八戒把人引过来——<strong>会办事的人，懂得以退为进、借力打力</strong>。也让人看到：悟空虽爱闹，心里却有数。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 请医之礼 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">药不跟脉，病不讨医</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    八戒被校尉围堵，辩称榜是师兄接的，众人却说“现钟不打去撞钟”——逮着你就是你。悟空这才承认：揭榜一是逗八戒，二是守“药不跟脉、病不讨医”的规矩——<strong>治病的药，不能上赶着送</strong>，要国王亲自来请。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">现钟不打</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">认准八戒</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            八戒嚷着“你儿子揭黄榜了”，校尉却引用俗语：“<strong>现钟不打，去撞钟</strong>？”——现成的“揭榜人”就在眼前，何必再去寻什么师兄？众人推推扯扯，认死八戒。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">药不跟脉</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">要国王亲自来请</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            悟空向太监坦白：“常言道<strong>药不跟脉，病不讨医</strong>……你有病，就请国王亲自来请我，我有手到病除之功。”——<strong>心气高、要面子</strong>，但也确实有底气。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">姿态与实力</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空非要国王“亲自来请”，不是摆架子，而是守“病不讨医”的规矩——<strong>真正的本事，不必低声下气去推销；把姿态立住，实力自然会赢得尊重</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 望闻问切 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">吓倒国王，再亮出“悬丝诊脉”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空入朝，一声“老孙便是”吓得国王跌下龙床。群臣怒斥，悟空却道出医道：“望闻问切四般全，若不望闻并问切，今生莫想得安全。”国王不敢见生人，悟空又出奇招——<strong>悬丝诊脉</strong>：以丝线系腕，隔空把脉。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">望闻问切</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">通仙有一传</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            悟空引诗：“通仙有一传，望闻问切四般全。”<strong>望</strong>看气色、<strong>闻</strong>听声息、<strong>问</strong>问病情、<strong>切</strong>按脉搏——<strong>这是中医的看家功夫</strong>。太医院官也点头：就算神仙看病，也得望闻问切。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">悬丝诊脉</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">丝线传脉，隔空把脉</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            国王怕见生人，悟空说：<strong>你手上系根丝线，脉搏的跳动会传到线上，我在远处一摸就能切脉</strong>——这便是传说中的“悬丝诊脉”。国王病已三年，愿试一试。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">艺高人胆大</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空敢吓皇帝、敢讲医道、敢用“悬丝诊脉”，全因<strong>真有本事，才有胆量</strong>。<strong>实力，是一个人最大的底气</strong>——肚子里有货，走到哪里都不慌。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第六十八回“朱紫国唐僧面圣，孙行者施为诊症”讲的是朱紫国揭榜求医：繁华城池里久不坐朝的国王、美食诱八戒上街、黄榜塞进八戒怀里、药不跟脉病不讨医、望闻问切与悬丝诊脉。这一回让我们看到：反常之处必有文章、会办事的人借力打力、姿态与实力、艺高人胆大。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第六十八回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "师徒来到的这座繁华城池叫什么？",
+                    "options": {"A": "朱紫国","B": "车迟国","C": "女儿国","D": "比丘国"},
+                    "correct": "A",
+                    "analysis": "城头杏黄旗上写着“朱紫国”三个大字（文中语音写作“朱子国”），是一个繁华不亚大唐的国家。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "馆吏说国王“久不坐朝”，今天为什么上朝？",
+                    "options": {"A": "接见唐僧","B": "黄道良辰，与百官商议出黄榜","C": "选妃","D": "过生日"},
+                    "correct": "B",
+                    "analysis": "馆吏说万岁爷久不坐朝，今天恰逢黄道良辰，正与文武百官商议“出黄榜”——这成了故事的引子。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "皇榜上说国王得了什么病？",
+                    "options": {"A": "头疼","B": "重病卧床、咽炎日久难全（三年不起）","C": "风寒","D": "摔伤"},
+                    "correct": "B",
+                    "analysis": "黄榜说国王“陈疴复染，常年起不来床，咽炎日久难全”，太医药方都无效，才普招天下贤士。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "皇榜上许诺治好国王的酬谢是什么？",
+                    "options": {"A": "黄金万两","B": "愿将社稷平分（分一半江山）","C": "封大官","D": "赐良田"},
+                    "correct": "B",
+                    "analysis": "黄榜写道：“若得病愈，愿将社稷平分，决不虚示”——竟愿意拿出半个国家作谢礼，足见病重求医心切。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空用什么办法哄八戒上街买调料？",
+                    "options": {"A": "威胁他","B": "列举街市美食（大烧饼、糖糕、蒸酥油食）勾他馋虫","C": "求他","D": "给他钱"},
+                    "correct": "B",
+                    "analysis": "八戒借口“长得丑怕惹祸”不肯去，悟空便说街上有大烧饼、糖糕、蒸酥油食等无数好吃的——八戒一听口水长流，立刻答应。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "八戒为什么不敢上街？",
+                    "options": {"A": "没钱","B": "嫌自己嘴脸丑陋，怕吓死人还要偿命","C": "不认识路","D": "不想买东西"},
+                    "correct": "B",
+                    "analysis": "八戒说自己长嘴脸欠俊，“一旦挤到人丛里，吓死几个人我还得偿命”——他清楚自己的模样。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "悟空是怎么揭下皇榜的？",
+                    "options": {"A": "硬挤进去揭","B": "朝巽方吹口气变阵旋风惊散人群，用隐身法上前揭榜","C": "求人帮忙","D": "买通校尉"},
+                    "correct": "B",
+                    "analysis": "悟空“朝巽方上吹了一口气，来了一阵旋风，把人都惊散了”，然后使隐身法上前揭了榜文——神不知鬼不觉。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "悟空揭了榜，把榜文塞进了谁的怀里？",
+                    "options": {"A": "沙僧","B": "打瞌睡的八戒怀中","C": "唐僧","D": "自己怀里"},
+                    "correct": "B",
+                    "analysis": "八戒靠墙打瞌睡，悟空把榜文折好“轻轻揣在他怀里”，让众人误以为是八戒揭的榜——这就是悟空的恶作剧。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "校尉用哪句俗语反驳八戒“榜不是我揭的”？",
+                    "options": {"A": "“嫁出去的女儿泼出去的水”","B": "“现钟不打，去撞钟”","C": "“说曹操曹操到”","D": "“此地无银三百两”"},
+                    "correct": "B",
+                    "analysis": "校尉说：现成的“揭榜人”（八戒）就在眼前，何必再去找什么师兄——这叫作“现钟不打，去撞钟”。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "悟空坚持要国王亲自来请，依据是什么？",
+                    "options": {"A": "摆架子","B": "“药不跟脉，病不讨医”——治病的药不能上赶着送","C": "国王钱多","D": "想见皇帝"},
+                    "correct": "B",
+                    "analysis": "悟空说常言道“药不跟脉，病不讨医”——你既然有病求医，就该亲自来请，我有手到病除之功。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "百官奉命到会同馆，悟空的表现是？",
+                    "options": {"A": "吓得躲起来","B": "端然不动，居中稳坐（当过大圣的底气）","C": "低头哈腰","D": "逃跑"},
+                    "correct": "B",
+                    "analysis": "八戒躲进厢房、沙僧闪到阶下，只有悟空“坐在当中端然不动”——他不是虚张声势，是真有把握。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "悟空进朝见国王，一开口把国王怎么样了？",
+                    "options": {"A": "治好了一半","B": "声音凶狠、相貌刁钻，把国王吓得跌在龙床上","C": "逗笑了","D": "认了亲"},
+                    "correct": "B",
+                    "analysis": "悟空前进一步厉声道“老孙便是”，国王看他相貌刁钻、声音凶狠，“战战兢兢跌在龙床之上”——病没治，先吓一跳。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "悟空说的“医道”四字诀是什么？",
+                    "options": {"A": "望闻问切","B": "针灸推拿","C": "打针吃药","D": "望气算命"},
+                    "correct": "A",
+                    "analysis": "悟空引诗“通仙有一传，望闻问切四般全”——望气色、闻声息、问病情、切脉搏，是中医的传统诊断法。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "国王不敢见生人，悟空用什么办法给他看病？",
+                    "options": {"A": "远远看看","B": "悬丝诊脉：国王手上系丝线，悟空隔线切脉","C": "问别人","D": "看太医的方子"},
+                    "correct": "B",
+                    "analysis": "悟空说：国王手系丝线，脉搏跳动传到线上，我在远处一摸就能切脉——这就是传说中的“悬丝诊脉”。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "太医院官听了“望闻问切”后怎么评价？",
+                    "options": {"A": "胡扯","B": "说得有理，就算神仙看病也得望闻问切","C": "听不懂","D": "反对"},
+                    "correct": "B",
+                    "analysis": "太医院官认为悟空说得有道理：“就算是神仙看病，也得望闻问切”，于是传奏国王。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "这一回里，悟空的“新本领”是什么？",
+                    "options": {"A": "七十二变","B": "会医术，尤其会用“悬丝诊脉”治大病","C": "腾云驾雾","D": "偷东西"},
+                    "correct": "B",
+                    "analysis": "悟空此前从没显过医术，这回一登场就是“望闻问切”“悬丝诊脉”的高超手法——英雄也会新本事。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "师徒来到的城池叫“______紫国”。",
+                    "answer": "朱",
+                    "analysis": "“朱紫国”城头杏黄旗上三个大字（文中语音作“朱子国”），是西域少见的繁华大邦。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "馆吏说国王久不坐朝，今天正商议“出______榜”。",
+                    "answer": "黄",
+                    "analysis": "“黄榜”即皇帝张贴的告示。国王因重病求医心切，要出黄榜普招天下贤士，愿以社稷平分作谢。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "悟空用街市上的大烧饼、糖______、蒸酥油食勾八戒上街。",
+                    "answer": "糕",
+                    "analysis": "“糖糕”等美食是八戒的最爱。悟空深谙八戒贪吃，几句美食就哄得他口水长流、乖乖出门。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "悟空朝______方吹口气，变阵旋风惊散人群揭榜。",
+                    "answer": "巽",
+                    "analysis": "“巽方”即东南方。悟空朝巽方吹气起旋风，趁乱用隐身法揭下皇榜——神不知鬼不觉。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "校尉说八戒“______钟不打，去撞钟”。",
+                    "answer": "现",
+                    "analysis": "“现钟不打去撞钟”是说现成的事不办，偏要另找麻烦——校尉认死八戒就是揭榜人。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "悟空引诗：“通仙有一传，望______问切四般全。”",
+                    "answer": "闻",
+                    "analysis": "“望闻问切”是中医四诊：望气色、闻声息、问病情、切脉搏。悟空以此说明自己懂医道，也让太医信服。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "国王不敢见生人，悟空提出“______丝诊脉”。",
+                    "answer": "悬",
+                    "analysis": "“悬丝诊脉”是传说中隔线把脉的绝技：国王手腕系丝线，悟空在远处凭线的颤动感知脉搏。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "悟空说：“药不跟脉，______不讨医。”",
+                    "answer": "病",
+                    "analysis": "“病不讨医”是行医的规矩：求医者要主动来请，医者不必上赶着送药。悟空以此要国王亲自来请。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“反常之处必有文章”】繁华的朱紫国，国王却久不坐朝、急着出黄榜。请谈谈：为什么“反常”往往是重要线索？读书与生活中，你如何从“不对劲”里发现真相？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>异常是真相的窗口：</strong> 若国王正常上朝，故事就平淡了；正是“久不坐朝”与“急出黄榜”连在一起，才引出求医之谜。<strong>凡是“不合常理”的地方，多半藏着没说完的话</strong>。</p>\n                        <p class=\"mt-2\"><strong>从反常中发现真相：</strong> ①作业本上的字迹忽然变了，可能是别人代写；②朋友突然不说话，可能有心事；③某个人“无缘无故”对你好，多留个心眼；④读故事时，抓住“不寻常的细节”追下去；⑤多问一句“为什么会这样”。<strong>会看“反常”的人，能一眼看穿表象</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“借力打力”】悟空不自己去揭榜，而是借八戒把人引来。请谈谈：为什么“会借力”比“单打独斗”高明？生活里你如何“借力”把事情办成？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>四两拨千斤：</strong> 悟空若自己捧着榜去请功，就“掉价”了；借八戒一引，反而让国王派人来请——<strong>同样的事，换个做法，效果天差地别</strong>。</p>\n                        <p class=\"mt-2\"><strong>学会借力：</strong> ①想让别人答应某件事，先找“合适的人”递话；②不会的事，请擅长的人搭把手；③把“自己的事”讲成“大家的事”，一起出力；④用“别人的长处”补“自己的短处”；⑤借力之后，记得感谢与分享。<strong>借力不是偷懒，而是把劲儿使在刀刃上</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“姿态与实力”】悟空要国王亲自来请，是因为“病不讨医”又有真本事。请谈谈：为什么“有实力才有底气”？你如何做到“既谦虚，又不看轻自己”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>实力撑起姿态：</strong> 悟空敢要“国王来请”，因为确有悬丝诊脉的本事。<strong>底气不是“喊”出来的，是“练”出来的</strong>——肚子里有货，腰杆才挺得直。</p>\n                        <p class=\"mt-2\"><strong>既谦虚又不看轻自己：</strong> ①平时多积累，本事在手，遇事不慌；②别人夸你，说声“谢谢”并继续努力；③自己会的事，大方展示，不藏不掖；④不会的事，虚心承认、赶紧学；⑤把“我不行”换成“我还没学会”。<strong>谦虚是态度，实力是资本——两手都要抓</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“望闻问切”】悟空看病讲究先“望闻问切”再下判断。请谈谈：为什么“先了解清楚再行动”那么重要？你做事时如何做到“先调查，再出手”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>不了解就动手，等于盲人摸象：</strong> 医生不看脉就开药，十有八九开错。<strong>先“望闻问切”，才能对症下药</strong>——做事也是这个道理。</p>\n                        <p class=\"mt-2\"><strong>先调查再出手：</strong> ①做题先审题，看清“问什么”；②和朋友闹矛盾，先听双方怎么说；③买东西先“货比三家”；④写作文先列提纲、想清楚再下笔；⑤做决定前，先问“我掌握的信息够吗”。<strong>知己知彼，百战不殆——了解得越透，出手越准</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“艺高人胆大”】悟空敢吓皇帝、敢用传说级的“悬丝诊脉”，全凭真本事。请谈谈：为什么“平时下功夫”会让你“关键时刻不慌张”？你如何练就“拿得出手”的本事？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>台上一分钟，台下十年功：</strong> 悟空能“悬丝诊脉”，是修来的神通；<strong>平时肯下功夫，关键时刻才有底气</strong>——功夫不到，再大的胆子也会露馅。</p>\n                        <p class=\"mt-2\"><strong>练就真本事：</strong> ①每天坚持一点，比“三天打鱼两天晒网”强；②把不会的题、不懂的知识，一个个啃下来；③多练多写多试，熟能生巧；④上台讲话前，对着镜子多练几遍；⑤把“怕出错”变成“练到不出错”。<strong>所有的从容，都是练出来的</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“医者仁心”】悟空为救一个素不相识的国王，揭榜、戏八戒、立规矩，最终要悬丝诊脉。请谈谈：为什么“救人”这件事本身就有价值？你如何理解“帮助别人也是成全自己”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>救人如救己：</strong> 悟空揭榜不为分半壁江山，而是“做个医生耍耍”背后，其实是<strong>能帮就帮的侠义心肠</strong>。帮了国王，也圆了悟空“展身手”的心愿。</p>\n                        <p class=\"mt-2\"><strong>帮助别人成全自己：</strong> ①给同学讲题，自己也把知识记得更牢；②帮家里做家务，学会了生活技能；③安慰难过的人，自己也更懂倾听；④参加志愿服务，体会到“被需要”的快乐；⑤把“利他”当“利己”——你帮过的每个人，都在帮你变成更好的自己。<strong>赠人玫瑰，手有余香——帮助别人，是自己最大的成长</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

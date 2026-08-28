@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第三十七回精读：问母辨假</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第三十七回精读：问母辨假</h1>
+            <p class="text-lg text-gray-700 serif">“婴儿问母知邪正，金木参玄见假真”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-mother')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-mother">第一章：太子问母</button>
+                <button onclick="NavigationModule.switchTab('section-evidence')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-evidence">第二章：证据之思</button>
+                <button onclick="NavigationModule.switchTab('section-well')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-well">第三章：八戒下井</button>
+                <button onclick="NavigationModule.switchTab('section-body')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-body">第四章：背尸取证</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Mother -->
+        <section id="section-mother" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">太子问母：“冷如冰”的三个字</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    太子回到宫中，屏退左右，问娘娘一个关键问题——这三年来，你和我“父王”的夫妻感情如何？娘娘的回答，让太子心里“咯噔”一下。点击翻转卡片，看看这个“证据”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-m1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">娘娘的眼泪</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-m1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“三年之后冷如冰”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-m1-back">
+                        <p class="text-gray-700 text-left">
+                            娘娘哭着说：<strong>“三载之前温又暖，三年之后冷如冰。”</strong>自从“道士走后”，这个“国王”对娘娘<strong>再无恩爱之情</strong>，只敷衍说“年纪大了”。太子一听——<strong>心里有了答案：这父王，铁定是假的</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-m2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">母子互证</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-m2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“梦，对上了！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-m2-back">
+                        <p class="text-gray-700 text-left">
+                            太子拿出<strong>白玉圭</strong>，说起唐僧托梦之事。娘娘<strong>泪如泉涌</strong>：“昨天四更我也做了梦，你父王水淋淋地站在我跟前说<strong>他死了、请唐僧降怪</strong>……被你一说，<strong>我全想起来了</strong>！”<strong>母子梦境互证，真相拼图完整</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：情感是最准的“探测器”</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    妖怪变得了国王的<strong class="text-amber-900">模样</strong>，却变不了<strong class="text-amber-900">“感情的温度”</strong>。娘娘的一句<strong class="text-amber-900">“冷如冰”</strong>，成了最有力的证据。这说明：<strong class="text-amber-900">“本质”藏不住——表面的伪装再像，时间久了、细节里，总会露出马脚</strong>。无论是<strong class="text-amber-900">看人还是看事</strong>，关注<strong class="text-amber-900">“真情与细节”</strong>，就能识破假象。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Evidence -->
+        <section id="section-evidence" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">证据之思：悟空要“拿贼拿赃”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    太子相信了，但要治妖怪的罪，光靠“相信”还不够——得拿出真凭实据。悟空想到了最好的证据：国王的尸体。点击翻转卡片，看看悟空为何非要“尸体”不可。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-e1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">拿贼拿赃</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-e1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“萧何律法”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-e1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空说：“你光知道念经打坐，<strong>不知道‘萧何律法’（人间法律）</strong>——<strong>拿贼拿赃，抓人要有证据</strong>。”妖怪若说“我就是国王”，没有证据<strong>定不了罪</strong>。<strong>最好的证据：那口井里的尸体</strong>！
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-e2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">为何让八戒</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-e2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“八戒，下井去”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-e2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空为何让八戒下井？①<strong>水下功夫，八戒（原天蓬元帅）更熟</strong>；②<strong>故事更好看</strong>——都让悟空干就没意思了；③<strong>师兄弟互相“坑”是取经路上的“调味剂”</strong>，让故事<strong>又热闹又好玩</strong>。<strong>分工不同，各展所长</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“证据”意识：讲道理不如亮证据</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    悟空<strong class="text-amber-900">不凭“我觉得”定人的罪</strong>，而是<strong class="text-amber-900">坚持“拿贼拿赃”</strong>——讲究<strong class="text-amber-900">证据</strong>。这是非常“现代”的法治思维。学习中、生活里也一样：①<strong class="text-amber-900">说别人错了，要有依据</strong>；②<strong class="text-amber-900">写作文讲道理，要举例子</strong>；③<strong class="text-amber-900">判断一件事，先找证据再下结论</strong>。<strong class="text-amber-900">有理有据，才让人信服</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Well -->
+        <section id="section-well" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">八戒下井：宝贝变“尸体”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空用“宝贝”作诱饵，哄八戒下井。八戒满心欢喜地下去，却只见一口井、一座水晶宫、一具尸体。点击翻转卡片，看看八戒这场“空欢喜”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-w1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">“宝贝”诱饵</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-w1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“黄金动道心”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-w1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空故意说：“太子说妖怪有件宝贝，咱先偷到手……”八戒一听“宝贝”，<strong>瞌睡都没了</strong>，“咕噜”爬起来——<strong>“清酒红人面，黄金动道心。”</strong>悟空还许诺：“我只要名，<strong>宝贝都归你</strong>。”
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-w2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">井底水晶宫</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-w2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“井龙王”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-w2-back">
+                        <p class="text-gray-700 text-left">
+                            八戒下到井底，发现一座<strong>水晶宫</strong>——原来井里也有<strong>“井龙王”</strong>！龙王<strong>认识八戒</strong>，尊称他<strong>“天蓬元帅”</strong>。龙王说：井里<strong>没有宝贝</strong>，只有一具<strong>六尺长的“尸首”</strong>——<strong>乌鸡国国王的尸体</strong>，用<strong>“定颜珠”</strong>定住，三年<strong>不曾腐烂</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“贪”字头上一把刀</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    八戒<strong class="text-amber-900">一听“宝贝”就失了理智</strong>，乖乖下了井——结果捞上来个“死尸”。这提醒我们：<strong class="text-amber-900">贪念（贪财、贪名、贪便宜）最容易让人“上钩”</strong>。骗子最喜欢用<strong class="text-amber-900">“天大的好处”</strong>引诱人。遇到“白捡的便宜”，<strong class="text-amber-900">先冷静想一想：真有这么好的事吗？</strong>
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Body -->
+        <section id="section-body" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">背尸取证：互坑背后的“默契”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    八戒背着尸体上来，心里窝火，转头就“坑”了悟空一把——撺掇唐僧念紧箍咒，逼悟空救活国王。点击翻转卡片，看看这对“活宝”如何相爱相杀。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-b1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">“起死回生”难题</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-b1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“你能医活他！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-b1-back">
+                        <p class="text-gray-700 text-left">
+                            尸体背回来了，悟空<strong>只当“证据”</strong>——一具尸体总比一堆白骨强。八戒却<strong>使坏</strong>：“师父别听他推脱，<strong>他有本事医活</strong>！你念紧箍咒，<strong>还你一个活人</strong>！”唐僧<strong>耳根子一软</strong>，真的念起咒来，悟空<strong>头疼难忍</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-b2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">相爱相杀</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-b2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“越掐，事越成”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-b2-back">
+                        <p class="text-gray-700 text-left">
+                            精读指出：这次“互坑”跟以前<strong>完全不同</strong>——以前互坑让取经不顺，这次<strong>越掐、事情做得越漂亮</strong>：悟空坑八戒，<strong>背出了尸体</strong>；八戒坑悟空，<strong>逼出了“起死回生”</strong>。<strong>小小的斗嘴打闹，反而推动了大事</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“玩笑”与“默契”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    八戒悟空<strong class="text-amber-900">嘴上互相埋汰，心里却明白对方</strong>——这叫<strong class="text-amber-900">“兄弟间的默契”</strong>。适度的玩笑、善意的打趣，<strong class="text-amber-900">让相处有趣，也让感情更深</strong>。当然要<strong class="text-amber-900">把握好分寸</strong>：玩笑不伤人、打闹不误事。好朋友之间，既有<strong class="text-amber-900">玩笑的热闹</strong>，又有<strong class="text-amber-900">正事上的靠谱</strong>，才是最舒服的关系。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第三十七回“婴儿问母知邪正，金木参玄见假真”让乌鸡国的真相一点点浮出水面。这一回让我们看到：细节与情感能识破伪装、办事要靠证据、贪念最容易让人上钩、兄弟间的“互坑”也可以是默契。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第三十七回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "太子问娘娘“三年来夫妻恩爱如何”，娘娘的回答是：",
+                    "options": {
+                        "A": "一直很好",
+                        "B": "三载之前温又暖，三年之后冷如冰",
+                        "C": "越来越恩爱",
+                        "D": "不清楚"
+                    },
+                    "correct": "B",
+                    "analysis": "娘娘说三年前温又暖，三年后冷如冰——“国王”对娘娘再无恩爱之情，让太子断定父王是假的。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "娘娘为何能确定“父王”是妖怪变的？",
+                    "options": {
+                        "A": "父王长相变了",
+                        "B": "父王三年不再恩爱、态度冰冷，感情的温度变不了假",
+                        "C": "父王不会说话了",
+                        "D": "父王变矮了"
+                    },
+                    "correct": "B",
+                    "analysis": "妖怪变得了模样，却变不了“感情的温度”。“冷如冰”是本质的破绽，情感是最准的“探测器”。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "太子拿出什么信物给娘娘看？",
+                    "options": {
+                        "A": "金箍棒",
+                        "B": "白玉圭",
+                        "C": "袈裟",
+                        "D": "玉玺"
+                    },
+                    "correct": "B",
+                    "analysis": "太子拿出白玉圭，娘娘一眼认出是夫君的遗物，泪如泉涌，与自己的梦对上了。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "娘娘此前做的梦是：",
+                    "options": {
+                        "A": "梦见妖怪被打死",
+                        "B": "梦见国王水淋淋地托梦说死了、请唐僧降怪",
+                        "C": "梦见太子长大",
+                        "D": "梦见下雨"
+                    },
+                    "correct": "B",
+                    "analysis": "娘娘四更也梦见国王水淋淋地说自己死了、请唐僧降怪，只是记得一半忘了一半，被太子一说全想起来了。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空认为要治妖怪的罪，必须先有什么？",
+                    "options": {
+                        "A": "太子同意",
+                        "B": "真凭实据（拿贼拿赃），最好的证据是国王的尸体",
+                        "C": "妖怪认罪",
+                        "D": "国王下旨"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空说“拿贼拿赃”，没有证据定不了罪。他决定下井捞出国王的尸体，作为铁证。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "悟空为何让八戒下井捞尸体？",
+                    "options": {
+                        "A": "八戒不听话",
+                        "B": "八戒水下功夫熟（原是天蓬元帅），也让故事更好看，师兄弟互坑更有趣",
+                        "C": "悟空不敢下水",
+                        "D": "八戒力气大"
+                    },
+                    "correct": "B",
+                    "analysis": "一是八戒水性好，二是分工让故事更有趣，三是师兄弟的“互坑”是取经路上的调味剂。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "悟空用什么“诱饵”哄八戒下井？",
+                    "options": {
+                        "A": "美食",
+                        "B": "谎称妖怪有“宝贝”，先偷到手，还答应宝贝归八戒",
+                        "C": "承诺让他当官",
+                        "D": "金钱"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空骗八戒说妖怪有宝贝，还许诺“我只要名，宝贝归你”，八戒一听就心动了。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "“清酒红人面，黄金动道心”这句话的意思是：",
+                    "options": {
+                        "A": "酒很好喝",
+                        "B": "酒能让人脸红，黄金能让人动心——利益最容易让人心动",
+                        "C": "金子很值钱",
+                        "D": "人要喝酒"
+                    },
+                    "correct": "B",
+                    "analysis": "这句话点出：利益（宝贝、金钱）最能打动人。八戒一听“宝贝”连觉都不睡了。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "八戒下到井底发现的是什么？",
+                    "options": {
+                        "A": "金银珠宝",
+                        "B": "井龙王的水晶宫，还有乌鸡国国王的尸体",
+                        "C": "龙宫宝藏",
+                        "D": "一口枯井"
+                    },
+                    "correct": "B",
+                    "analysis": "井底有井龙王的水晶宫，龙王取出乌鸡国国王的尸体，用定颜珠定住，三年不腐。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "国王尸体三年不腐的原因是什么？",
+                    "options": {
+                        "A": "井底很冷",
+                        "B": "井龙王给了“定颜珠”，定住容貌不坏",
+                        "C": "尸体被冷冻",
+                        "D": "道士施了法"
+                    },
+                    "correct": "B",
+                    "analysis": "井龙王用定颜珠给国王定住容貌，所以三年尸首不坏，这为“起死回生”留下了可能。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "八戒背尸上来后，如何“报复”悟空？",
+                    "options": {
+                        "A": "把他推下井",
+                        "B": "撺掇唐僧念紧箍咒，逼悟空救活国王",
+                        "C": "骂他一顿",
+                        "D": "把他的宝贝藏起来"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒恼恨悟空让自己背死尸，就撺掇唐僧“念紧箍咒”，逼悟空想办法医活国王。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "唐僧听了八戒的话，做了什么？",
+                    "options": {
+                        "A": "训斥八戒",
+                        "B": "耳根子一软，真念起紧箍咒，悟空头疼难忍",
+                        "C": "让沙僧救",
+                        "D": "不理八戒"
+                    },
+                    "correct": "B",
+                    "analysis": "唐僧被八戒一撺掇就信了，念紧箍咒，悟空“眼胀头疼”，只好答应想办法。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "精读认为这次悟空、八戒“互坑”与以往不同的地方是：",
+                    "options": {
+                        "A": "他们彻底闹翻了",
+                        "B": "越掐、事情做得越漂亮——悟空坑八戒背出尸体，八戒坑悟空逼出“起死回生”",
+                        "C": "唐僧生气了",
+                        "D": "妖怪趁机跑了"
+                    },
+                    "correct": "B",
+                    "analysis": "以前的互坑让取经不顺，这次“互坑”反而推动了大事：尸体背出来了，救人的事也提上了日程。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "八戒“一听宝贝就爬起来”，说明他最大的弱点之一是：",
+                    "options": {
+                        "A": "爱睡觉",
+                        "B": "贪（贪财、贪便宜），容易被利益引诱",
+                        "C": "爱打架",
+                        "D": "怕妖怪"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒被“宝贝”诱饵轻松骗下井，正应了“黄金动道心”——贪念最容易让人上钩。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "本回故事给我们的启示不包括：",
+                    "options": {
+                        "A": "细节与情感能识破伪装",
+                        "B": "办事要讲究证据",
+                        "C": "贪小便宜容易吃大亏",
+                        "D": "跟朋友开玩笑越过分越好"
+                    },
+                    "correct": "D",
+                    "analysis": "朋友间的玩笑要有分寸，不能伤人误事。其余三条都是本回的正面启示。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "娘娘说“三载之前温又暖，三年之后______如冰”。",
+                    "answer": "冷",
+                    "analysis": "娘娘对太子说：「三载之前温又暖，三年之后冷如冰。」——三年前的真国王「温又暖」，三年后的假国王「冷如冰」。一个「冷」字，让太子明白：眼前的「父王」是假的。人心冷暖，是最真实的「信号」。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "太子拿出信物______给娘娘看，母子梦境互证。",
+                    "answer": "白玉圭",
+                    "analysis": "太子拿出「白玉圭」给娘娘看，娘娘一见，痛哭流涕——这是她和真国王的「定情信物」。母子「梦境互证」：太子梦见父王托梦，娘娘拿出信物，真假立辨。「证据」+「真情」，真相大白。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "悟空坚持“拿贼拿______”，要捞出国王尸体作证。",
+                    "answer": "赃",
+                    "analysis": "悟空坚持「拿贼拿赃」：不能光凭「鬼魂托梦」，要捞出国王尸体作「物证」，才能让假国王「现形」。「拿贼要拿赃」——指认坏人，要有「真凭实据」，不能空口无凭。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "八戒下井发现______龙王的水晶宫。",
+                    "answer": "井",
+                    "analysis": "八戒奉命下井，在井底发现了「井龙王」的水晶宫，找到了国王的尸体。「井龙王」也是龙，守着乌鸡国国王的「尸身」。一具「沉冤三载」的尸体，就藏在水晶宫里。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "国王尸体三年不腐，靠的是______珠定住容貌。",
+                    "answer": "定颜",
+                    "analysis": "国王尸体三年不腐，靠的是「定颜珠」定住容貌。井龙王用「定颜珠」保住了国王的「真容」。这也为后面「一粒金丹天上得，三年故主世间生」——国王还能「复活」埋下伏笔。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "八戒背尸上来后，撺掇唐僧念______咒，逼悟空救人。",
+                    "answer": "紧箍",
+                    "analysis": "八戒背尸上来后，故意「撺掇」唐僧念「紧箍咒」，逼悟空「救人」。八戒这是「报复」悟空坑他背尸——「你坑我背尸，我坑你救人」。师徒之间「相爱相杀」，也是取经路的「日常调味」。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "“清酒红人面，______动道心”，利益最容易让人心动。",
+                    "answer": "黄金",
+                    "analysis": "俗语「清酒红人面，黄金动道心」：美酒让人脸红，黄金让人「心动」。唐僧师徒面对「黄金」（利益）的诱惑，也要「守住道心」——利益面前，最能考验一个人的「定力」。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "悟空坑八戒背出______，八戒坑悟空逼出“起死回生”。",
+                    "answer": "尸体",
+                    "analysis": "悟空坑八戒背出「尸体」，八戒坑悟空「起死回生」——你来我往，「互相算计」，最后反而「合力」救了国王。「斗嘴归斗嘴」，到了「正事」上，师徒还是「一条心」。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“识破伪装”】妖怪变得了国王的模样，却变不了“感情的温度”。请谈谈：为什么“细节和真情”最能暴露真假？你在生活中如何识破“伪装”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>本质藏不住：</strong> 模样可以“演”，感情、习惯、细节却很难演得长久。娘娘一句“冷如冰”，比任何“像不像”都更能说明问题。</p>\n                        <p class=\"mt-2\"><strong>识破伪装的方法：</strong> ①看“言行是否一致”（嘴上说好，做却相反）；②看“长期的细节”（偶尔可以装，久了露馅）；③看“危难时的表现”（真朋友危难见真心）；④听“大家的口碑”（众人眼睛是雪亮的）。不轻信表面，多观察本质，才能看穿假象。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“证据意识”】悟空说“拿贼拿赃”，坚持要证据才定罪。请谈谈：为什么“讲证据”比“凭感觉”更可靠？学习中如何养成“用证据说话”的习惯？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>证据的力量：</strong> 光说“我觉得他是妖怪”没人信，有了尸体这个“铁证”，才能让人心服口服。凭感觉容易冤枉人，凭证据才公正。</p>\n                        <p class=\"mt-2\"><strong>学习中的“证据”习惯：</strong> ①写作文的每个观点都要有例子支撑；②做数学题“下结论”要写清推导过程；③回答“为什么”时引用课文、数据；④与人争论时“摆事实”而不是“喊口号”。有理有据，才站得住脚。会“用证据说话”的人，更有说服力。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“贪念”】八戒一听“宝贝”就下井，结果捞到死尸。请谈谈：为什么“贪小便宜”最容易吃大亏？如何警惕“天大的好处”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>贪是陷阱：</strong> 八戒贪“宝贝”，连井里有啥都没看清就跳下去。骗子最爱用“好处”引诱人上钩——天上不会掉馅饼，太好的事往往有诈。</p>\n                        <p class=\"mt-2\"><strong>如何警惕：</strong> ①遇到“白捡便宜”（免费礼物、超低价格、包赚不赔），先想“为什么是我”；②涉及转账、密码、隐私，一律警惕；③“中奖了要先交钱”一定是骗局；④拿不定主意就问问家长老师。记住：不贪，就不会被骗。小便宜背后，常常是“大亏”等着你。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“分工与默契”】悟空让八戒下井（水性好），八戒负责背尸。请谈谈：为什么说“各展所长、互相配合”比“一人包办”更好？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>各展所长：</strong> 八戒水性好，下井这活儿他最合适。若悟空非要自己干，未必顺利。团队里“让对的人做对的事”，效率最高。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> ①小组作业里，会画画的画图、会写的写稿、会讲的上台；②班级大扫除，个子高的擦窗、力气大的搬桌；③足球队，前锋射门、守门员守门。每个人做好自己擅长的部分，团队就强大。别总想“一人干完”，学会信任和分工，才是有智慧的团队。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“兄弟互坑与分寸”】这次悟空八戒“越掐事越成”。请谈谈：如何区分“善意的玩笑”和“伤人的捉弄”？朋友之间怎样开玩笑才恰当？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路</p>\n                        <p><strong>善意与伤人的区别：</strong> 善意的玩笑是“大家都开心”，不是“只拿你取乐”；伤人的捉弄是“踩别人的痛处”“让被捉弄的人难堪”。悟空八戒互坑，是“逗着玩”，心里都明白对方没有坏心。</p>\n                        <p class=\"mt-2\"><strong>开玩笑的分寸：</strong> ①不拿别人的身体缺陷、家庭、外号开玩笑；②对方说“别这样”，立刻停；③玩笑不误正事（正事上要靠谱）；④不“落井下石”，对方真难过时要收起玩笑。好朋友之间也要“尊重”打底。会开玩笑，也要会“收住”玩笑。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“办事留证据”】如果悟空没有捞尸体，只凭“太子相信”去抓妖怪，会怎样？请谈谈：“把证据留好”为什么是办事稳妥的表现？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路</p>\n                        <p><strong>没有证据的麻烦：</strong> 若只凭太子、娘娘“相信”，妖怪一句“我就是国王”，别人就会怀疑太子勾结外人害君，反而说不清。有尸体这个铁证，满朝文武才无话可说。</p>\n                        <p class=\"mt-2\"><strong>留证据的习惯：</strong> ①借给同学东西记个备忘；②重要的事发个消息确认（留文字）；③完成的任务保存成果；④“空口无凭”的事，白纸黑字更稳妥。不是“不信任人”，而是“把事情办稳妥”。会办事的人，都懂得“留一手证据”。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“信任与求证”】太子问母亲、娘娘对梦境，一步步确认真相。请谈谈：为什么“重要的事要反复求证”，而不是“听一次就全信”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>求证更可靠：</strong> 太子没有只信唐僧一面之词，他回宫问母亲、拿白玉圭对照、对梦境，多重印证才确信。重要的判断，求证越多越稳。</p>\n                        <p class=\"mt-2\"><strong>学习中的求证：</strong> ①听到一个“说法”，查资料、问老师确认，别被谣言带偏；②考试答案做出来了，回头验算、换方法再算一遍；③同学传的“八卦”，别急着信，找当事人问清楚。多一次求证，少一分误判。谨慎求证，是聪明的习惯。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

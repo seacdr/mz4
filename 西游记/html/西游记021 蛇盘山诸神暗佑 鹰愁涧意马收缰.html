@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第十五回精读：意马收缰</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第十五回精读：意马收缰</h1>
+            <p class="text-lg text-gray-700 serif">“蛇盘山诸神暗佑，鹰愁涧意马收缰”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-lost')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-lost">第一章：鹰愁涧失马</button>
+                <button onclick="NavigationModule.switchTab('section-dragon')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-dragon">第二章：观音收龙</button>
+                <button onclick="NavigationModule.switchTab('section-horse')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-horse">第三章：意马收缰</button>
+                <button onclick="NavigationModule.switchTab('section-team')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-team">第四章：取经团队</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Lost -->
+        <section id="section-lost" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">鹰愁涧：一场“抢马”风波</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    师徒行至蛇盘山鹰愁涧，涧中突然窜出一条恶龙，把唐僧的白马一口吞下。悟空护师心切，与恶龙斗智斗勇。点击下方卡片，回顾这场“失马—寻马—斗龙”的风波。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>诸神暗佑</h3>
+                    <p class="text-sm text-gray-600 mb-4">回目点明“蛇盘山诸神暗佑”。</p>
+                    <div class="bg-amber-50 p-4 rounded border border-amber-200">
+                        <p class="text-sm text-amber-800">
+                            唐僧师徒在西行路上，一直有<strong>六丁六甲、五方揭谛、四值功曹</strong>等神暗中护佑。恶龙吞马时，诸神暗中保护唐僧，使他<strong>安然无恙</strong>。这印证了“取经人自有天助”。
+                        </p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>悟空斗龙</h3>
+                    <p class="text-sm text-gray-600 mb-4">悟空见马被吞，又急又怒。</p>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li>① 跳到涧边叫骂，逼龙出水</li>
+                        <li>② 与恶龙大战，恶龙“战罢多时”逃回水中</li>
+                        <li>③ 悟空请来山神土地，问明龙的来历</li>
+                        <li>④ 请观音菩萨出马收服</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">悟空的变化：越来越“靠谱”</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    比起初出山时的鲁莽，这时的悟空已经懂得<strong class="text-amber-900">先问清来历、再请对路的人帮忙</strong>——这正是“心猿归正”之后，他逐渐变得有策略、有担当的体现。遇到难题不再只会硬打，而是懂得“找对方法、请对帮手”。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Dragon -->
+        <section id="section-dragon" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">观音收龙：又一个“戴罪之身”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空请来观音，观音道破真相：这条恶龙不是普通妖怪，而是西海龙王敖闰的三太子，因犯了天条，在此等候取经人。点击翻转卡片，认识这条“命运多舛”的小白龙。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-d1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">三太子的罪</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-d1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">纵火烧明珠</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-d1-back">
+                        <p class="text-gray-700 text-left">
+                            小白龙原是<strong>西海龙王三太子</strong>，因纵火烧毁了殿上的<strong>明珠</strong>，犯下<strong>忤逆之罪</strong>，被玉帝吊打、判了死刑。观音求情救下他，让他在这里等待取经人，变作白马，戴罪立功。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-d2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">观音的点化</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-d2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“蛇盘山候候”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-d2-back">
+                        <p class="text-gray-700 text-left">
+                            观音问明情况后，向玉帝求情，让小白龙<strong>变作白马</strong>，为取经人“充作脚力”，取经成功后<strong>还他龙身、功成归天</strong>。小白龙从此成为唐僧的坐骑，踏上赎罪与修行之路。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“龙”为何要“变马”？</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    龙是神兽、尊贵无比，却要变成一匹马任人骑乘——这既是<strong class="text-amber-900">赎罪的代价</strong>，也是<strong class="text-amber-900">修行的考验</strong>：放下“龙”的骄傲，甘愿做“马”的苦役，才能洗清罪业、重获新生。真正的修行，往往从<strong class="text-amber-900">放下身段</strong>开始。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Horse -->
+        <section id="section-horse" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">意马收缰：白龙马归位</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    “意马”比喻躁动不安、难以收摄的心意。小白龙变作的白马，正是“意马”的化身。回目“意马收缰”，说的是这匹“马”终于被“收住缰绳”，归入取经团队。点击下方卡片，理解“心猿意马”的深层含义。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>心猿</h3>
+                    <p class="text-center text-4xl mb-2">🐒</p>
+                    <p class="text-sm text-gray-600 text-center">孙悟空代表“心”，跳动不安、难以安定，已被紧箍“收服”。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>意马</h3>
+                    <p class="text-center text-4xl mb-2">🐎</p>
+                    <p class="text-sm text-gray-600 text-center">白龙马代表“意”，驰骋奔逸、难以收摄，此回被“收缰”。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>收缰</h3>
+                    <p class="text-center text-4xl mb-2">🧘</p>
+                    <p class="text-sm text-gray-600 text-center">“心猿意马”都被收服，取经团队的核心成员基本聚齐。</p>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“心猿意马”对现代人的启示</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    今天我们用“心猿意马”形容<strong class="text-amber-900">心神不宁、难以专注</strong>。学习时想着玩，上课时想着游戏——这些都是“心猿意马”。学会<strong class="text-amber-900">“收缰”</strong>，即管住自己的心思、把注意力拉回正事，是每个人终身的功课。心定了，路才能走稳。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Team -->
+        <section id="section-team" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">取经团队初具雏形</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    到本回为止，取经团队已经有了唐僧（领队）、孙悟空（大徒弟）、白龙马（脚力）。此后还将加入猪八戒、沙僧。点击下方卡片，看看这个团队的分工与意义。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>唐僧</h3>
+                    <p class="text-sm text-gray-600">团队的<strong>灵魂与方向</strong>，目标坚定、心怀慈悲，决定“往哪走”。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>孙悟空</h3>
+                    <p class="text-sm text-gray-600">团队的<strong>武力与智谋</strong>，降妖除魔、开山辟路，负责“解决难题”。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>白龙马</h3>
+                    <p class="text-sm text-gray-600">团队的<strong>脚力与承载</strong>，默默负重前行，负责“坚持到底”。</p>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“每个人都很重要”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    白龙马看似戏份少，却是<strong class="text-amber-900">不可或缺的一员</strong>：没有它，唐僧走不完十万八千里。一个团队里，有人冲在前面，有人默默支撑——<strong class="text-amber-900">分工不同，价值同等重要</strong>。这启示我们：不必人人都当“主角”，在自己的位置上尽职尽责，同样值得尊敬。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第十五回“蛇盘山诸神暗佑，鹰愁涧意马收缰”讲的是小白龙变白马、归入取经团队的故事。这一回让我们懂得：骄傲要放下、错误要赎罪、分工无高低；也让我们理解“心猿意马”这个成语的深意——管住自己的心，才能走稳自己的路。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第十五回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "吞掉唐僧白马的是谁？",
+                    "options": {
+                        "A": "鹰愁涧中的一条恶龙",
+                        "B": "双叉岭的老虎精",
+                        "C": "黑风山的熊罴怪",
+                        "D": "流沙河的沙僧"
+                    },
+                    "correct": "A",
+                    "analysis": "师徒行至蛇盘山鹰愁涧，涧中窜出一条恶龙，一口将唐僧的白马吞下肚去。这条恶龙正是后来的白龙马——西海龙王三太子。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "恶龙吞马时，唐僧安然无恙。回目“蛇盘山诸神暗佑”表明：",
+                    "options": {
+                        "A": "唐僧运气好，恰好躲开",
+                        "B": "有六丁六甲、五方揭谛等神暗中保护取经人",
+                        "C": "恶龙根本不想吃唐僧",
+                        "D": "白马护住了唐僧"
+                    },
+                    "correct": "B",
+                    "analysis": "取经人受神佛暗中护佑，六丁六甲、五方揭谛、四值功曹等神沿途保护。恶龙吞马时，诸神暗中护住唐僧，使他安然无恙。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "悟空与恶龙交手，恶龙“战罢多时”便逃回水中。悟空随后的做法体现了他怎样的成长？",
+                    "options": {
+                        "A": "继续蛮干，死缠烂打",
+                        "B": "先请山神土地问明来历，再请观音出马，懂得“找对方法、请对帮手”",
+                        "C": "放弃找马，直接赶路",
+                        "D": "回花果山搬救兵"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空先请山神土地问清龙的来历，知道它是观音安排在此等取经人的龙子，于是去请观音菩萨收服。这体现他“心猿归正”后更有策略、更有担当。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "小白龙（白龙马）的本来身份是：",
+                    "options": {
+                        "A": "东海龙王三太子",
+                        "B": "西海龙王敖闰的三太子",
+                        "C": "南海龙王的三太子",
+                        "D": "北海龙王的三太子"
+                    },
+                    "correct": "B",
+                    "analysis": "小白龙是西海龙王敖闰的三太子，因纵火烧毁殿上明珠、犯忤逆之罪，被玉帝判罪。观音求情后，令他变作白马为取经人充作脚力。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "小白龙被贬罚的原因是：",
+                    "options": {
+                        "A": "偷吃蟠桃",
+                        "B": "纵火烧毁殿上明珠，犯下忤逆之罪",
+                        "C": "大闹天宫",
+                        "D": "调戏嫦娥"
+                    },
+                    "correct": "B",
+                    "analysis": "小白龙因纵火烧毁殿上明珠、忤逆尊长，被玉帝吊打三百、判了死刑。观音向玉帝求情，救下他，让他变马赎罪。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "观音对小白龙的安排是：",
+                    "options": {
+                        "A": "让他继续在鹰愁涧修行",
+                        "B": "让他变作白马为取经人充作脚力，取经成功后还他龙身、功成归天",
+                        "C": "把他押回西海龙宫关禁闭",
+                        "D": "让他做悟空的坐骑"
+                    },
+                    "correct": "B",
+                    "analysis": "观音安排小白龙变作白马，驮着唐僧走完取经路，戴罪立功。取经成功后他还龙身、功成归天，这也呼应了结尾“八部天龙”的封号。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "“意马收缰”中的“意马”，在象征意义上对应：",
+                    "options": {
+                        "A": "白龙马象征躁动不安、难以收摄的“心意”",
+                        "B": "白龙马只是普通的坐骑",
+                        "C": "意马指唐僧的想法",
+                        "D": "意马指悟空的筋斗云"
+                    },
+                    "correct": "A",
+                    "analysis": "“心猿意马”中，心猿指悟空（心），意马指白龙马（意）。“意马收缰”即象征躁动的心意被收服、归入正道。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "“龙”变“马”这一情节的深层象征是：",
+                    "options": {
+                        "A": "龙本来就是马变的",
+                        "B": "放下“龙”的骄傲，甘愿做“马”的苦役，是赎罪与修行的考验",
+                        "C": "龙的体型太大，不适合当坐骑",
+                        "D": "作者随便写的，没有深意"
+                    },
+                    "correct": "B",
+                    "analysis": "龙是尊贵的神兽，变马任人骑乘，既是为过错付出的赎罪代价，也是放低身段、甘愿吃苦的修行考验。真正的修行，往往从放下骄傲开始。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "“心猿意马”这个成语在今天的含义是：",
+                    "options": {
+                        "A": "形容人精力充沛",
+                        "B": "形容心神不宁、难以专注",
+                        "C": "形容跑得很快",
+                        "D": "形容神通广大"
+                    },
+                    "correct": "B",
+                    "analysis": "今天我们常用“心猿意马”形容心神不宁、心思不定、难以专注。这与书中“心猿”（心）和“意马”（意）需要被收服约束的隐喻一脉相承。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "到本回为止，取经团队已聚齐的成员是：",
+                    "options": {
+                        "A": "唐僧、悟空、八戒、沙僧",
+                        "B": "唐僧、孙悟空、白龙马",
+                        "C": "唐僧、悟空、八戒",
+                        "D": "只有唐僧一人"
+                    },
+                    "correct": "B",
+                    "analysis": "本回结束时，团队有唐僧（领队）、孙悟空（大徒弟）、白龙马（脚力）。猪八戒、沙僧将在后续回目中陆续加入。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "白龙马在团队中的角色，精读强调的是：",
+                    "options": {
+                        "A": "可有可无的配角",
+                        "B": "看似戏份少却不可或缺——默默负重前行，分工不同价值同等重要",
+                        "C": "团队的战力核心",
+                        "D": "负责逗笑大家"
+                    },
+                    "correct": "B",
+                    "analysis": "白龙马戏份不多，但没有它唐僧走不完十万八千里。这告诉我们：团队里有人冲在前面，有人默默支撑，分工不同、价值同等重要，人人都值得尊敬。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "观音向玉帝为小白龙求情，体现的价值观是：",
+                    "options": {
+                        "A": "徇私枉法，包庇罪犯",
+                        "B": "给犯错者改过自新的机会，让赎罪者通过修行重获新生",
+                        "C": "观音害怕龙王家族",
+                        "D": "观音想让小白龙报恩"
+                    },
+                    "correct": "B",
+                    "analysis": "观音求情并非包庇，而是给小白龙“戴罪立功、改过自新”的机会。这体现了“浪子回头金不换”的慈悲：惩罚不是目的，让人改过、成长才是目的。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "悟空在蛇盘山遇到困难时，没有直接硬闯，而是“请山神土地问来历”。这说明悟空：",
+                    "options": {
+                        "A": "变懒了，不想动手",
+                        "B": "成长了，懂得先了解情况、再采取有针对性的行动",
+                        "C": "打不过恶龙，只好求饶",
+                        "D": "害怕观音责罚"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空先摸清恶龙来历，知道它是观音安排的龙子后，便请观音来收服。这种“先调查、后行动”的做法，是他在取经路上越来越成熟的表现。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "小白龙变作的白马，其“收缰”象征的是：",
+                    "options": {
+                        "A": "给马戴上缰绳方便骑乘",
+                        "B": "躁动奔逸的“心意”被收服，归入取经正道",
+                        "C": "马需要训练才能听话",
+                        "D": "悟空学会了骑马"
+                    },
+                    "correct": "B",
+                    "analysis": "“收缰”的字面是收住马缰绳，象征意义是把躁动奔逸的心意收住、管束起来，使它安分地沿着取经之路前行——这与“心猿归正”异曲同工。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "本回中，悟空、唐僧、白龙马的关系，最适合用下列哪个词概括？",
+                    "options": {
+                        "A": "互相猜忌",
+                        "B": "各怀鬼胎",
+                        "C": "师徒同心、各司其职，共同走上取经路",
+                        "D": "彼此利用"
+                    },
+                    "correct": "C",
+                    "analysis": "唐僧定方向、悟空护安全、白龙马负重行，三人各司其职、目标一致。取经团队正是这样一点点凝聚起来的，体现了“团结协作”的主题。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "吞掉唐僧白马的是鹰愁涧中的一条______，它正是后来的白龙马。",
+                    "answer": "恶龙",
+                    "analysis": "吞掉唐僧白马的是鹰愁涧里的一条恶龙（小白龙变的）。它躲在涧中，见马就吃。唐僧没了白马，寸步难行，这才引出「降龙」的情节——原来吃掉马的，正是将来驮唐僧的白龙马。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "白龙马本名是______龙王敖闰的三太子。",
+                    "answer": "西海",
+                    "analysis": "白龙马本是西海龙王敖闰的三太子，因纵火烧毁殿上明珠，犯下「忤逆」大罪，被玉帝判了死刑，多亏观音求情才保下性命。一条「死囚龙」，被观音点化成了取经人的「脚力」。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "小白龙因纵火烧毁殿上______，犯下忤逆之罪，被玉帝判了死刑。",
+                    "answer": "明珠",
+                    "analysis": "小白龙因「纵火烧了殿上明珠」获罪。明珠是龙宫重宝，烧了它就是「不孝」「忤逆」。这个「年少冲动、闯下大祸」的设定，和悟空、八戒、沙僧的经历一样——取经队伍里，个个都是「戴罪之身」，取经就是「赎罪修行」。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "观音为小白龙求情，让他变作______为取经人充作脚力，戴罪立功。",
+                    "answer": "白马",
+                    "analysis": "观音为小白龙求情，让他变作白马，驮取经人西行，将功赎罪。从「龙」变「马」，从「自由」变「脚力」，是惩罚也是救赎。有意思的是：这匹马从头到尾没说过几句话，却是「主角团队」里不可或缺的一员。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "“心猿意马”中，心猿指______，意马指______。",
+                    "answer": "孙悟空|白龙马",
+                    "analysis": "「心猿意马」是佛家用语：心像猿猴一样跳来跳去，意（念头）像野马一样狂奔不止，比喻人心浮躁、难以安定。在书里，悟空是「心猿」，白龙马是「意马」。两人一前一后入队，象征「心」「意」都被收拢到取经这条正道上。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "取经路上有______、五方揭谛、四值功曹等神暗中保护唐僧师徒。",
+                    "answer": "六丁六甲",
+                    "analysis": "原著提到，唐僧取经路上暗中受「六丁六甲、五方揭谛、四值功曹、护教伽蓝」等神将轮流保护，随时记录善恶、报与天庭。所以师徒一路上的言行，其实「天知地知」——这也是「头上三尺有神明」的传统观念。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "“意马收缰”象征躁动奔逸的______被收服，归入取经正道。",
+                    "answer": "心意",
+                    "analysis": "「意马收缰」就是给「意」（念头、心思）这匹野马套上缰绳，让它不再乱跑。白龙马被收服变作坐骑，象征「意」被收拢到西天取经的正道上。心定、意收，队伍才能一条心往前走。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "白龙马看似戏份少，却______——没有它，唐僧走不完十万八千里。",
+                    "answer": "不可或缺",
+                    "analysis": "白龙马虽然戏份不多、几乎不说话，但作用极大：没有它，唐僧根本走不完十万八千里路。这提醒我们：一个团队里，不是只有「主角」才重要。那些默默扛着「重担」、任劳任怨的人，往往才是真正撑起大局的人。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“放下身段”】小白龙本是尊贵的龙，却要变成一匹马任人骑乘。请谈谈：为什么说“放得下骄傲”是一种了不起的本事？你有过“放下身段、从小事做起”的经历吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>放低身段的意义：</strong> 小白龙放下“龙”的骄傲变作“马”，看似委屈，实则是救赎与修行的开始。能弯腰的人，才能走得更远。</p>\n                        <p class=\"mt-2\"><strong>联系自己：</strong> 觉得自己成绩好就不愿意请教别人，反而进步慢；愿意放下面子向同学请教、从最基础的事做起，反而进步快。真正有本事的人，往往最谦逊，也最能吃苦。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“改过的机会”】小白龙犯了错，观音却给他“戴罪立功”的机会。请谈谈：为什么说“给人改过的机会”比“一棒子打死”更有意义？作为同学、朋友，我们该如何对待犯错的人？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>改过的机会：</strong> 人非圣贤，孰能无过。若一犯错就被否定，人就没有了改正的动力。观音给小白龙机会，让他用行动赎罪，最终修成正果。</p>\n                        <p class=\"mt-2\"><strong>对待犯错的人：</strong> ①指出错误但要就事论事，不给人贴标签；②给ta改正的时间和机会；③在ta改正时及时肯定鼓励；④当然，严重的错误也要承担后果。既宽容又不纵容，才是真正的善意。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“分工与价值”】白龙马戏份少，却是团队不可缺少的一员。请谈谈：在一个集体中，为什么“默默付出的平凡人”同样重要？你身边有这样的“白龙马”吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>平凡人的重要：</strong> 一个班级里，有人当班长很风光，但扫地、搬书、帮大家做杂事的同学同样让班级正常运行。没有“白龙马”式的付出，团队寸步难行。</p>\n                        <p class=\"mt-2\"><strong>身边的白龙马：</strong> 每天默默打扫卫生的保洁阿姨、背后做课件备课的老师、为全家做饭的父母……他们不起眼，却撑起了我们的生活。学会尊重每一个“默默付出的人”，也愿意做那个“不必被看见”却踏实做事的人。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“专注”】“心猿意马”形容心神不宁、难以专注。请谈谈：为什么专注这么难？我们怎样才能像“收缰”一样，把自己拉回该做的事情上？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>专注难的原因：</strong> 手机、游戏、零食、闲聊……身边的诱惑太多，人的注意力本来就容易被新鲜事物吸引，就像“心猿”乱跳、“意马”乱跑。</p>\n                        <p class=\"mt-2\"><strong>如何“收缰”：</strong> ①写作业前把手机、平板放远或交给家长保管；②用“番茄钟法”：专注25分钟、休息5分钟；③列出任务清单，完成一项打勾；④一次只做一件事；⑤累了就起来活动一下再继续。学会把“缰绳”握在自己手里。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“智慧地求助”】悟空遇到恶龙，不蛮干，而是先问来历、再请观音帮忙。请谈谈：遇到难题时，“先了解情况再决定对策”和“一上来就乱闯”有什么区别？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>先了解再行动：</strong> 悟空先请山神土地问清恶龙来历，知道它是观音安排的，便请观音来收——对症下药，事半功倍。乱闯一气只会浪费力气、把事情搞砸。</p>\n                        <p class=\"mt-2\"><strong>联系学习：</strong> 拿到一道难题，先读题三遍、看清条件和要求，再想解题思路；而不是题目没看完就动笔。生活中也一样：先弄清事情的来龙去脉，再决定怎么做，能避免很多弯路和误会。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“耐心等待”】小白龙在鹰愁涧等待取经人，终于等来了赎罪的机会。请谈谈：有些机会需要耐心等待，但等待不等于空等。我们该怎样在“等待”中做好准备？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>等待中的准备：</strong> 小白龙在涧中等待，机会来临时能立即“上岗”。等待不是干坐着，而是蓄势待发、时刻准备着。</p>\n                        <p class=\"mt-2\"><strong>联系自己：</strong> 等一个比赛名额、等一次上台机会时，不要只是焦虑等待，而应抓紧时间练习、积累实力。机会总是留给有准备的人——平时多努力，机会来时才接得住。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“团队合作”】取经团队中，唐僧定方向、悟空护安全、白龙马负重行，各司其职。请谈谈：什么是真正的团队合作？在集体中，我们应该怎样找到自己的“位置”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>真正的团队合作：</strong> 不是每个人都抢着当主角，而是每个人清楚自己的角色、发挥自己的长处，为了共同目标相互配合。唐僧没有悟空能打，但没有他团队就没有方向。</p>\n                        <p class=\"mt-2\"><strong>找到自己的位置：</strong> ①了解自己的长处（组织、执行、创意、陪伴）；②主动承担适合自己的任务，不挑肥拣瘦；③尊重队友的分工，不越位、不拆台；④为团队目标贡献自己的一份力。每个人都重要，团队才完整。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

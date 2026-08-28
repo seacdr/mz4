@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第九十一回精读：乐极生悲与辨真假</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第九十一回精读：乐极生悲与辨真假</h1>
+            <p class="text-lg text-gray-700 serif">“金平府元夜观灯，玄英洞唐僧供状”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">金平府</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">元宵看灯</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">假佛收油</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">玄英洞</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 金平府 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">繁华的金平府，慈云寺里的一段哲思</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    离开玉华州，师徒来到天竺外郡金平府——市井喧哗、生意热闹，一派极乐之乡。师徒到慈云寺歇脚，寺中和尚一听唐僧来自中华大唐，倒身就拜：“我们修行看经念佛，就指望着到你中华福地托生！”唐僧惊问何故。你看——大唐的人想去西天，西天的人却想托生中华：“你所嫌弃的当下，正是远方之人羡慕的远方。”
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">金平府</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">天竺外郡的繁华之城</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            凤仙郡、玉华州之后，师徒来到<strong>金平府</strong>——天竺外郡，市井四喧哗、生意热闹，与大唐盛世有一拼。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">慈云寺</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“中华福地托生”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            寺中和尚听唐僧来自中华，倒身就拜：<strong>“修行就是指望到中华福地托生。”</strong>——大唐人求西天，西天人盼中华，<strong>你所嫌弃的当下，正是别人羡慕的远方</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">珍惜“当下”，别总羡慕远方</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    大唐人想上西天，天竺和尚却想托生中华。<strong>我们总羡慕别人的生活，却忘了自己脚下这块“寻常”地，正是别人眼中的宝地——先珍惜眼前，再谈远方</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 元宵看灯 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">金灯桥上三盏灯，一夜烧掉五万两</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    正值元宵，众僧留唐僧过了十五再看灯。金灯桥上有三盏金灯，每盏缸大、细金丝编成两层楼格、衬琉璃薄片，点的是苏合香油——一两油值银二两，比银子还贵！二百四十家灯油大户，三盏灯三晚要烧1500斤油、耗银五万两。行者听得皱眉：三天晚上，哪烧得完这么多油？
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">苏合香油</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">一两值银二两</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            金灯点的是<strong>苏合香油</strong>——<strong>一两油值银二两</strong>、每斤值32两（古代十六两为一斤，才有“半斤八两”）。三缸1500斤油，加杂项一年耗银约<strong>五万两</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">灯油大户</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">240家灯油大户</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            金平府设<strong>240家灯油大户</strong>，家家出油——“每年甚是吃亏”。正月十五到十八三个晚上，就要烧掉五万两银子的苏合香油。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">热闹背后，是老百姓的苦</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    一盏金灯光彩夺目，背后却是二百四十户人家“吃重苦”的负担。<strong>我们享受繁华时，要想到这繁华是谁付出的——懂得体谅，才不麻木</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 假佛收油 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">半空风响“佛”来收灯，唐僧被掳</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    正月十五正节，众人进城看灯。半空中呼呼风响，看灯人四散——“诸佛降世”来收灯油了！众僧让唐僧回避，唐僧却说：弟子正想拜佛！跑上桥顶倒身下拜。行者连忙扯住：不好，定是妖邪！话未说完，灯光昏暗，三个“佛身”一把抱住唐僧驾云而去。行者追到青龙山，四值功曹报信：山名青龙山，洞名玄英洞，里面是三个妖王。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">假佛</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">年年正月十五来收油</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            每年不到三更就有风来，“诸佛降身”收灯——只要油干，就说五谷丰登；油不干，就说年成荒旱。<strong>管他真佛假佛，年年用“风调雨顺”要挟百姓进贡</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">乐极生悲</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">唐僧被三个“佛身”抱走</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            唐僧一心想见真佛，上桥就拜——行者扯住“定是妖邪”，话未说完，<strong>灯光昏暗，唐僧被三个“佛身”一把抱住驾云而去</strong>。四值功曹点破：<strong>“宽了禅性、贪欢看灯，乐极生悲”</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">真真假假，别只看“名声”</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    打着“佛”的旗号来收油的，其实是妖怪。<strong>看人看事，不能只看“名号”和“打扮”——挂羊头卖狗肉的，往往最会演戏</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 玄英洞 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">三妖审讯：唐僧供出齐天大圣</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    玄英洞里，三个妖王——避寒、避暑、避尘大王，正把唐僧洗净准备用苏合香油煎着吃。唐僧战战兢兢磕头，把来历全供了：“我叫陈玄奘，三个徒弟是齐天大圣孙悟空、天蓬元帅猪悟能、卷帘大将沙悟净！”三妖听了一惊——齐天大圣可是五百年前大闹天宫的！八戒猜是阎罗殿牛头马面，悟空却说：那是三只犀牛精！
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">三妖</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">避寒、避暑、避尘大王</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            洞中三妖叫<strong>避寒、避暑、避尘大王</strong>——原是民间供奉、抵御寒暑尘土的“神”，实为<strong>千年犀牛精</strong>，专喜吃苏合香油。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">唐僧供状</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“齐天大圣孙悟空”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            唐僧战战兢兢把来历全供了：“<strong>我叫陈玄奘，三个徒弟是齐天大圣孙悟空、天蓬元帅猪悟能、卷帘大将沙悟净</strong>”——三妖闻言着了一惊，先不敢吃他了。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">“名声”也是护身符</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    唐僧供出悟空的名号，妖怪顿时不敢动他。<strong>平时好好做人、攒下的好名声，关键时刻能救自己——这就是“口碑”的力量</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第九十一回“金平府元夜观灯，玄英洞唐僧供状”讲的是金平府之难：师徒在天竺外郡金平府慈云寺歇脚，恰逢元宵；金灯桥三盏金灯点着比银子还贵的苏合香油，二百四十家灯油大户一年要供五万两银子；年年正月十五“假佛”来收油，唐僧上桥拜佛被掳走；四值功曹报信青龙山玄英洞，三妖原是千年犀牛精——避寒、避暑、避尘大王；唐僧供出齐天大圣名号，首战一百五十合不分胜负。这一回让我们看到：珍惜当下、热闹背后是百姓的苦、真真假假别只看名声、好名声是护身符。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第九十一回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "金平府属于哪里？",
+                    "options": {"A": "大唐","B": "天竺国外郡","C": "西牛贺洲","D": "玉华州"},
+                    "correct": "B",
+                    "analysis": "金平府是“天竺国外郡”——凤仙郡、玉华州之后，师徒已深入天竺国境内。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "慈云寺的和尚听说唐僧来自中华大唐，为什么倒身就拜？",
+                    "options": {"A": "害怕","B": "他们修行就指望着托生到中华福地","C": "要饭","D": "行礼"},
+                    "correct": "B",
+                    "analysis": "和尚说：“我们是向善的人，看经念佛，就指望着到你中华福地托生”——大唐人求西天，西天人盼中华。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "金灯桥上点的是什么油？",
+                    "options": {"A": "菜油","B": "苏合香油（一两值银二两）","C": "灯草油","D": "豆油"},
+                    "correct": "B",
+                    "analysis": "金灯点“苏合香油”，一两油值银子二两、比银子还贵——三盏灯三晚烧1500斤，耗银五万两。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "金平府有多少家“灯油大户”？",
+                    "options": {"A": "二十四家","B": "二百四十家","C": "四十家","D": "一百家"},
+                    "correct": "B",
+                    "analysis": "“县里边有二百四十里，其中有二百四十家灯油大户”——家家要出灯油，每年甚是吃亏。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "苏合香油“半斤八两”的说法，来自古代什么计量？",
+                    "options": {"A": "一斤十两","B": "一斤十六两（半斤就是八两）","C": "一斤二十两","D": "一斤十二两"},
+                    "correct": "B",
+                    "analysis": "古代一斤十六两，所以半斤等于八两——于是有了“半斤八两”的说法，比喻彼此差不多。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "年年正月十五来“收灯油”的是什么？",
+                    "options": {"A": "真佛","B": "三个假扮佛像的妖怪","C": "天官","D": "太守"},
+                    "correct": "B",
+                    "analysis": "“风中现出三位佛身”——其实是三个妖怪假扮的，年年打着佛的旗号收苏合香油。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "唐僧为什么会被“佛”抓走？",
+                    "options": {"A": "跑太慢","B": "想拜真佛上桥下拜，被假佛掳去","C": "被风刮走","D": "主动去的"},
+                    "correct": "B",
+                    "analysis": "唐僧一心见佛，众人回避他却上桥下拜——行者扯住“定是妖邪”也晚了，唐僧被三个“佛身”抱走。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "四值功曹怎么解释唐僧遭难的原因？",
+                    "options": {"A": "运气不好","B": "“宽了禅性，在慈云寺贪欢，乐极生悲”","C": "妖太强","D": "没人保护"},
+                    "correct": "B",
+                    "analysis": "功曹说：你师傅“宽了禅性”，贪欢看灯——生活太安逸、太快乐，心思一变化，妖魔鬼怪就出来了。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "三个妖怪住在哪座山、哪个洞？",
+                    "options": {"A": "青龙山玄英洞","B": "狮驼岭","C": "竹节山九曲盘桓洞","D": "豹头山虎口洞"},
+                    "correct": "A",
+                    "analysis": "四值功曹报信：“山名为青龙山，有洞名为玄英洞”——里面住着避寒、避暑、避尘三妖。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "三个妖王叫什么名字？",
+                    "options": {"A": "青狮、白象、大鹏","B": "避寒大王、辟暑大王、避尘大王","C": "金角、银角","D": "红孩儿"},
+                    "correct": "B",
+                    "analysis": "三妖叫“避寒大王、辟暑大王、避尘大王”——原是民间供奉、抵御寒暑尘土的“神”，实为犀牛精。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "三个妖怪最喜欢吃什么？",
+                    "options": {"A": "童男童女","B": "苏合香油","C": "人肉","D": "蟠桃"},
+                    "correct": "B",
+                    "analysis": "三妖“自幼就喜欢吃苏合香油”——为吃油，假装佛像哄骗金平府设立金灯，年年正月十五收油。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "三妖抓到唐僧后打算怎么吃？",
+                    "options": {"A": "清蒸","B": "剥了衣裳洗净，细切细剁，用苏合香油煎着吃","C": "生吃","D": "煮汤"},
+                    "correct": "B",
+                    "analysis": "三个妖怪正把唐僧“剥了衣裳，清水洗净”，商议“细切细剁，带着苏合香油煎着吃”——唐僧一路不是被蒸就是被煎。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "唐僧供出徒弟名号后，三妖为什么“着了一惊”？",
+                    "options": {"A": "怕打","B": "齐天大圣是五百年前大闹天宫的，名头太大","C": "认识悟空","D": "被吓到了"},
+                    "correct": "B",
+                    "analysis": "唐僧说第一个徒弟是“齐天大圣孙悟空”——三妖活了一千年，知道那是五百年前大闹天宫的主，着了一惊。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "八戒猜三个牛头鬼怪是什么？",
+                    "options": {"A": "太上老君","B": "阎罗殿的牛头马面（封都城鬼王弄的）","C": "牛魔王","D": "天庭天兵"},
+                    "correct": "B",
+                    "analysis": "八戒听说小妖都是牛头鬼怪，猜是“阎罗殿里的牛头马面”——悟空笑他猜错，说那是犀牛成精。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "悟空说三个大王是什么成精？",
+                    "options": {"A": "犀牛精","B": "狮子精","C": "老虎精","D": "大象精"},
+                    "correct": "A",
+                    "analysis": "悟空看那怪“是三只犀牛成的精”——犀牛在古代被认为能通天意，所以叫“灵犀”。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "首战悟空一人独战三妖，结果如何？",
+                    "options": {"A": "秒胜","B": "斗了一百五十合天色将晚，群妖围攻，行者败走","C": "被擒","D": "平手后各自收兵"},
+                    "correct": "B",
+                    "analysis": "行者独战三妖“斗经百五十合，天色将晚，胜负未分”——避尘大王摇疙瘩棒召群妖围攻，行者寡不敌众败走。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "金平府的灯油是______合香油，一两值银二两。",
+                    "answer": "苏",
+                    "analysis": "“苏合香油”是一种名贵香料油——一两油值二两银子，比银子还贵，所以一夜就要烧掉五万两。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "古代一斤等于______两，所以才有“半斤八两”的说法。",
+                    "answer": "十六",
+                    "analysis": "古代一斤十六两，半斤就是八两——两样东西差不多，就叫“半斤八两”。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "唐僧被三个“佛身”抱走，四值功曹说他“宽了禅性、乐极生______”。",
+                    "answer": "悲",
+                    "analysis": "“乐极生悲”指高兴过头反而招来灾祸——唐僧贪欢看灯，心思安逸，妖怪就来了。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "妖怪住的山叫______龙山，洞叫玄英洞。",
+                    "answer": "青",
+                    "analysis": "“青龙山玄英洞”——四值功曹报信的地点，正是三只犀牛精的老巢。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "三个妖王叫避寒、避暑、避______大王。",
+                    "answer": "尘",
+                    "analysis": "“避尘”是抵御尘土的意思——避寒、避暑、避尘原是民间供奉的“神”，后成犀牛精。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "唐僧说自己叫陈______奘，徒弟是齐天大圣孙悟空。",
+                    "answer": "玄",
+                    "analysis": "“陈玄奘”是唐僧的法名——他一路自报“陈玄奘、唐三藏”，这次在洞里“供状”全交代了。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "八戒听说是牛头鬼怪，猜是______罗殿（阎王殿）里的牛头马面。",
+                    "answer": "阎",
+                    "analysis": "“阎罗殿”是阴间阎王办公的地方——牛头马面是阎罗殿的差役，八戒由此瞎猜。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "沙僧说“停留长______”，怕拖久了妖怪变主意吃了唐僧。",
+                    "answer": "智",
+                    "analysis": "“停留长智”指拖久了容易生变故、出新主意——沙僧主张立刻去救，趁其不备。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“乐极生悲”】唐僧贪欢看灯，就被妖怪抓走了。请谈谈：为什么“得意忘形”容易出事？你如何做到“开心时也不松懈”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>乐不可极，欲不可纵：</strong> 唐僧一安逸、一贪玩，“宽了禅性”，妖怪就钻了空子——<strong>得意忘形，常常是出事的前奏</strong>。</p>\n                        <p class=\"mt-2\"><strong>开心也不松懈：</strong> ①考好了别飘，还有下一场要准备；②放假了也别完全“放飞”，作业要排上；③玩得开心，也要记得“正事”；④越顺利，越要多想一步“有没有隐患”；⑤把“松弛”和“自律”结合，张弛有度。<strong>真正的强者，得意时也不忘形</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“体谅民间疾苦”】一盏金灯背后，是二百四十户人家每年五万两银子的负担。请谈谈：为什么“享受繁华时要想到付出的人”？你如何理解“体谅他人”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>一粥一饭，当思来之不易：</strong> 金灯的光，是老百姓的血汗钱点起来的——<strong>享受任何“繁华”，都要想到谁在为它付出</strong>。</p>\n                        <p class=\"mt-2\"><strong>体谅他人：</strong> ①知道饭菜是谁做的、教室是谁打扫的；②不浪费东西，因为背后有他人的劳动；③对服务你的人说声“谢谢”；④换位思考：如果是你出钱出力，会怎么想；⑤把“体谅”变成行动：不浪费、多感恩。<strong>懂得体谅的人，心是暖的</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“辨真假”】打佛旗号的假佛，骗了百姓上千年。请谈谈：为什么“打着好旗号的坏东西”最危险？你如何做到“不轻信、会辨别”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>披着羊皮的狼最可怕：</strong> 假佛年年收油，还拿“风调雨顺”当要挟——<strong>越是打着“好人好事”的旗号，越要留个心眼</strong>。</p>\n                        <p class=\"mt-2\"><strong>学会辨别：</strong> ①看“实际效果”，别只听“漂亮话”；②陌生人说“带你发财、免费送”要警惕；③网上“权威”也要核实来源；④多问几个“为什么”，多想“他图什么”；⑤拿不准的，问问家长和老师。<strong>会辨别的人，不吃“套路”的亏</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“好名声”】唐僧供出“齐天大圣”的名号，妖怪就不敢吃他了。请谈谈：为什么“好名声”关键时刻能救人？你如何攒下自己的“好名声”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>名声是隐形的“护身符”：</strong> 齐天大圣五百年前的威名，让妖怪不敢轻举妄动——<strong>平日攒下的口碑，危难时能保你</strong>。</p>\n                        <p class=\"mt-2\"><strong>攒好名声：</strong> ①说到做到，答应的事不食言；②诚实守信，不撒谎、不抄作业；③乐于助人，让同学愿意信任你；④犯了错敢认、敢改；⑤坚持做好每一件小事，口碑是攒出来的。<strong>好名声不是一天炼成的，却能在关键时救你</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“珍惜当下”】大唐人求西天，天竺和尚却盼托生中华。请谈谈：为什么“身在福中不知福”？你如何发现并珍惜身边的美好？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>墙内开花墙外香：</strong> 我们总看别人好，却忽略了自己的好——<strong>“身在福中不知福”，是因为少了一双发现的眼睛</strong>。</p>\n                        <p class=\"mt-2\"><strong>珍惜当下：</strong> ①每天记一件“今天的小确幸”；②多看看自己拥有的：健康的身体、温暖的家；③不盲目攀比，别人有的未必适合你；④对已有的一切心存感谢；⑤把“羡慕”换成“努力”，把日子过好。<strong>你嫌弃的日常，可能是别人梦里的远方</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“果断行动”】沙僧说“停留长智”，主张连夜去救。请谈谈：为什么“该出手时果断出手”很重要？你如何克服“拖延”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>夜长梦多：</strong> 拖一晚，妖怪可能就“改主意吃了唐僧”——<strong>关键时刻犹豫，往往错过最佳时机</strong>。</p>\n                        <p class=\"mt-2\"><strong>克服拖延：</strong> ①想到该做的事，先做“第一步”；②把大任务拆小，从最小的开始；③用“先做五分钟”骗自己开始；④给任务设个“截止时间”，不无限期拖；⑤想清楚“拖下去的代价”，就不敢拖了。<strong>行动力，是拉开差距的关键</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

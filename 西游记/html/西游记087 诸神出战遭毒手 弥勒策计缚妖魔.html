@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第六十五回精读：智取胜强攻与正主收魔</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第六十五回精读：智取胜强攻与正主收魔</h1>
+            <p class="text-lg text-gray-700 serif">“诸神出战遭毒手，弥勒策计缚妖魔”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">真武不出山</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">国师王遣徒</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">弥勒现身</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">瓜田计</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 真武不出山 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">奉命行事：派兵不亲征的“人情”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空去武当山请北方真武荡魔天尊。真武说：我降妖都是奉玉帝、元始天尊的旨意，如今没有上界旨意，不能私自出兵；但你这人情不能不还，便派龟蛇二将与五大神龙随行助战。结果——又是一包被装走。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">真武的为难</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">出师要有名</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            真武说：我统摄真武之位、降妖除魔，都是“奉旨”而行。如今<strong>上界没有旨意，我自己不能出去</strong>，出师无名。<strong>但他又不想驳悟空面子</strong>，便派得力干将龟蛇二将、五大神龙相助——人情还了，规矩也守了。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">龟蛇五龙被收</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">一包装走一群</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            五龙翻云覆雨、二将播土扬沙，围攻半个时辰。妖怪解下大包一抛——<strong>悟空驾筋斗云逃脱，龟蛇五龙全被装进包</strong>，关进地窖。天上的星宿、地上的龙蛇，都被“腌”在同一个地窖里。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">守规矩，也讲人情</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    真武既不违“无旨不出”的规矩，又不驳悟空的面子——<strong>会做事的人，能在原则和人情之间找到两全的办法</strong>。规矩要守，但人心也要顾。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 国师王遣徒 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">淮水未平：看着“水猿”不能走</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    值日功曹又荐南赡部洲国师王菩萨——当年降服水母娘娘的高人。国师王本欲亲去，却因“时值初夏，淮水泛涨，新收的水猿大圣遇水即兴、无人可治”，只得派徒弟小张太子率四大神将前去——结果又是一包装走。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">功曹指点</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">暗中护法的“保镖团”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            值日功曹现身：我们奉菩萨指令<strong>暗中保护唐僧</strong>，不敢离位参谒。取经明面上是师徒几人，<strong>暗地里其实跟着一大队保镖</strong>——功曹提醒悟空：“你千万再去求救援兵。”
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">水猿难离</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">自己的摊子自己看</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            国师王说：本当亲去，但<strong>时值初夏淮水泛涨</strong>，新收的水猿大圣“遇水即兴、水越大本事越大”，我若走了无人可治。<strong>于是派小张太子率四大神将随行</strong>——结果照样被搭包装走。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">外援再多，也有尽头</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    天上的、地上的、会治水的，一路请了个遍，全都败在搭包手里。<strong>真正的难关，常常不是靠“请更多人”就能过的</strong>——得找到问题的“正主”才行。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 弥勒现身 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">绝望时刻：弥勒佛点破“黄眉童儿”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空在西山坡凄惨独坐时，西南彩云坠地，弥勒佛现身：“我此来专为这小雷音妖怪。”原来那黄眉老佛，是他座前“司磬的黄眉童儿”，趁弥勒赴会时偷了三件宝贝下凡成精。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">三件宝贝</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">磬·锤·袋子</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            黄眉童儿偷走的三件宝，全是弥勒的日常法器：①<strong>金铙</strong>——原是敲的“磬”；②<strong>短软狼牙棒</strong>——原是“敲磬的锤儿”；③<strong>后天袋</strong>——唤作“人种袋”，<strong>是个人就能收进去</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">正主来了</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">魔障未完，百灵下界</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            弥勒说：我确实“家法不严”，走失了人口；但也是<strong>你们师徒魔障未完，百灵下界该当受难</strong>。悟空却犯难：你连兵器都没有，万一也被装进袋子怎么办？
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">解铃还须系铃人</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    天上的星宿、地上的龙神、水中的菩萨都斗不过，唯有“主人”弥勒能收。<strong>很多难题，要找到那个“根子”（正主）才能解决</strong>——治标不治本，只会越治越乱。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 瓜田计 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">变成熟瓜入腹：智取胜强攻</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    弥勒画地为田，种下甜瓜，在悟空左手写一个“禁”字。悟空去挑战，诈败引妖入瓜田；弥勒变瓜农，把“熟瓜”递给妖怪——悟空趁它咬瓜，一骨碌钻进腹中翻跟头、竖蜻蜓，疼得黄眉满地打滚求饶。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">禁字引妖</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">手一放，妖就跟来</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            弥勒用神水在悟空左手写一个“<strong>禁</strong>”字，让他见妖时把手一放。悟空诈败，妖怪“着禁”后<strong>不思退步、不能搭包，只顾向前追赶</strong>——一路被引进瓜田。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">入腹搅扰</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">钻腹妙计</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            悟空变作一个大熟瓜，弥勒变瓜农递给妖怪。妖怪张口咬瓜，悟空<strong>一骨碌钻到咽喉之下</strong>，“翻跟头、竖蜻蜓”，把妖怪疼得满地打滚、求饶喊“主人公”。<strong>孙悟空钻肚子的手段，这次是第三次用了</strong>——每次方式都不同。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">以智取胜，胜过蛮力</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    弥勒不跟妖怪硬拼，而是种瓜、写“禁”、引妖、钻腹，一步步请君入瓮。<strong>真正的高招，是“四两拨千斤”</strong>——不动刀兵，就制服强敌。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第六十五回“诸神出战遭毒手，弥勒策计缚妖魔”讲的是小雷音寺收妖：真武派兵被收、国师王遣徒被收、弥勒点破黄眉童儿、瓜田智取降妖。这一回让我们看到：守规矩也讲人情、外援再多有尽头、解铃还须系铃人、以智取胜胜强攻。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第六十五回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "悟空去武当山请的是谁？",
+                    "options": {"A": "观音菩萨","B": "北方真武荡魔天尊","C": "玉皇大帝","D": "太上老君"},
+                    "correct": "B",
+                    "analysis": "悟空去南赡部洲武当山太和宫，请北方真武荡魔天尊——他是负责降妖的祖师，却因无旨不能亲出。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "真武为什么不能亲自出战？",
+                    "options": {"A": "打不过","B": "上界没有旨意，出师无名，不能私自出兵","C": "太远了","D": "生病了"},
+                    "correct": "B",
+                    "analysis": "真武说：我降妖都是奉玉帝、元始天尊旨意而行；如今上界没有旨意，我自己不能出去。但他派了龟蛇二将、五大神龙还人情。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "真武派了哪些帮手给悟空？",
+                    "options": {"A": "托塔天王和哪吒","B": "龟蛇二将与五大神龙","C": "二十八宿","D": "二郎神"},
+                    "correct": "B",
+                    "analysis": "真武派“龟蛇二将、五大神龙”随悟空助战——五龙翻云覆雨、二将播土扬沙，却被搭包一包装走。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "值日功曹现身，是为了提醒悟空什么？",
+                    "options": {"A": "妖怪很厉害","B": "暗中护法，建议他再请援兵（荐国师王菩萨）","C": "别打了","D": "快回家"},
+                    "correct": "B",
+                    "analysis": "功曹说我们奉菩萨指令暗中保护唐僧，看你请的兵都败了，特来劝你再去求援，并推荐南赡部洲的国师王菩萨。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "国师王菩萨为什么不能亲自出马？",
+                    "options": {"A": "没有兵器","B": "时值初夏淮水泛涨，要看管遇水即兴的水猿大圣","C": "被关起来了","D": "不感兴趣"},
+                    "correct": "B",
+                    "analysis": "国师王说：时值初夏淮水泛涨，新收的水猿大圣“遇水即兴、水越大本事越大”，我若走了无人可治——所以派小张太子和四大神将前往。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "小张太子是谁的徒弟？",
+                    "options": {"A": "观音","B": "国师王菩萨","C": "真武","D": "弥勒"},
+                    "correct": "B",
+                    "analysis": "小张太子是国师王菩萨的徒弟，率四大神将（类似“山寨版”哪吒太子+四大天王）随悟空降妖。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "悟空先后请了几路援兵，结果如何？",
+                    "options": {"A": "都成功了","B": "天上（二十八宿）、地上（真武）、水边（国师王）三路全被搭包收走","C": "只败一路","D": "没请过"},
+                    "correct": "B",
+                    "analysis": "二十八宿、龟蛇五龙、小张太子四将——天、地、水三路援兵全被“人种袋”装走，唯有悟空预先驾云逃脱。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "黄眉老佛的真正身份是什么？",
+                    "options": {"A": "真武的徒弟","B": "弥勒座前司磬的黄眉童儿","C": "观音的童儿","D": "如来弟子"},
+                    "correct": "B",
+                    "analysis": "弥勒佛揭示：黄眉老佛是“我面前司磬的黄眉童儿”，趁弥勒赴元始会时，偷了三件宝贝下凡成精。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "“人种袋”是什么宝贝？",
+                    "options": {"A": "装人的袋子","B": "弥勒的后天袋，是个人就能收进去","C": "种瓜的袋子","D": "乾坤袋"},
+                    "correct": "B",
+                    "analysis": "弥勒说那大包“是我的后天袋子，唤作人种袋”——是个人就能收进来，所以一收就是一大群。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "黄眉的“短软狼牙棒”原是什么？",
+                    "options": {"A": "金箍棒","B": "弥勒敲磬的锤儿","C": "打狗棒","D": "拐杖"},
+                    "correct": "B",
+                    "analysis": "弥勒说“那条狼牙棒也是我的宝贝，是我敲磬的锤儿”——所以它“短软”，因为敲磬不用长而硬的家伙。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "弥勒在悟空左手写了什么字来引妖怪？",
+                    "options": {"A": "“收”","B": "“禁”","C": "“定”","D": "“变”"},
+                    "correct": "B",
+                    "analysis": "弥勒用口中神水在悟空左手写一个“禁”字，悟空见妖时把手一放，妖怪“着禁”后不思退步、只顾追赶。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "弥勒的瓜田计中，悟空变成了什么？",
+                    "options": {"A": "瓜农","B": "一个大熟瓜","C": "西瓜籽","D": "藤蔓"},
+                    "correct": "B",
+                    "analysis": "悟空打个滚变成“大熟瓜”，弥勒变种瓜老农把瓜递给妖怪；妖怪咬瓜时，悟空钻入腹中搅扰。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "悟空钻妖怪肚子这招，之前用过几次、方式有何不同？",
+                    "options": {"A": "第一次用","B": "第三次用：变丹药、变蟭蟟虫、变熟瓜，每次方式不同","C": "第二次用","D": "没用过"},
+                    "correct": "B",
+                    "analysis": "最早变灵丹进黑熊怪肚子、再变蟭蟟虫进铁扇公主肚子、这次变熟瓜进黄眉肚子——同样“钻腹”，次次不同。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "妖怪在腹中求饶喊什么？",
+                    "options": {"A": "“大圣饶命”","B": "“主人公饶命”","C": "“如来饶命”","D": "“菩萨救命”"},
+                    "correct": "B",
+                    "analysis": "妖怪疼得满地打滚，看见弥勒现出本相，慌忙跪倒喊“主人公饶命”——“主人公”指弥勒，他是这童儿的主人。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "弥勒用什么把妖怪收服带走的？",
+                    "options": {"A": "金铙","B": "把妖怪装进人种袋，跨在腰间","C": "照妖镜","D": "葫芦"},
+                    "correct": "B",
+                    "analysis": "悟空出腹后还举棒要打，弥勒却已把妖怪装进“人种袋”跨在腰间，手执磬锤责骂，随后复原被砸碎的金铙。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "收妖后，悟空放火焚烧了什么？",
+                    "options": {"A": "金光寺","B": "小雷音寺的宝阁珍楼（旁门左道的窝）","C": "芭蕉洞","D": "碧波潭"},
+                    "correct": "B",
+                    "analysis": "师徒与诸神吃饱后，“将这一邪魔歪道旁门左道的宝阁珍楼一把火烧为灰烬”，继续西行。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "悟空去武当山请北方真武荡魔______尊。",
+                    "answer": "天",
+                    "analysis": "“荡魔天尊”即北方真武，专管南赡部洲、北俱芦洲的妖邪。他因“无旨”不便亲出，派龟蛇二将、五大神龙相助。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "真武派______蛇二将与五大神龙助战。",
+                    "answer": "龟",
+                    "analysis": "“龟蛇二将”是真武的得力干将，与五大神龙一起随悟空除妖，却被黄眉的搭包一包装走。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "国师王菩萨要看着“遇水即兴”的水______大圣，不能亲去。",
+                    "answer": "猿",
+                    "analysis": "“水猿大圣”遇水本事越大，淮水泛涨时最难管。国师王要看住它，只派小张太子和四大神将前去。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "黄眉老佛是弥勒座前司______的黄眉童儿。",
+                    "answer": "磬",
+                    "analysis": "“司磬”即管敲磬。黄眉童儿偷走主人的磬（金铙）、敲磬锤（狼牙棒）和后天袋（人种袋）下凡成精。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "弥勒的后天袋唤作“______种袋”，是个人就能收进去。",
+                    "answer": "人",
+                    "analysis": "“人种袋”是弥勒的法宝，一收一大群——所以天上的星宿、地上的龙蛇、水边的神将全被装走。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "弥勒用神水在悟空左手写了个“______”字引妖。",
+                    "answer": "禁",
+                    "analysis": "“禁”字咒让妖怪“着禁”后不思退步、不能搭包，只顾追赶——这是瓜田计的引子。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "悟空变作大熟______，趁妖怪咬瓜钻入腹中。",
+                    "answer": "瓜",
+                    "analysis": "弥勒种瓜、悟空变熟瓜、妖怪吃瓜——悟空一骨碌钻进咽喉之下，“翻跟头、竖蜻蜓”，把妖怪治得服服帖帖。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "弥勒把妖怪装进袋子，______磬锤收走，问金铙下落。",
+                    "answer": "执",
+                    "analysis": "“执磬锤”即拿着磬锤责骂妖怪。弥勒收回后天袋、敲磬锤，还追回被悟空砸碎的金铙并复原。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“守规矩也讲人情”】真武既不违“无旨不出”的规矩，又不驳悟空的面子。请谈谈：为什么“原则”和“人情”可以两全？你如何做到“既守规则，又顾他人”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>规矩是底线，人情是温度：</strong> 真武自己不出兵是守规矩，但派得力干将帮忙是顾人情——<strong>规矩守住了，朋友也帮了，两全其美</strong>。</p>\n                        <p class=\"mt-2\"><strong>两全的办法：</strong> ①不能“破例帮忙”时，可以说“我不能替你决定，但我可以陪你想办法”；②帮不了“这个忙”，可以帮“另一个忙”；③规则不能改，但态度可以暖；④拒绝时说明原因，别让人寒心；⑤在不违反原则的前提下，尽量给人方便。<strong>守住底线的人让人放心，顾念人情的人让人暖心——两者都要</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“外援再多有尽头”】天、地、水三路援兵全败在搭包下。请谈谈：为什么“一味求助别人”解决不了根本问题？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>病根不除，谁来都白搭：</strong> 请再多兵，只要“人种袋”还在、主人不出现，就都一包被收。<strong>只靠“加人”，治不了“根子上的病”</strong>。</p>\n                        <p class=\"mt-2\"><strong>靠自己+借外力：</strong> ①遇到不会的题，先自己琢磨，再问别人；②求助前想清楚“我到底卡在哪一步”；③别人的帮助只能“扶一把”，路还得自己走；④找到“问题的根源”，而不是只消“眼前的火”；⑤每次求助后，把方法学会，让自己变强。<strong>别人能帮你一时，帮不了你一世；自己长本事，才是根本</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“解铃还须系铃人”】天兵天将都收不了黄眉，弥勒一现身就迎刃而解。请谈谈：为什么“找到问题的正主/根源”最重要？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>系铃人是唯一钥匙：</strong> 妖怪是弥勒的童儿、宝贝是弥勒的法器——<strong>正主一出手，规矩、来历、收法全明白</strong>。绕再多的圈子，都不如直达根子。</p>\n                        <p class=\"mt-2\"><strong>找根源的方法：</strong> ①成绩下滑，先找“哪一科、哪个环节”出了问题；②和朋友闹矛盾，先想“事情是从哪里开始的”；③东西找不到了，先想“最后一次放哪里”；④身体不舒服，先查“病因”再谈吃药；⑤遇事多问几个“为什么”，追到“根”为止。<strong>问题解决了“源头”，后面的麻烦就都迎刃而解</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“以智取胜”】弥勒不拼武力，而是种瓜、写禁字、变熟瓜，请君入瓮。请谈谈：为什么“巧干”常常胜过“苦干”？学习与生活中，你如何“动脑筋巧解决”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>四两拨千斤：</strong> 弥勒连兵器都没拿，就把神通广大的妖怪装进袋子。<strong>蛮力解决不了的事，往往“换个思路”就通了</strong>。</p>\n                        <p class=\"mt-2\"><strong>巧干的例子：</strong> ①背书记不住，用口诀、画面、故事来记；②收拾房间太乱，先“分类”再“归位”；③题算不出，换个角度、画个图；④与人沟通不畅，换个说法、换个时机；⑤先想“有没有更省力的方法”，再埋头苦干。<strong>苦干值得敬佩，巧干才能事半功倍——先动脑，再动手</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“轻敌”】妖怪见悟空孤身来战，以为他“计穷力竭”便轻敌追赶，结果中了瓜田计。请谈谈：为什么“轻敌”是失败的前兆？你如何做到“任何时候都不小看对手”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>轻敌是最贵的学费：</strong> 黄眉见悟空没带帮手就笑他“来送死”，结果被禁字咒引到瓜田、钻了肚子。<strong>越是顺风，越要小心“阴沟里翻船”</strong>。</p>\n                        <p class=\"mt-2\"><strong>不小看对手：</strong> ①考试前，不因为“上次考得好”就不好好复习；②比赛时，不因为“对方看起来弱”就松懈；③做简单题，也认真读完每个字；④听别人说完，再下结论；⑤永远给“万一”留一手准备。<strong>狮子搏兔，亦用全力——认真对待每一次，才能笑到最后</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“相似却不同”】黄眉一难与金角葫芦、镇元袖里乾坤、青牛金刚镯“形似而神不似”。请谈谈：为什么“有变化”才不落俗套？这给你写作与做事什么启发？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>同中求异，才见功夫：</strong> 收人的宝贝不止一次出现，但葫芦要“叫名”、袖里乾坤是“袖子”、人种袋是“一收一群”——<strong>看似雷同，处处不同</strong>，读者才不腻。</p>\n                        <p class=\"mt-2\"><strong>启发：</strong> ①写作文，同一种情绪可用不同场景写；②做事，同一种目标可用不同方法达成；③学过的知识，换个问法要还会；④回忆别人怎么做的，再想“我能不能做得不同”；⑤让每次重复都“多一点新意”。<strong>世界奖励“不一样”——在相似中做出变化，你就是那个特别的人</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

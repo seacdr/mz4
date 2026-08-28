@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第四十八回精读：履冰过通天河</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第四十八回精读：履冰过通天河</h1>
+            <p class="text-lg text-gray-700 serif">“魔弄寒风飘大雪，僧思拜佛履层冰”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-temple')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-temple">第一章：庙中设局</button>
+                <button onclick="NavigationModule.switchTab('section-ice')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ice">第二章：鳜婆献计</button>
+                <button onclick="NavigationModule.switchTab('section-walk')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-walk">第三章：履冰过河</button>
+                <button onclick="NavigationModule.switchTab('section-trap')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-trap">第四章：冰裂遭擒</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Temple -->
+        <section id="section-temple" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">庙中设局：悟空八戒“迎战”灵感大王</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空变作童男陈官宝、八戒变作童女一秤金，被抬进灵感大王庙，坐等妖怪现身。点击翻转卡片，看看这场“请君入瓮”如何上演。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">妖怪的疑虑</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“这童男不怕我？”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t1-back">
+                        <p class="text-gray-700 text-left">
+                            八戒想<strong>溜之大吉</strong>，悟空坚持“<strong>为人为彻</strong>”——要<strong>彻底解决</strong>妖怪祸患。妖怪降临，问祭祀来源，悟空<strong>从容应答</strong>。妖怪<strong>察觉异常</strong>：以往童男女见之即惧，<strong>此童男言谈自如</strong>——<strong>心生疑虑</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">一耙破甲</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“柱破甲了！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t2-back">
+                        <p class="text-gray-700 text-left">
+                            妖怪按例先吃童男，悟空<strong>镇定如常</strong>：“不敢抗拒，请自在受用。”妖怪<strong>反而犹豫</strong>，改先吃童女。八戒<strong>惊慌求饶</strong>，随即<strong>现出原形</strong>，<strong>挥耙反击</strong>——<strong>钉耙击中妖怪，“柱破甲了”！</strong>（打破了防御）
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：“为人为彻”的责任心</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    八戒觉得“<strong class="text-amber-900">引出来就跑”就算完成任务</strong>；悟空坚持“<strong class="text-amber-900">为人为彻</strong>”——<strong class="text-amber-900">帮人就要帮到底，除患就要除干净</strong>。这种<strong class="text-amber-900">“负责任”</strong>，值得我们学习：①<strong class="text-amber-900">做事别“半途”</strong>，要“善始善终”；②<strong class="text-amber-900">帮人别“走过场”，要“真解决问题”</strong>；③<strong class="text-amber-900">“差不多就行”和“做到最好”，差着一种“责任心”</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Ice -->
+        <section id="section-ice" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">鳜婆献计：一场“冰冻”的阴谋</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    妖怪被八戒一耙打掉鱼鳞，逃回通天河底。水族里钻出斑衣鳜婆，献上一条“妙计”。点击翻转卡片，看看这条阴险的计策。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-i1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">鱼鳞露底</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-i1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“冰盘大小的鱼鳞”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-i1-back">
+                        <p class="text-gray-700 text-left">
+                            妖怪<strong>无兵器</strong>，腾云质问：“你们是哪里的和尚，来欺负人？”悟空<strong>自报家门</strong>：“<strong>东土大唐圣僧派往西天取经的徒弟</strong>。”指责妖怪<strong>年年吞食童男女</strong>。妖怪逃走，化风<strong>钻入通天河底</strong>。地上留下“<strong>冰盘大小两个鱼鳞</strong>”——<strong>暴露鱼妖身份</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-i2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">鳜婆毒计</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-i2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“冻河诱僧”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-i2-back">
+                        <p class="text-gray-700 text-left">
+                            <strong>斑衣鳜婆</strong>（鳜鱼精）献计：①<strong>夜间三更起寒风、降大雪</strong>，<strong>冻结河面</strong>；②水族<strong>化人形在冰上行走</strong>，制造“可以通行”假象；③引诱唐僧师徒<strong>踏冰过河</strong>；④行至河心，<strong>裂冰使其坠水</strong>，一举擒获。妖怪<strong>采纳此计</strong>，“兴风作雪，凝冻成冰”。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“太顺利的路，要警惕”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    妖怪<strong class="text-amber-900">故意“铺好路”</strong>：<strong class="text-amber-900">结冰、有人走——“看起来一切顺利”</strong>。这正是<strong class="text-amber-900">陷阱的常见套路</strong>：<strong class="text-amber-900">越“方便”的路，越要留个心眼</strong>。生活中：①<strong class="text-amber-900">“免费”“白捡”要多想一步</strong>；②<strong class="text-amber-900">“天上掉的馅饼”，往往是诱饵</strong>；③<strong class="text-amber-900">别只看“表面方便”，要查“底下有没有陷阱”</strong>。<strong class="text-amber-900">警惕心，是最好的“护身符”</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Walk -->
+        <section id="section-walk" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">履冰过河：八戒的“验证智慧”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    天亮后，河面冻得结实，还有人行走。唐僧想趁冰过河，陈老、沙僧都劝他谨慎。八戒这次却“靠谱”了——他提出先用钉耙“实测”冰层。点击翻转卡片，看看八戒的“三板斧”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-w1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">实测冰层</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-w1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“实践是检验真理的唯一标准”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-w1-back">
+                        <p class="text-gray-700 text-left">
+                            陈老<strong>劝阻</strong>：“等雪融冰解，我用船相送。”沙僧<strong>附议</strong>：“<strong>耳闻不如眼见</strong>，先查看冰面。”八戒提出<strong>验证之法</strong>：“<strong>实践是检验真理的唯一标准</strong>！”亲自用<strong>九齿钉耙猛击冰面</strong>——“噗的一声，<strong>九个白记</strong>”，冰<strong>未破裂</strong>——<strong>可通行</strong>！
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-w2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">过河三招</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-w2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“积年走冰的”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-w2-back">
+                        <p class="text-gray-700 text-left">
+                            马蹄<strong>打滑</strong>，八戒献策：①<strong>稻草裹马蹄</strong>防滑；②<strong>横担九环锡杖</strong>于马上——若踩破“<strong>冷眼</strong>”（未冻实处），横杆可<strong>卡住防坠落</strong>。悟空<strong>暗笑</strong>：“这呆子<strong>倒是个积年走冰的</strong>！”——<strong>贪吃的八戒，也有“生活智慧”</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“经验+验证=靠谱”</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    八戒<strong class="text-amber-900">有“走冰经验”</strong>，又<strong class="text-amber-900">肯“实测”</strong>，还能想出<strong class="text-amber-900">“裹马蹄、横锡杖”</strong>的防滑招——<strong class="text-amber-900">经验很重要，验证更重要</strong>。学习中：①<strong class="text-amber-900">“我觉得会了”不如“做对一道题”验证</strong>；②<strong class="text-amber-900">背完书“合上书复述”才知道真记住了没</strong>；③<strong class="text-amber-900">有经验也别忘了“先试一试”</strong>。<strong class="text-amber-900">用“实测”代替“想当然”，才最靠谱</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Trap -->
+        <section id="section-trap" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">冰裂遭擒：行至河心的“突然一击”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    师徒昼夜不停走了一宿，天明仍未过河——通天河实在太宽。行至中途，冰底忽然“扑啦啦”一声响。点击翻转卡片，看看妖怪的伏击。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-p1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">冰底伏击</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-p1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“扑啦啦一声响”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-p1-back">
+                        <p class="text-gray-700 text-left">
+                            师徒<strong>昼夜行走一宿</strong>，天明<strong>仍未过河</strong>——通天河极宽，至少<strong>两日才能穿越</strong>。行至<strong>中途</strong>，冰底<strong>“扑啦啦”一声响</strong>，白马受惊。原是妖怪在水下多时，闻马蹄声<strong>崩裂冰面</strong>——<strong>伏击成功</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-p2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">唐僧被擒</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-p2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“名到底儿”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-p2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空<strong>跃上半空</strong>，其余三人<strong>连同白马落入水中</strong>。妖怪<strong>擒住唐僧</strong>，回府高呼“<strong>贵妹何在</strong>！”命<strong>磨刀备宴</strong>。<strong>鳜婆劝阻</strong>：“恐徒弟寻来吵闹，先等两天。”唐僧被藏于<strong>宫后六尺长石匣</strong>。八戒调侃：“师父姓陈，名<strong>到底儿</strong>。”
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“急于求成，最容易中计”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    唐僧<strong class="text-amber-900">一心“拜佛”，急于过河</strong>，看到冰面有人走，就<strong class="text-amber-900">不想“为什么有人走”</strong>——结果<strong class="text-amber-900">中了计</strong>。这提醒我们：①<strong class="text-amber-900">越急越要“慢一步”，先想清楚</strong>；②<strong class="text-amber-900">“大家都走”不代表“安全”</strong>；③<strong class="text-amber-900">大考前、比赛前，别“临时抱佛脚”，提前准备才不慌</strong>。<strong class="text-amber-900">“欲速则不达”，冷静，才是最快的路</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第四十八回“魔弄寒风飘大雪，僧思拜佛履层冰”是通天河故事的关键转折。这一回让我们看到：帮人要帮到底、太顺利的路要警惕、经验加验证才靠谱、急于求成最容易中计。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第四十八回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "悟空和八戒在庙中分别变作：",
+                    "options": {
+                        "A": "童男陈官宝和童女一秤金",
+                        "B": "两个男孩",
+                        "C": "两个女孩",
+                        "D": "老者"
+                    },
+                    "correct": "A",
+                    "analysis": "悟空变作童男陈官宝，八戒变作童女一秤金，坐等灵感大王现身。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "八戒想“引出来就跑”，悟空坚持要：",
+                    "options": {
+                        "A": "马上撤退",
+                        "B": "“为人为彻”——彻底解决妖怪祸患",
+                        "C": "先吃饭",
+                        "D": "等天亮"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空坚持“为人为彻”，要彻底解决妖怪，不能只救这一次。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "妖怪发现“童男”异常是因为：",
+                    "options": {
+                        "A": "他长得丑",
+                        "B": "以往童男女见之即惧，此童男却言谈自如、毫不畏惧",
+                        "C": "他太胖",
+                        "D": "他哭了"
+                    },
+                    "correct": "B",
+                    "analysis": "妖怪察觉“童男”毫不畏惧，与往年童子大不相同，因此心生疑虑不敢轻易动手。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "八戒被妖怪“先吃童女”吓到后做了什么？",
+                    "options": {
+                        "A": "求饶后现出原形，挥钉耙反击，击中妖怪“柱破甲了”",
+                        "B": "变成石头",
+                        "C": "逃跑",
+                        "D": "哭了"
+                    },
+                    "correct": "A",
+                    "analysis": "八戒惊慌求饶后跳下现原形，一耙击中妖怪，打破其防御，掉下鱼鳞。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "地上留下的“冰盘大小两个鱼鳞”说明：",
+                    "options": {
+                        "A": "妖怪是鱼妖",
+                        "B": "妖怪是螃蟹",
+                        "C": "妖怪是鸟",
+                        "D": "是假的"
+                    },
+                    "correct": "A",
+                    "analysis": "八戒一耙打掉妖怪两个鱼鳞，暴露其“鱼妖”身份，为后文伏笔。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "为捉拿唐僧，斑衣鳜婆献的计策是：",
+                    "options": {
+                        "A": "直接去抢",
+                        "B": "降雪结冰冻结河面，诱唐僧踏冰过河，行至河心裂冰擒获",
+                        "C": "下毒",
+                        "D": "请援兵"
+                    },
+                    "correct": "B",
+                    "analysis": "鳜婆献计：夜间降雪结冰、水族化人行走制造假象，诱唐僧过河至河心裂冰。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "唐僧看到冰面“有人行走”就想过河，这说明：",
+                    "options": {
+                        "A": "冰面真的安全",
+                        "B": "他急于过河，忽略了“为什么有人走”的疑点",
+                        "C": "他认识那些人",
+                        "D": "他知道是妖怪"
+                    },
+                    "correct": "B",
+                    "analysis": "“有人走”正是妖怪制造的假象，唐僧急于求成，未及多想就要过河。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "八戒验证冰层的方法是什么？",
+                    "options": {
+                        "A": "用脚踩",
+                        "B": "用九齿钉耙猛击冰面，只留九个白记未破裂（实践检验）",
+                        "C": "扔石头",
+                        "D": "问村民"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒说“实践是检验真理的唯一标准”，亲自用钉耙击冰验证冰层厚实。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "过冰河时，八戒让唐僧横担九环锡杖的目的是：",
+                    "options": {
+                        "A": "防身",
+                        "B": "若踩破“冷眼”（未冻实处），横杆可卡住防坠落",
+                        "C": "好看",
+                        "D": "当拐杖"
+                    },
+                    "correct": "B",
+                    "analysis": "横担锡杖是为了防“冷眼”：万一踩破冰面，横杆卡住不至于整个人掉下去。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "悟空夸八戒“倒是个积年走冰的”，意思是：",
+                    "options": {
+                        "A": "八戒年纪大",
+                        "B": "八戒有丰富的走冰经验，办法想得周到",
+                        "C": "八戒怕冷",
+                        "D": "八戒爱玩冰"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒想出裹马蹄、横锡杖等办法，显示其生活经验丰富，悟空难得夸他。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "师徒走了一宿仍未过河，说明了什么？",
+                    "options": {
+                        "A": "他们走错了路",
+                        "B": "通天河极宽，至少需两日才能穿越",
+                        "C": "冰面太滑",
+                        "D": "他们休息了"
+                    },
+                    "correct": "B",
+                    "analysis": "昼夜行走一宿天明仍未过河，足见通天河之宽，也给了妖怪在河心设伏的机会。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "妖怪“崩裂冰面”的时机选在：",
+                    "options": {
+                        "A": "刚上冰时",
+                        "B": "行至河心（中途），闻马蹄声发动伏击",
+                        "C": "快靠岸时",
+                        "D": "刚下冰时"
+                    },
+                    "correct": "B",
+                    "analysis": "妖怪在水下多时，等师徒行至中途（河心）才崩裂冰面，一举成功。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "唐僧落水被擒后，妖怪先要“磨刀备宴”，鳜婆却：",
+                    "options": {
+                        "A": "劝先吃掉",
+                        "B": "劝先等两天，恐徒弟们寻来吵闹",
+                        "C": "劝放了唐僧",
+                        "D": "抢着要吃"
+                    },
+                    "correct": "B",
+                    "analysis": "鳜婆劝“恐他徒弟们寻来吵闹，先等两天”，唐僧因此被藏入石匣，赢得救援时间。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "唐僧被藏在哪里？",
+                    "options": {
+                        "A": "水府大殿",
+                        "B": "宫后六尺长的石匣中",
+                        "C": "井里",
+                        "D": "树上"
+                    },
+                    "correct": "B",
+                    "analysis": "妖怪将唐僧藏于宫后六尺长石匣中暂存，等消停后再食。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "本回给我们的综合启示不包括：",
+                    "options": {
+                        "A": "帮人要“为人为彻”",
+                        "B": "太顺利的路要警惕",
+                        "C": "急于求成最容易中计",
+                        "D": "看到“有人走”就一定安全"
+                    },
+                    "correct": "D",
+                    "analysis": "“有人走”正是妖怪设的假象，不能凭此判断安全。其余三条都是正面启示。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "悟空变______官宝，八戒变______秤金入庙。",
+                    "answer": "陈|一",
+                    "analysis": "悟空变「陈官宝」，八戒变「一秤金」，两人「顶替」进庙「献祭」。八戒变「小姑娘」扭扭捏捏，「穿裙子、梳小辫」，「丑态百出」——「喜剧效果」拉满，也为「除妖」做铺垫。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "悟空坚持“为人为______”，要彻底解决妖怪。",
+                    "answer": "彻",
+                    "analysis": "悟空坚持「为人为彻」：帮人就要「帮到底」，不能「半途而废」。光「救下」童男童女还不够，要「彻底」除掉妖怪，才能「永绝后患」——「做事有始有终」，才是「真负责」。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "八戒一耙打掉妖怪______盘大小的两个______。",
+                    "answer": "冰|鱼鳞",
+                    "analysis": "八戒一耙打掉妖怪「冰盘大小」的两个「鱼鳞」。原来「灵感大王」是一条「金鱼精」，被八戒打掉鳞片，现出「鱼」形。「战斗」中，「细节」（鱼鳞）暴露了妖怪的「真身」。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "______婆献计：降雪结冰，诱唐僧过河。",
+                    "answer": "鳜",
+                    "analysis": "「鳜婆」献计：降雪结冰，诱唐僧「过河」，再「破冰」捉人。鳜婆是「金鱼精」的「军师」——「妖怪」也有「智囊」，可惜「毒计」再精，也「敌不过」正道。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "八戒用______钉耙验证冰层，只留九个白记。",
+                    "answer": "九齿",
+                    "analysis": "八戒用「九齿钉耙」验证冰层，只留九个白记，确认「冰够厚」，才让唐僧过河。平时「粗心」的八戒，这时倒「细心」起来——「关键时刻」，八戒也「靠谱」。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "过河时用______裹马蹄防滑，横担______锡杖防坠。",
+                    "answer": "稻草|九环",
+                    "analysis": "过河时用「稻草」裹马蹄防滑，横担「九环锡杖」防坠。「九环锡杖」是如来赐给唐僧的「宝贝」。准备得「周全」，可惜还是「中了」妖怪的「破冰计」——「魔高一尺」，防不胜防。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "妖怪在水下______冰面，使唐僧落水被擒。",
+                    "answer": "崩裂",
+                    "analysis": "妖怪在水下「崩裂」冰面，唐僧落水被擒。「冰」是「诱饵」，过河是「陷阱」——「危险」往往藏在「最顺」的时候，越是「看似安全」，越要「小心」。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "唐僧被藏在宫后______尺长的石匣中。",
+                    "answer": "六",
+                    "analysis": "唐僧被藏在宫后「六尺」长的石匣中。八戒、沙僧下水找不到，只好请悟空「搬救兵」——「唐僧」这个「取经核心」，又一次「遇险」。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“为人为彻”】悟空说帮人要“为人为彻”，不能引出来就跑。请谈谈：为什么做事要“善始善终”？你有过“半途而废”和“坚持到底”的经历吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>半途等于没做：</strong> 若悟空把妖怪“引出来”就撤，明天它照样吃孩子。做事做一半，等于白做，甚至更糟。</p>\n                        <p class=\"mt-2\"><strong>善始善终：</strong> ①答应别人的事，做完才算数；②小组任务，不能“我那份交了就行”；③读书、练字、健身，坚持到“见效”再停；④遇到困难先想“能不能再坚持一下”。把“差不多”改成“做到位”，你会发现自己的成长。半途而废的人，永远看不到“完成”的风景。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“警惕陷阱”】妖怪故意“结冰+有人走”引唐僧上钩。请谈谈：为什么“看起来太方便、太顺利”的事要警惕？你在生活中遇到过“假象”吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>方便可能是诱饵：</strong> 妖怪不是真的“帮”唐僧过河，而是“铺好陷阱等他跳”。“有人走”是为了让他安心——这恰恰是骗术的高明处。</p>\n                        <p class=\"mt-2\"><strong>识别假象：</strong> ①网上“免费领皮肤”“点赞返现”，先想想“为什么偏偏给我”；②“考试包过”“快速提分”多是骗局；③别人“太好心”帮你，多问一句“图什么”；④重要选择，先和父母、老师商量。多一分警惕，少一分风险。天上不会白掉馅饼。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“实践验证”】八戒用钉耙“实测”冰层才敢走。请谈谈：为什么“实践”比“听说”可靠？你如何用“试一试”来验证学习上的猜想？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>耳闻不如眼见，眼见不如实证：</strong> 沙僧说“耳闻不如眼见”，八戒更进一步——亲自动手“砸一砸”。只有亲手验证，才知道冰层到底结不结实。</p>\n                        <p class=\"mt-2\"><strong>学习中的验证：</strong> ①背完单词，合上书“默写”一遍，比看十遍有效；②觉得自己“懂了”公式，做几道题验证；③“我觉得这道题选A”，用排除法验证；④科学课上亲手做实验，比背结论记得牢。敢于“动手验证”的人，才是真懂。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“准备充分”】八戒想出了裹马蹄、横锡杖的“过冰装备”。请谈谈：为什么“提前准备”能减少风险？你考试前如何“装备自己”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>准备=安全感：</strong> 裹了稻草，马蹄不打滑；横了锡杖，破了冰也有“救命杆”。八戒把能想到的风险都做了防范。</p>\n                        <p class=\"mt-2\"><strong>考前“装备”：</strong> ①提前复习，不“临时抱佛脚”；②准备好文具、证件；③列“易错点清单”，考前过一遍；④好好休息，精神饱满；⑤遇到“冷眼”似的难题，也有“备用思路”。有准备的人，遇事不慌。准备，是给未来的自己“上保险”。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“急于求成”】唐僧急着过河，结果中了埋伏。请谈谈：为什么“欲速则不达”？你如何克服“着急”的毛病？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>急则出错：</strong> 唐僧若肯“等雪融、坐船走”，就不会被擒。越急着“快点到”，越容易忽略“路上的危险”。</p>\n                        <p class=\"mt-2\"><strong>克服着急：</strong> ①做题前先“深呼吸”，别抢速度；②考试时先易后难，不恋战；③定了计划就按步骤来，别“跳步”；④想“快”的时候提醒自己“慢就是快”；⑤把事情做对，比做快更重要。稳扎稳打，反而最快。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“生活经验”】平时贪吃的八戒，在“走冰”上却很有办法。请谈谈：为什么“生活经验”也是一种重要的学习？你在生活中学到了什么“课本外”的本领？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>生活是大学问：</strong> 八戒也许背书不行，但“走冰防滑”的经验一套一套的。会读书，也要会“过日子”。</p>\n                        <p class=\"mt-2\"><strong>生活中的本领：</strong> ①雨雪天怎么走路防滑；②怎么整理书包又快又齐；③怎么礼貌地跟人打招呼；④遇到突发情况怎么求助；⑤做饭、打扫、照顾自己。这些“生活智慧”让课本知识“活”起来。会学习+会生活，才是完整的人。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“团队分工”】悟空在空中、八戒验冰、沙僧提建议，各司其职。请谈谈：为什么“团队里每个人都重要”？你愿意做“帮忙提意见”的人吗？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>各司其职：</strong> 悟空负责“战”，八戒负责“经验”，沙僧负责“提醒”——缺了谁，都可能出事。团队不是“主角一个人的舞台”。</p>\n                        <p class=\"mt-2\"><strong>在团队发光：</strong> ①积极“提意见”，好点子不分大小；②做好“小角色”，也很了不起；③听到别人的提醒，认真对待；④勇敢说出“我担心……”，可能就避免了错误；⑤互相补位，别等别人“出风头”。每个人都能是“关键先生”。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

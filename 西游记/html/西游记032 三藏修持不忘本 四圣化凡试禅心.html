@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第二十三回精读：四圣试禅心</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第二十三回精读：四圣试禅心</h1>
+            <p class="text-lg text-gray-700 serif">“三藏不忘本，四圣试禅心”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-trap')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-trap">第一章：四圣设局</button>
+                <button onclick="NavigationModule.switchTab('section-choice')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-choice">第二章：师徒的选择</button>
+                <button onclick="NavigationModule.switchTab('section-bajie')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-bajie">第三章：八戒撞天婚</button>
+                <button onclick="NavigationModule.switchTab('section-truth')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-truth">第四章：众圣现真身</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Trap -->
+        <section id="section-trap" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">一处“富贵”的庄院</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    师徒四人离开流沙河，走了些时日，来到一处富贵人家的大庄院。庄院富丽堂皇，女主人是个富有的寡妇，还有三个如花似玉的女儿。点击翻转卡片，看看这“好运”背后藏着什么。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">富婆招亲</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“坐拥万贯家财”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t1-back">
+                        <p class="text-gray-700 text-left">
+                            女主人自称<strong>“莫贾氏”</strong>，丈夫已故，膝下<strong>三个女儿</strong>：真真、爱爱、怜怜。她见唐僧师徒“长得周正”，便想<strong>招他们做女婿</strong>，从此享受荣华富贵、“坐享其成”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">真相：四圣设局</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">一场“考试”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t2-back">
+                        <p class="text-gray-700 text-left">
+                            这庄院并非真实人家，而是<strong>黎山老母、观音、文殊、普贤</strong>四位菩萨<strong>变化而成</strong>——专门<strong>“试禅心”</strong>：考验取经人面对<strong>财、色、安逸</strong>的诱惑，是否<strong>不忘初心</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：“诱惑”是一道必考题</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    取经路上的“难”，不只是刀光剑影的<strong class="text-amber-900">“武难”</strong>，还有舒适安逸的<strong class="text-amber-900">“心难”</strong>——财富、美色、享乐，都是温柔的陷阱。真正检验一个人的，往往不是他<strong class="text-amber-900">面对困难时的勇气</strong>，而是他<strong class="text-amber-900">面对诱惑时的不动摇</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Choice -->
+        <section id="section-choice" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">四位师徒，四种选择</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    面对招亲的诱惑，师徒四人的反应各不相同。点击翻转卡片，看看谁坚持了初心，谁动了心。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">唐僧</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">坚定拒绝</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c1-back">
+                        <p class="text-gray-700 text-left">
+                            唐僧<strong>斩钉截铁地拒绝</strong>，说自己是出家人，以取经为念，<strong>“不忘本”</strong>。他面对荣华富贵，<strong>毫不动摇</strong>——这正是“三藏不忘本”的含义，也是他作为师父的“定力”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">悟空·沙僧</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">婉言推拒</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空<strong>早看穿是“试”</strong>，笑着把“好事”往八戒身上推；沙僧<strong>老实本分</strong>，说自己只愿护师取经，不贪女色。两人虽性格不同，却都<strong>没有迷失方向</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c3')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">八戒</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c3-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">动了心</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c3-back">
+                        <p class="text-gray-700 text-left">
+                            八戒<strong>心猿意马、动了贪念</strong>，一听“坐享其成、荣华富贵”，便<strong>心痒难耐</strong>，又想入赘、又惦记三个女儿。悟空故意说“你去入赘吧”，八戒便<strong>半推半就、欣然答应</strong>——贪念让他一步步走进了圈套。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c4')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">对比的启示</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c4-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“定力”见高下</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c4-back">
+                        <p class="text-gray-700 text-left">
+                            同样面对诱惑，有人<strong>毫不动摇</strong>，有人<strong>立刻沦陷</strong>——差别就在<strong>“心中的信念”</strong>。唐僧心里装的是“取经”，八戒心里装的是“享乐”。<strong>心里装着什么，决定你被什么带走</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Section 3: Bajie -->
+        <section id="section-bajie" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">撞天婚：一场荒唐的“婚礼”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    八戒留下来“入赘”。女主人说三个女儿不知嫁谁，便让他“撞天婚”——蒙上眼睛，抓住谁就娶谁。点击翻转卡片，看看八戒在这场“婚礼”中经历了什么。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-b1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">撞天婚</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-b1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">抓不到“媳妇”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-b1-back">
+                        <p class="text-gray-700 text-left">
+                            八戒蒙着眼，在院子里<strong>东扑西撞</strong>，却<strong>怎么也抓不到人</strong>——三个女儿（其实是菩萨所变）<strong>闪来闪去，捉摸不定</strong>。八戒撞得晕头转向，累得气喘吁吁，<strong>一个媳妇也没抓着</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-b2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">珍珠汗衫</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-b2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“穿上就变绳子”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-b2-back">
+                        <p class="text-gray-700 text-left">
+                            女儿们说“谁的汗衫你先穿上，就算嫁给谁”。八戒<strong>抢过珍珠汗衫就穿</strong>，谁知汗衫<strong>变成绳子</strong>，<strong>把他牢牢捆住，吊在半空</strong>。八戒在树上<strong>哀声叫苦</strong>，狼狈不堪，才知<strong>上了大当</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“贪”的现形记</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    八戒的“撞天婚”，是一出<strong class="text-amber-900">喜剧式的“贪念现形记”</strong>：越想抓“媳妇”，越是什么也抓不到；越贪“便宜”，越被<strong class="text-amber-900">“绳子”捆住</strong>。这讽刺了：被欲望牵着走的人，往往<strong class="text-amber-900">昏头转向、自投罗网</strong>——“贪”到最后，得到的是<strong class="text-amber-900">狼狈与教训</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Truth -->
+        <section id="section-truth" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">众圣现真身：一场“禅心”的考试</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    天亮之后，庄院现出真面目，原来是黎山老母与观音、文殊、普贤四位菩萨所化。点击翻转卡片，理解这场“试禅心”考试的用意与结果。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-v1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">四位菩萨</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-v1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">老母 + 三菩萨</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-v1-back">
+                        <p class="text-gray-700 text-left">
+                            庄院原是<strong>黎山老母</strong>与<strong>观音、文殊、普贤</strong>四位菩萨<strong>变化而成</strong>。她们并非为难取经人，而是用一场<strong>“化凡”的考验</strong>，检验取经团队面对<strong>富贵美色的诱惑</strong>是否<strong>心志坚定</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-v2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">考试的结果</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-v2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">有人满分，有人挂科</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-v2-back">
+                        <p class="text-gray-700 text-left">
+                            唐僧<strong>初心不改</strong>，悟空、沙僧<strong>立场坚定</strong>；只有八戒<strong>动了贪念、出了洋相</strong>。菩萨们点化众人后<strong>飘然而去</strong>，八戒<strong>羞愧难当、连声求饶</strong>。<strong>考试的意义不在“罚”，而在“警醒”</strong>——让每个人看见自己的“心”。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“试禅心”的深意</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    “禅心”就是<strong class="text-amber-900">向佛、向善、不动摇的本心</strong>。四圣试禅心，试的是<strong class="text-amber-900">在诱惑面前，初心会不会变</strong>。这一回告诉我们：人生处处有“试禅心”的时刻——面对好吃的、好玩的、别人给的“好处”，<strong class="text-amber-900">守住底线、牢记目标</strong>，才不会被一时的贪念<strong class="text-amber-900">吊在半空</strong>。修行不是“做给神看”，而是<strong class="text-amber-900">在没人看见时，仍能管住自己</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第二十三回“三藏不忘本，四圣试禅心”是一个充满喜剧色彩的“考试”故事。四位菩萨化作富贵人家，考验取经人的“禅心”。谁通过了考验，谁被贪念吊在半空？请认真作答，也请你想一想：如果“诱惑”降临，你能守住自己的“本心”吗？
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第二十三回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "师徒四人在庄院遇到的“女主人”自称叫什么？",
+                    "options": {
+                        "A": "莫贾氏",
+                        "B": "高翠兰",
+                        "C": "白骨夫人",
+                        "D": "百花羞"
+                    },
+                    "correct": "A",
+                    "analysis": "女主人自称“莫贾氏”，是位富有的寡妇，有真真、爱爱、怜怜三个女儿，想招取经人做女婿。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "这座“富贵庄院”的真实身份是：",
+                    "options": {
+                        "A": "普通财主家",
+                        "B": "黎山老母与观音、文殊、普贤四位菩萨变化而成",
+                        "C": "妖怪的洞穴",
+                        "D": "土地神庙"
+                    },
+                    "correct": "B",
+                    "analysis": "庄院是黎山老母和观音、文殊、普贤四位菩萨所变，专门用来“试禅心”，考验取经人的定力。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "“四圣试禅心”，试的是取经人的什么？",
+                    "options": {
+                        "A": "武艺高不高",
+                        "B": "面对财色安逸等诱惑时，能否坚守向善的“初心”",
+                        "C": "认不认识路",
+                        "D": "会不会念经"
+                    },
+                    "correct": "B",
+                    "analysis": "“禅心”指向佛向善、不动摇的本心。四圣用富贵美色设局，考验取经人在诱惑面前是否“不忘本”。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "面对招亲的诱惑，唐僧的态度是：",
+                    "options": {
+                        "A": "欣然答应",
+                        "B": "斩钉截铁地拒绝，说自己出家人以取经为念，不忘本",
+                        "C": "犹豫不决",
+                        "D": "让徒弟们决定"
+                    },
+                    "correct": "B",
+                    "analysis": "唐僧坚定拒绝，一心取经、不忘本。这正是“三藏不忘本”的含义，也是他作为师父的定力。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "面对诱惑，悟空和沙僧的反应是：",
+                    "options": {
+                        "A": "都动了心",
+                        "B": "悟空看穿是“试”，沙僧老实本分，都没有迷失方向",
+                        "C": "都怂恿唐僧入赘",
+                        "D": "两人大打出手"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空早看穿是考验，沙僧老实本分只愿护师取经。两人性格不同，但都坚守了立场。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "师徒四人中，对招亲“动了心”的是谁？",
+                    "options": {
+                        "A": "唐僧",
+                        "B": "悟空",
+                        "C": "八戒",
+                        "D": "沙僧"
+                    },
+                    "correct": "C",
+                    "analysis": "八戒一听“荣华富贵、坐享其成”就心痒难耐，又想入赘又惦记三个女儿，最终走进了圈套。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "“撞天婚”是怎么一回事？",
+                    "options": {
+                        "A": "举办大型婚礼",
+                        "B": "蒙上眼睛在院子里抓人，抓到谁就娶谁",
+                        "C": "比赛撞钟",
+                        "D": "拜堂成亲"
+                    },
+                    "correct": "B",
+                    "analysis": "女主人的三个女儿“不知嫁谁”，便让八戒蒙眼“撞天婚”——抓住谁就娶谁。结果八戒怎么也抓不到人。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "八戒“撞天婚”的结果是：",
+                    "options": {
+                        "A": "抓住了一个女儿",
+                        "B": "一个也没抓住，撞得晕头转向",
+                        "C": "撞到了唐僧",
+                        "D": "放弃了入赘"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒蒙着眼东扑西撞，三个女儿闪来闪去，他一个也没抓住，累得气喘吁吁。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "八戒穿上“珍珠汗衫”后发生了什么？",
+                    "options": {
+                        "A": "变得珠光宝气",
+                        "B": "汗衫变成绳子，把他牢牢捆住吊在半空",
+                        "C": "汗衫把他烫伤",
+                        "D": "汗衫变成了一件宝衣"
+                    },
+                    "correct": "B",
+                    "analysis": "女儿们说“谁先穿上汗衫就算嫁给谁”，八戒抢来穿上，汗衫却变成绳子把他捆住吊起，狼狈不堪。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "“撞天婚”和“珍珠汗衫变绳子”的情节，讽刺的是：",
+                    "options": {
+                        "A": "婚礼太麻烦",
+                        "B": "被贪念牵着走的人，往往昏头转向、自投罗网",
+                        "C": "女儿们太调皮",
+                        "D": "八戒运气不好"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒越贪越抓不到媳妇，越想占便宜越被捆住。这是喜剧式的“贪念现形记”，讽刺贪心者最终自食其果。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "天亮后，庄院现出真身，四位菩萨对八戒的态度是：",
+                    "options": {
+                        "A": "狠狠惩罚他",
+                        "B": "点化众人后飘然而去，八戒羞愧求饶",
+                        "C": "把八戒贬为凡人",
+                        "D": "把八戒赶出取经队伍"
+                    },
+                    "correct": "B",
+                    "analysis": "菩萨们现身后并未重罚八戒，而是点化众人后离去。考试的意义在“警醒”，八戒羞愧难当、连声求饶。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "本回标题“三藏不忘本”，其中“本”指的是：",
+                    "options": {
+                        "A": "本领",
+                        "B": "作为出家人、取经人的初心与本分",
+                        "C": "本钱",
+                        "D": "书本"
+                    },
+                    "correct": "B",
+                    "analysis": "“不忘本”指唐僧不忘自己是出家人、不忘取经的使命，面对荣华富贵毫不动摇，守住初心与本分。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "“修行不是做给神看，而是没人看见时仍能管住自己”，这句话的意思是：",
+                    "options": {
+                        "A": "修行要偷偷进行",
+                        "B": "真正的自律是发自内心、无人监督时也不违背原则",
+                        "C": "修行不需要别人监督",
+                        "D": "只有没人时才叫修行"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒在“考试”中现了原形，是因为他以为没人监督。真正的定力，是即使无人看见也能守住原则，是发自内心的自律。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "取经路上的“难”，除了刀光剑影的“武难”，还包括：",
+                    "options": {
+                        "A": "不认识路",
+                        "B": "财、色、安逸等“心难”——温柔的诱惑陷阱",
+                        "C": "没钱吃饭",
+                        "D": "天气太热"
+                    },
+                    "correct": "B",
+                    "analysis": "除了一路上的妖魔鬼怪，还有富贵美色等“温柔陷阱”。本回四圣试禅心，就是一场“心难”的考试。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "同样面对诱惑，唐僧与八戒反应截然不同，根本差别在于：",
+                    "options": {
+                        "A": "唐僧比八戒聪明",
+                        "B": "两人“心里装着的东西”不同——唐僧装着取经信念，八戒装着享乐贪念",
+                        "C": "八戒比唐僧勇敢",
+                        "D": "唐僧吃过亏所以有经验"
+                    },
+                    "correct": "B",
+                    "analysis": "心里装着目标与信念的人，诱惑难以撼动；心里装着欲望的人，轻易就被带走。心之所向，决定行之所往。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "庄院女主人自称______，有三个女儿：真真、爱爱、怜怜。",
+                    "answer": "莫贾氏",
+                    "analysis": "庄院女主人自称「莫贾氏」——「莫贾」谐音「莫假」，暗含「莫要虚假」之意（也暗指「假装」）。她自称寡妇，有三个女儿：真真、爱爱、怜怜，其实是黎山老母变的，专门设局考验取经人的「禅心」。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "庄院是______老母与观音、文殊、普贤四位菩萨变化而成。",
+                    "answer": "黎山",
+                    "analysis": "这个富丽堂皇的庄院，是黎山老母与观音、文殊、普贤四位菩萨变化而成。四位大菩萨「组团」演戏，只为了「试禅心」——检验取经人面对富贵美色时，是否动摇。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "四圣设局是为了“______禅心”，考验取经人的定力。",
+                    "answer": "试",
+                    "analysis": "四圣设局的目的就是「试禅心」：用万贯家财、三个如花似玉的女儿，考验唐僧师徒的「定力」。取经路上，比妖魔鬼怪更难过的关，往往是「财色名利」这一关。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "唐僧面对招亲______地拒绝，说自己以取经为念、不忘本。",
+                    "answer": "斩钉截铁",
+                    "analysis": "面对「坐享富贵、招赘为婿」的诱惑，唐僧「斩钉截铁」地拒绝，说自己是「出家人，不敢打诳语」，一心只想去西天取经。唐僧的「定力」，正在于他「不忘本」——目标明确，诱惑再多也不动摇。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "八戒被要求蒙眼“______”，抓住谁就娶谁，结果一个也没抓住。",
+                    "answer": "撞天婚",
+                    "analysis": "八戒被要求蒙上眼睛「撞天婚」：抓住哪个女儿就娶哪个。结果三个女儿跑来跑去，八戒撞来撞去，一个也抓不住，摔得鼻青脸肿。贪心的下场就是「竹篮打水一场空」——什么便宜都想要，最后什么都得不到。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "八戒穿上______汗衫，汗衫却变成绳子把他吊在半空。",
+                    "answer": "珍珠",
+                    "analysis": "八戒穿上「珍珠汗衫」，汗衫却变成了绳子，把他紧紧捆住，吊在半空。这一出「美人计」变成了「捉妖计」——贪图「便宜」，往往就上了「套」。四圣现身后哈哈大笑，八戒又羞又愧。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "四圣现身后______众人，然后飘然而去。",
+                    "answer": "点化",
+                    "analysis": "四圣现出真身（黎山老母、观音、文殊、普贤），点化众人：「从此改过，再莫贪淫好色。」然后飘然而去。这一「点」，点醒的是八戒，也点醒所有读者：财色面前，要守得住「心」。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "“三藏不忘______”，指唐僧坚守出家人与取经人的初心。",
+                    "answer": "本",
+                    "analysis": "「三藏不忘本」的「本」，就是出家人、取经人的「初心」：一心向佛、志在取经。唐僧没有被富贵美色迷惑，因为他「不忘本」；八戒差点「忘了本」，所以被教训。做人做事，别忘了「来时的路」。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“初心”】唐僧面对荣华富贵毫不动摇，被称为“不忘本”。请谈谈：什么是“初心”？一个人为什么需要记住自己“为什么出发”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>初心是什么：</strong> 初心就是最初的方向与信念。唐僧的初心是“去西天取经、普度众生”；我们的初心可以是“要做一个正直、上进、善良的人”。</p>\n                        <p class=\"mt-2\"><strong>为什么需要初心：</strong> 路上诱惑太多、岔路太多，忘了初心就会迷路。比如“本要好好学习”却迷上游戏，“本要诚实”却为了省事撒谎。常问问自己“我为什么出发”，才能不偏航。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“诱惑的考验”】八戒被“荣华富贵”勾走了魂。请谈谈：为什么说“看起来最舒服的选择，往往最危险”？面对“好处”，我们应该先想什么？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>舒服的选择未必安全：</strong> 八戒选了“坐享其成”的安逸，结果被吊在半空。天上不会掉馅饼，太好的“好处”往往藏着圈套。</p>\n                        <p class=\"mt-2\"><strong>面对好处先想：</strong> ①这“好处”合理吗？为什么偏偏给我？②我需要为它付出什么？有没有隐藏代价？③它会不会影响我的原则和底线？④和信任的师长商量，不急着答应。多一分冷静，少一分上当。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“自律与他律”】八戒在“没人监督”时放松了自己，暴露了贪念。请谈谈：为什么说“自己管住自己”比“靠别人管”更可靠？如何培养自律？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>自律最可靠：</strong> 别人不可能24小时盯着你，真正的定力来自内心。八戒以为“没人看见”就放肆，结果被自己害了。</p>\n                        <p class=\"mt-2\"><strong>培养自律：</strong> ①明确目标，知道自己“要什么”；②定具体的规矩（如“写完作业才玩”）；③从小事练起，如每天坚持早起、收拾书桌；④在诱惑面前“延迟满足”，先做该做的，再玩想玩的。自律不是压抑，而是用“更好的自己”来掌控当下。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“考试与警醒”】四圣试禅心的目的不是惩罚八戒，而是让他警醒。请谈谈：为什么说“被点醒”比“被惩罚”更让人成长？我们该怎样对待自己犯的错？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>点醒胜于惩罚：</strong> 惩罚只让人“怕”，点醒让人“懂”。八戒明白了自己贪念的后果，才会真正去改。学习也一样，明白“为什么错”比只改答案更重要。</p>\n                        <p class=\"mt-2\"><strong>对待自己的错：</strong> ①错了不掩饰、不推脱，诚实面对；②问自己“为什么会犯”，找到根源；③把错误当“警报”，提醒自己下次注意；④不因为一次错就否定自己，把警醒变成改进的动力。真正的成长，是把每次犯错变成“上课”。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“财色与价值”】本回用“富贵美人”考验取经人。请谈谈：什么是比“钱和享受”更珍贵的东西？你的人生“价值观”排序里，什么最重要？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>比享受更珍贵的：</strong> 诚实、善良、健康、亲情友情、梦想与坚持……这些是“钱买不到”的财富。唐僧为了取经大义放弃富贵，正是看重“使命”胜过“享受”。</p>\n                        <p class=\"mt-2\"><strong>我的价值排序：</strong> ①品行（诚实正直）永远在第一位；②健康与家人朋友最宝贵；③学习与成长是为了实现更好的自己；④金钱是工具，不是目的。想清楚“什么最重要”，很多选择就不难做了。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“伙伴的提醒”】悟空看穿是“试”，故意把八戒往圈套里引。请谈谈：为什么说“真正的朋友会在你犯迷糊时点醒你，而不是顺着你”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>真朋友敢说真话：</strong> 顺着你、捧着你，可能是害你；在你犯迷糊时拉你一把，才是真朋友。悟空虽“使坏”，其实也让八戒看清了自己。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> 朋友想抄作业，你劝ta自己完成，ta可能一时不高兴，但长远是帮ta；朋友要闯红灯，你拉住ta，就是救ta。同时也要学会“听劝”——朋友的逆耳忠言，往往最珍贵。能接受批评，是成熟的开始。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“心里装着什么”】同样是诱惑，唐僧不动、八戒沦陷，差别在于“心里装着什么”。请谈谈：你觉得“心里装着目标”的人，和“心里只装着享受”的人，人生会有什么不同？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>心里装着目标的人：</strong> 诱惑来时能分清轻重，困难面前能坚持，走得更远更稳，人生有方向感、有成就感。</p>\n                        <p class=\"mt-2\"><strong>只装享受的人：</strong> 容易被眼前的小甜头带走，遇到挫折容易放弃，看似轻松，实则容易被欲望“吊在半空”。心里装的东西，决定你走的路。试着让自己“心里多装一些美好的目标”——比如想成为什么样的人、想做成什么事，它们会成为你人生路上的“指南针”。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第四十三回精读：车迟国风云</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第四十三回精读：车迟国风云</h1>
+            <p class="text-lg text-gray-700 serif">“法身元运逢车力，心正妖邪度脊关”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-country')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-country">第一章：崇道灭僧</button>
+                <button onclick="NavigationModule.switchTab('section-suffer')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-suffer">第二章：和尚之苦</button>
+                <button onclick="NavigationModule.switchTab('section-disguise')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-disguise">第三章：悟空探情</button>
+                <button onclick="NavigationModule.switchTab('section-rescue')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-rescue">第四章：解救众僧</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Country -->
+        <section id="section-country" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">崇道灭僧：一个“偏爱”引发的乱局</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    师徒来到车迟国，听到千万人呐喊的声音。悟空远远一看——城池祥光隐隐，不是妖气，却看到城门外一群和尚在拉大车。点击翻转卡片，看看这个国家的“怪现象”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">反常的劳作</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“大力王菩萨”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c1-back">
+                        <p class="text-gray-700 text-left">
+                            城门外沙滩上，众多<strong>和尚正在拉大车</strong>，口中齐呼“<strong>大力王菩萨</strong>”作为号子。他们搬运砖瓦木料，攀爬<strong>高坡夹脊小路</strong>，<strong>衣衫褴褛</strong>，处境窘迫。悟空判断：<strong>五谷丰登却无人工，定是和尚被迫劳役</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">历史讽刺</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“好道”的国王</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c2-back">
+                        <p class="text-gray-700 text-left">
+                            国王<strong>宠信道士，打压佛教</strong>——全国和尚受迫害，道士地位尊崇。两名少年道士出城门<strong>“摇摇摆摆”</strong>，和尚见了<strong>心惊胆战，加倍用力拉车</strong>。——这并非贬道扬佛，而是借<strong>明代嘉靖帝崇道炼丹</strong>的历史<strong>讽刺现实政治</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：“偏爱”会制造不公</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    国王<strong class="text-amber-900">一味崇道、一味灭僧</strong>，全凭<strong class="text-amber-900">“偏爱”</strong>办事——<strong class="text-amber-900">不看重“对不对”，只看重“喜不喜欢”</strong>。这提醒我们：①<strong class="text-amber-900">待人处事要“公平”，不能偏心</strong>；②<strong class="text-amber-900">判断对错要看“事实”，不看“关系”</strong>；③<strong class="text-amber-900">有“偏爱”不可怕，可怕的是用偏爱“害人”</strong>。<strong class="text-amber-900">一颗“公心”，比“偏爱”更可贵</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Suffer -->
+        <section id="section-suffer" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">和尚之苦：“想死都死不了”的悲剧</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空变作云游道士进城打听，才知道了三位“国师”的来历，以及和尚们“被迫长寿”的悲惨处境。点击翻转卡片，看看这出“人间悲剧”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-s1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">三位国师</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-s1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“虎鹿羊”三力</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-s1-back">
+                        <p class="text-gray-700 text-left">
+                            二十年前<strong>大旱</strong>，全民求雨无效，天降<strong>三位仙长</strong>：<strong>虎力、鹿力、羊力大仙</strong>。“<strong>虎鹿羊</strong>”三字<strong>暗示动物原型</strong>。他们能<strong>呼风唤雨、点石成金</strong>，被奉为<strong>国师</strong>，视为亲人。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-s2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">求死不得</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-s2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“长寿罪”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-s2-back">
+                        <p class="text-gray-700 text-left">
+                            国师奏请国王<strong>绘制五百和尚画像</strong>全国张贴，<strong>抓一僧升三级，平民赏银五十两</strong>。和尚<strong>求死不能</strong>：<strong>上吊绳断、刀割不痛、投河漂浮、服毒无用</strong>——<strong>被迫“长寿”，实为“长寿罪”</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“活着却生不如死”的控诉</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    和尚<strong class="text-amber-900">连“死”都成了奢望</strong>——<strong class="text-amber-900">生命的尊严被彻底剥夺</strong>。这让我们懂得：①<strong class="text-amber-900">“活着”不只是“呼吸”，还要有尊严、自由、希望</strong>；②<strong class="text-amber-900">珍惜自己拥有的“普通幸福”</strong>；③<strong class="text-amber-900">遇到不公，不要“放弃”，要相信会有人来救你</strong>——六丁六甲<strong class="text-amber-900">护法</strong>正等着取经人来解救他们。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Disguise -->
+        <section id="section-disguise" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">悟空探情：一场“假哭寻亲”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空变作云游道士，唱道情进城，谎称来寻一位“出家为僧的叔父”。和尚们一听，纷纷争着“认亲”。点击翻转卡片，看看悟空如何套出真相。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-d1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">假哭套话</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-d1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“我叔父呢？”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-d1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空变作<strong>云游道士</strong>，唱道情进城，自称“云游于海角，浪荡在天涯”。又<strong>假装哭泣</strong>，说有个<strong>出家为僧的叔父</strong>多年未归。道士允许他<strong>去沙滩寻人</strong>——<strong>名正言顺接近了和尚</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-d2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">争相认亲</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-d2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“我是你叔父！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-d2-back">
+                        <p class="text-gray-700 text-left">
+                            众和尚<strong>误认悟空是监工</strong>，纷纷跪地磕头。悟空澄清是<strong>寻亲</strong>，和尚们<strong>争先恐后自称是亲戚</strong>——只想<strong>脱离苦役</strong>。悟空笑他们“<strong>命犯华盖，不该出家却沦为道士佣人</strong>”。和尚痛陈：<strong>国王偏心无道，喜道士而恶和尚</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“同情心”与“办事方法”</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    悟空<strong class="text-amber-900">没有贸然动手</strong>，而是<strong class="text-amber-900">先变道士混进城、假装寻亲套话</strong>——<strong class="text-amber-900">先“摸底”，再“出手”</strong>。这告诉我们：①<strong class="text-amber-900">做一件事前，先了解“情况”</strong>；②<strong class="text-amber-900">帮人前，先弄清“缘由”</strong>；③<strong class="text-amber-900">“善良”+“方法”才能真正帮到人</strong>。<strong class="text-amber-900">会“调查研究”，才能“对症下药”</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Rescue -->
+        <section id="section-rescue" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">解救众僧：撕毁“通缉令”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空决定救这群和尚。他谎称五百人全是自己的亲戚邻里，要求全部释放；被道士拒绝后，怒杀二道士，亮出身份。点击翻转卡片，看看这场“解放”如何完成。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-r1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">亮明身份</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-r1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“我是孙行者！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-r1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空<strong>谎称五百和尚全是亲戚</strong>，要求全部释放。道士<strong>拒绝</strong>：“和尚是御赐奴仆！”悟空<strong>连问三声未果</strong>，<strong>怒杀两名少年道士</strong>。和尚惊呼“打死皇亲了”，悟空<strong>亮明身份</strong>：“我正是唐僧徒弟<strong>孙行者</strong>，前来救你们！”
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-r2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">毫毛护身符</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-r2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“喊齐天大圣”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-r2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空<strong>拽大车轻松过两关</strong>，将车与建材<strong>彻底摧毁</strong>。又<strong>拔毫毛每人一截</strong>，藏于<strong>无名指指甲内</strong>，叮嘱捏拳呼“<strong>齐天大圣</strong>”即可召唤。有僧试唤，悟空<strong>瞬间现身持棒威震千军</strong>；念“<strong>记</strong>”即还原为毫毛。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“正义感+行动力=英雄”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    悟空<strong class="text-amber-900">见到不平就出手</strong>——他<strong class="text-amber-900">不仅“神通广大”，更“专秉忠良之心，为人抱不平”</strong>。这正是悟空受欢迎的原因：<strong class="text-amber-900">能力+正义才是“英雄”</strong>。①<strong class="text-amber-900">看到不公，别做“看客”</strong>；②<strong class="text-amber-900">帮人讲方法，也要有担当</strong>；③<strong class="text-amber-900">给人“希望”和“依靠”</strong>。<strong class="text-amber-900">愿你有悟空的本事，更有悟空的心肠</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第四十三回“法身元运逢车力，心正妖邪度脊关”开启了精彩的车迟国故事。这一回让我们看到：偏心制造不公、生命需要尊严、帮人要讲方法、正义需要行动。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第四十三回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "车迟国国王“崇道灭僧”的社会背景是：",
+                    "options": {
+                        "A": "作者真的认为道教不好",
+                        "B": "借明代嘉靖帝崇信道教炼丹的历史，讽刺现实政治风气",
+                        "C": "和尚犯了大错",
+                        "D": "国王信佛"
+                    },
+                    "correct": "B",
+                    "analysis": "作品并非贬道扬佛，而是借嘉靖帝沉迷修道炼丹的历史背景进行社会讽刺。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "悟空远远看车迟国城池，判断是什么？",
+                    "options": {
+                        "A": "妖气冲天",
+                        "B": "祥光隐隐、无凶气，非妖魔盘踞",
+                        "C": "荒无人烟",
+                        "D": "兵荒马乱"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空见城池祥光隐隐、无凶气，判断非妖巢，而是“正派场所”。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "和尚们拉大车时喊的口号是：",
+                    "options": {
+                        "A": "阿弥陀佛",
+                        "B": "大力王菩萨",
+                        "C": "齐天大圣",
+                        "D": "太上老君"
+                    },
+                    "correct": "B",
+                    "analysis": "和尚们搬运砖瓦木料，口中齐呼“大力王菩萨”作为劳动号子。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "“摇摇摆摆”四个字用来描写：",
+                    "options": {
+                        "A": "和尚拉车",
+                        "B": "两名少年道士出城门的傲慢姿态",
+                        "C": "唐僧走路",
+                        "D": "悟空变化"
+                    },
+                    "correct": "B",
+                    "analysis": "“摇摇摆摆”生动刻画出道士的嚣张跋扈，与和尚的恐惧形成对比。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "三位“国师”的名字分别是：",
+                    "options": {
+                        "A": "金角、银角、铜角",
+                        "B": "虎力、鹿力、羊力大仙",
+                        "C": "黑风、黄风、白风",
+                        "D": "牛魔王、红孩儿、铁扇公主"
+                    },
+                    "correct": "B",
+                    "analysis": "三位仙长叫虎力、鹿力、羊力大仙，“虎鹿羊”三字暗示其动物原型。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "当年和尚与道士“斗法”求雨的结果是：",
+                    "options": {
+                        "A": "和尚获胜",
+                        "B": "和尚空念经未降雨，道士成功施法",
+                        "C": "双方都没成功",
+                        "D": "天降大雨谁都成功了"
+                    },
+                    "correct": "B",
+                    "analysis": "僧人“空念经不记事”未能降雨，道士成功，国王因此拆寺、追度牒、贬僧为奴。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "国师为防止和尚逃跑，采用了什么制度？",
+                    "options": {
+                        "A": "建高墙",
+                        "B": "绘制五百和尚画像全国张贴，抓一僧升三级、平民赏银五十两",
+                        "C": "锁脚镣",
+                        "D": "派兵看守"
+                    },
+                    "correct": "B",
+                    "analysis": "国师奏请绘制五百和尚画像全国张贴，形同通缉令，重赏之下人人抓捕。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "和尚们“求死不能”的表现是：",
+                    "options": {
+                        "A": "吃药没死",
+                        "B": "上吊绳断、刀割不痛、投河漂浮、服毒无用",
+                        "C": "跳楼摔不死",
+                        "D": "喝水呛不死"
+                    },
+                    "correct": "B",
+                    "analysis": "自杀方式均无效，和尚被迫“长寿”，实为“长寿罪”，是极端的悲剧。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "谁在夜里保护和尚、劝他们“苦挨”等待？",
+                    "options": {
+                        "A": "悟空",
+                        "B": "六丁六甲、护法伽蓝（并托梦告知取经僧将来救他们）",
+                        "C": "观音",
+                        "D": "山神土地"
+                    },
+                    "correct": "B",
+                    "analysis": "六丁六甲、护法伽蓝每夜保护和尚，托梦告知东土取经僧前来时方可得救。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "悟空接近和尚，用的“计策”是：",
+                    "options": {
+                        "A": "直接问",
+                        "B": "变作云游道士，假哭说寻找出家为僧的叔父",
+                        "C": "请唐僧问",
+                        "D": "偷听"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空变作道士唱道情进城，谎称寻叔父，名正言顺地接近了和尚。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "和尚们为何“争先恐后”认悟空做亲戚？",
+                    "options": {
+                        "A": "真的很喜欢他",
+                        "B": "想脱离苦役，被悟空救走",
+                        "C": "怕他",
+                        "D": "想骗他钱"
+                    },
+                    "correct": "B",
+                    "analysis": "和尚们误认悟空能带他们走，争相自称亲戚，只想逃离悲惨的苦役。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "悟空要求释放五百和尚，道士拒绝后，悟空怎么做？",
+                    "options": {
+                        "A": "转身走了",
+                        "B": "连问三声未果，怒杀两名少年道士",
+                        "C": "找国王讲理",
+                        "D": "请观音"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空谎称五百人全是亲戚要求释放，被拒后连问三声未果，怒而出手打死两道士。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "悟空给每个和尚的“护身符”是什么？",
+                    "options": {
+                        "A": "一道符纸",
+                        "B": "一截毫毛，藏于无名指指甲内，捏拳呼“齐天大圣”即可召唤",
+                        "C": "一颗丹药",
+                        "D": "一面小旗"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空拔毫毛每人一截藏于指甲内，呼喊“齐天大圣”即现身，念“记”则还原。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "和尚梦中听说的悟空形象是：",
+                    "options": {
+                        "A": "慈眉善目",
+                        "B": "磕额金睛、黄发圆头、毛脸无腮、呲牙尖嘴，如雷公",
+                        "C": "高大威猛",
+                        "D": "白面书生"
+                    },
+                    "correct": "B",
+                    "analysis": "太白金星托梦描述悟空外貌“磕额金睛，黄发圆头，毛脸无腮，呲牙尖嘴”，性情如雷公。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "悟空最受欢迎的真正原因是什么？",
+                    "options": {
+                        "A": "长相可爱",
+                        "B": "专秉忠良之心、为人抱不平，既神通广大又主持正义",
+                        "C": "会念经",
+                        "D": "有钱"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空不仅是神通广大的英雄，更因主持正义、拯救苍生而受人爱戴。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "师徒来到______国，国王宠信______、打压和尚。",
+                    "answer": "车迟|道士",
+                    "analysis": "师徒来到「车迟国」，国王宠信「道士」、打压和尚。车迟国是「尊道抑佛」的国家：和尚被抓去当苦力、挨打，道士却「风光无限」——「偏见」一旦当道，「善良」就要受苦。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "三位仙长名叫虎力、______、羊力大仙。",
+                    "answer": "鹿力",
+                    "analysis": "车迟国三位「国师」是虎力大仙、鹿力大仙、羊力大仙——三个「动物精」假扮的道士。他们靠「呼风唤雨」等「法术」哄骗国王，把持朝政——「装神弄鬼」，往往是「骗术」的伪装。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "当年______空念经未降雨，______成功施法。",
+                    "answer": "僧人|道士",
+                    "analysis": "当年车迟国大旱，僧人「空念经」未降雨，道士「成功施法」，国王从此「尊道抑佛」。其实「降雨」是「天庭」的安排，跟道士的「法术」无关——「巧合」被当成「本事」，是「迷信」的开始。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "抓一名和尚官员升______级，平民赏银______两。",
+                    "answer": "三|五十",
+                    "analysis": "车迟国规定：抓一名和尚，官员升「三级」，平民赏银「五十两」。重赏之下，和尚们被抓得「躲进深山」。「迫害」+「重赏」，让「偏见」变成「疯狂」——「利益」最容易让人「失去理性」。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "悟空变作______道士，假哭寻找出家为僧的______。",
+                    "answer": "云游|叔父",
+                    "analysis": "悟空变作一个「云游道士」，假哭说「寻找出家为僧的叔父」，混进和尚堆里打探消息。悟空「打入内部」，先摸清情况——「知己知彼」，才能「救苦救难」。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "悟空谎称______个和尚全是自己的亲戚邻里。",
+                    "answer": "五百",
+                    "analysis": "悟空谎称「五百个和尚全是自己的亲戚邻里」，要「一并带走」。这个「大话」把监官「镇住」了——「兵不厌诈」，善用「声势」也能「以虚胜实」。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "悟空拔______毛给和尚做护身符，藏在无名指______内。",
+                    "answer": "毫|指甲",
+                    "analysis": "悟空拔「毫毛」给和尚做「护身符」，藏在无名指「指甲」内，还教他们：遇难时「握紧拳头」呼「齐天大圣」，毫毛就会「显灵」。「毫毛分身」，是悟空的「分身术」——「授人以渔」，比「授人以鱼」更管用。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "呼“______大圣”即可召唤悟空，念“______”则还原毫毛。",
+                    "answer": "齐天|记",
+                    "analysis": "悟空教和尚们：呼「齐天大圣」即可召唤悟空，念「记」字则「还原毫毛」。这是「暗号」+「法宝」——和尚们有了「护身符」，才有「底气」对抗道士。一个小「暗号」，成了「希望」的寄托。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“不偏心”】车迟国国王因“偏爱”道士就打压和尚。请谈谈：为什么“偏心”会制造不公？你在生活中如何做到“对事不对人”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>偏心毁公平：</strong> 国王不管和尚冤不冤，只因为“喜欢道士”就灭佛。偏心会让人看不到事实、听不进道理，把“对错”变成“亲疏”。</p>\n                        <p class=\"mt-2\"><strong>对事不对人：</strong> ①评价同学看“这件事做得对不对”，不因为他平时和你关系好不好；②评优秀、改作业按标准，不掺个人喜好；③自己犯错了也认，不护短；④不因为“别人对我好”就包庇他的错。一颗公心，才能服人。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“生命的尊严”】和尚“想死都死不了”，活着却生不如死。请谈谈：为什么“人活着”不仅需要“呼吸”，还需要“尊严与希望”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>尊严是活着的意义：</strong> 和尚被当奴隶使唤，生命毫无尊严，连死都由不得自己——这样的“活”是一种折磨。人有尊严、有自由、有希望，才是真正“活着”。</p>\n                        <p class=\"mt-2\"><strong>珍惜与守护：</strong> ①珍惜自己拥有的自由学习、快乐成长；②尊重每一个人，包括“不起眼”的人；③遇到困难别绝望，相信“会有人来帮你、会有转机”；④也多给身边人“希望”，一句鼓励可能点亮别人。尊重生命，敬畏尊严。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“调查研究”】悟空没有贸然动手，而是先变道士“摸底”。请谈谈：为什么“先了解情况再行动”是聪明人的做法？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>摸底防失误：</strong> 悟空若一进城就打，可能伤及无辜、不知虚实。他先打听“三位国师是谁、和尚为什么受苦”，才能“对症下药”。</p>\n                        <p class=\"mt-2\"><strong>学习中的调查：</strong> ①做数学题，先读清题目条件再动笔；②写作文，先想清“写什么”再下笔；③解决矛盾，先了解“发生了什么”再判断；④读书先看目录、提问，再细读。把“搞清楚”放在“动手”前面，事半功倍。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“行动与担当”】悟空明知“打死皇亲”会惹麻烦，还是救下了五百和尚。请谈谈：为什么“明知有麻烦，正义的事还是要做”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>正义需要勇气：</strong> 悟空打死道士、放走和尚，等于公开“挑衅”三位国师和国王，麻烦很大。但“该做的事”不能因为“有麻烦”就不做。</p>\n                        <p class=\"mt-2\"><strong>从小做起：</strong> ①看到同学被欺负，勇敢站出来（或报告老师）；②不随波逐流做“坏事”，哪怕大家都做；③自己错了就承认，不逃避；④能力范围内多帮人。做正义的事，心里踏实。真正的勇敢，不是“不怕”，而是“怕也要做对的事”。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“希望的等待”】六丁六甲保护和尚，让他们“苦挨”等待取经人。请谈谈：为什么“心里有希望”的人能熬过最苦的日子？你如何给自己“打气”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>希望在，苦就熬得过去：</strong> 和尚们知道“会有人来救”，就咬牙撑着。没有希望，人一绝望就垮了；有希望，再苦也能等。</p>\n                        <p class=\"mt-2\"><strong>给自己打气：</strong> ①学习累了，想“再坚持一下就能进步”；②遇到难事，告诉自己“这件事会过去的”；③给自己设小目标，完成一个就鼓励自己；④难过时找信任的人聊聊，别一个人扛。黑夜再长，天总会亮。希望，就是黑暗中那盏不灭的灯。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“名正言顺”】悟空用“寻叔父”这个借口，顺利接近和尚。请谈谈：为什么“会说话、会找理由”有时能帮我们达成好事？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>话要说得巧：</strong> 悟空若直说“我要救和尚”，道士立刻警觉；他编“找叔父”，顺理成章走进沙滩。会“表达”，能让事情更顺利。</p>\n                        <p class=\"mt-2\"><strong>会说话的艺术：</strong> ①请求帮忙，先说清理由，别人更愿意帮；②提出建议，先肯定对方，再讲想法；③表达不同意见，语气缓和，别硬顶；④“理由”要真诚，不是撒谎骗人。会说话，不是油嘴滑舌，而是“让别人听得进去”。把话说到人心里，事就好办多了。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“能力+心肠=英雄”】悟空“专秉忠良之心，为人抱不平”。请谈谈：为什么“有本事却冷漠”不是英雄？你心中的“英雄”是怎样的？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>英雄有“心”：</strong> 悟空本事大，更难得的是“愿意管不平事”。如果只强不善良，那就是“恶霸”；只有“强+善”，才是真英雄。</p>\n                        <p class=\"mt-2\"><strong>你心中的英雄：</strong> ①可以是老师：教知识又关心人；②可以是父母：为家操劳；③可以是同学：正直、乐于助人；④也可以是你自己：做好事、守正义。英雄不一定轰轰烈烈——在平凡处发光、在需要时出手，就是英雄。愿我们都能“有本事、有担当、有温度”。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

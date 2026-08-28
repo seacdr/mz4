@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第七十九回精读：揭穿真相与救苦救难</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第七十九回精读：揭穿真相与救苦救难</h1>
+            <p class="text-lg text-gray-700 serif">“寻洞除妖逢老寿，当朝正主救婴儿”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">剖腹多心</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">国丈逃窜</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">清华洞</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">寿星收鹿</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 剖腹多心 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">剖开肚皮，滚出一堆“心”来</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    假唐僧（悟空所变）被带到殿前，国王笑着索要他的“心肝”做药引。悟空不慌不忙：“心有好几个，你要什么样的？什么色儿的？”国丈点名要“黑心”，悟空真的持牛耳短刀剖开肚皮——咕噜噜滚出一大堆心：红心、白心、黄心，还有悭贪心、嫉妒心、好胜心、杀害心……唯独找不到黑心。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">索心</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">你要什么色儿的心</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            国王说“特求长老的心肝”，假唐僧却答“<strong>心有好几个，你要什么样的？什么色儿的</strong>”——国丈指定要“黑心”，悟空便爽快应下，取刀剖腹。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">一堆心</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">悭贪心、嫉妒心、好胜心……</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            剖开肚皮滚出<strong>红心、白心、黄心</strong>，还有<strong>悭贪心、利名心、嫉妒心、计较心、好胜心、望高心、我慢心、杀害心、狠毒心、恐怖心、邪妄心、无名隐暗之心</strong>种种不善之心——却偏偏没有黑心。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">心里装什么，就显什么</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    作者借“一堆心”讲人生：人有贪心、嫉妒心、好胜心……<strong>重要的是，别让“不善之心”占据你的内心，要守好一颗“好心”</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 国丈逃窜 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">认得出齐天大圣，必是天上来的妖怪</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空现出本相，说“黑心在你国丈身上”，举棒就打。国丈睁眼一看，认得“当年孙大圣，蟠桃会上旧知名”——他是天上下来的！国丈抡盘龙拐与悟空斗了二十多回合，不敌，化作寒光逃走，还顺带拐走了那个“妖后”。国王吓得躲进谨身殿，被太监搀着出来。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">认得大圣</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">蟠桃会上旧知名</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            国丈一见悟空现本相，<strong>“认得当年孙大圣，蟠桃会上旧知名”</strong>——他在蟠桃会上见过悟空，证明他绝非凡间之物，是天上下来的妖怪。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">谨身殿</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">藏在谨身殿的昏君</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            悟空打败国丈后，众臣在<strong>谨身殿</strong>找到吓坏的国王，由四五个太监搀着出来。“谨身”二字像在提醒：<strong>对自身要有恭谨、自律的态度</strong>，国王却纵欲伤身。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">细节暴露来历</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    国丈“认得蟠桃会上的大圣”，这一句就暴露了他天上妖怪的身份。<strong>有些破绽，往往藏在“你认识谁”“你知道什么”的细节里</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 清华洞 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">九杈杨树：左三圈右三圈，开门！</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    国王供出妖怪住在“南方七十里柳林坡清华庄”。悟空赶到，只见一片杨柳却找不到庄子——土地说：没有清华庄，只有清华洞！只要在南岸找一棵九杈杨树根，左转三圈、右转三圈，连叫三声“开门”，洞府自现。悟空依言，两扇门开、树迹全无，洞上写着“清华仙府”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">九杈杨树</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">左三圈，右三圈，开门！</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            土地指点：在南岸找<strong>九杈杨树根</strong>，<strong>左转三圈、右转三圈，连叫三声“开门”</strong>，洞府便现——像“芝麻开门”一样神奇。八戒在外等不及，一耙推倒九杈杨树，竟流出血来——<strong>那棵树也是个看门的树精</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">清华仙府</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">洞里藏着白鹿精</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            洞门开处，老怪正搂着“妖后”密谈。原来“清华庄”是装给人看的，真身是<strong>清华洞里的野兽</strong>——国丈，其实是一只<strong>白鹿精</strong>（南极仙翁的坐骑偷下凡）。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">表里不一，终会露馅</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    妖怪自称“清华庄”的体面人家，实际是住在洞里的野兽。<strong>一个人说自己是“什么人”，不如看他“做什么事”</strong>——表面的体面，骗不了真正的行家。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 寿星收鹿 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">一拐杖，三个枣，一千一百一十一个孩子</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    白鹿精化作寒光逃走，却被南极老人（寿星）罩住——原来这鹿是他的坐骑，偷了盘龙拐下凡。寿星用勒袍腰带拴住鹿脖，悟空八戒进洞打死白面狐狸（妖后），一把火把清华洞烧个干净。寿星送国王三枚仙枣，国王吞下病就好了。最后半空中落下1111只鹅笼，孩子们全被送回，满城百姓抬八戒、扛沙僧、顶悟空、簇拥唐僧，感激不尽。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">寿星收鹿</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">我的一副脚力</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            南极老人（寿星）赶到，罩住寒光求情：白鹿是<strong>“我的一副脚力”（坐骑）</strong>，趁他下棋时偷了盘龙拐下凡。寿星用<strong>勒袍腰带扣住鹿颈</strong>，牵鹿而去。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">三枚仙枣</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">国王病愈</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            国王身体被狐狸精掏空，求寿星救命。寿星说没带丹药，便从袖中取出<strong>三枚东华帝君献茶的枣儿</strong>——国王吞下“渐觉身轻，病退身好”。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c33')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">万民拥戴</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c33-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">抬、扛、顶、簇拥</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c33-back">
+                        <p class="text-gray-700 text-left">
+                            半空中落下<strong>1111只鹅笼</strong>，孩子们全被送回。百姓欢喜：<strong>抬着猪八戒、扛着沙和尚、顶着孙悟空、簇拥着唐三藏</strong>——四个动词“抬、扛、顶、簇拥”，按各自身形写得精准又有情。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">救人，才真正赢得人心</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    赶跑妖怪、救活国王，百姓未必领情；救回一千多个孩子，才让满城人发自肺腑地感恩。<strong>真正的好事，是让普通人活得好、活得有盼头</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第七十九回“寻洞除妖逢老寿，当朝正主救婴儿”讲的是比丘国收尾：悟空剖腹现“一堆心”揭穿国丈、国丈是天上来的妖怪化作寒光逃走；寻到九杈杨树里的清华洞，南极仙翁收走坐骑白鹿、悟空八戒打死白面狐狸；寿星三枚仙枣医好国王，1111只鹅笼送回孩子，满城百姓感激涕零。这一回让我们看到：心里装什么就显什么、细节暴露来历、表里不一终会露馅、救人才能真正赢得人心。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第七十九回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "国王向“假唐僧”索要心肝，悟空怎么回答？",
+                    "options": {"A": "吓得求饶","B": "“心有好几个，你要什么样的？什么色儿的？”","C": "赶紧逃跑","D": "假装没有"},
+                    "correct": "B",
+                    "analysis": "悟空毫不惊慌：“心有好几个，你要什么样的？什么色儿的？”——把挖心说得像买糖一样轻松，胆识过人。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "悟空剖开肚皮后，滚出了一堆什么？",
+                    "options": {"A": "银子","B": "红心、白心、黄心以及悭贪心、嫉妒心、好胜心等种种心","C": "五脏","D": "水果"},
+                    "correct": "B",
+                    "analysis": "剖开肚皮“咕噜噜滚出一大堆心”：红白黄心之外，还有悭贪心、利名心、嫉妒心、好胜心、杀害心等种种不善之心。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "一堆心里唯独没有哪种心？",
+                    "options": {"A": "红心","B": "黑心","C": "白心","D": "黄心"},
+                    "correct": "B",
+                    "analysis": "悟空现出的一堆心里唯独没有黑心——他说“我和尚家一片都是好心”，黑心在国丈身上。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "国丈为什么一见悟空现本相就认得他？",
+                    "options": {"A": "听说过","B": "“认得当年孙大圣，蟠桃会上旧知名”——他在蟠桃会上见过悟空","C": "悟空报名字","D": "猜的"},
+                    "correct": "B",
+                    "analysis": "国丈“认得当年孙大圣，蟠桃会上旧知名”——这句暴露了他天上下来的妖怪身份。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "国丈的兵器是什么？",
+                    "options": {"A": "九齿钉耙","B": "盘龙拐（老寿星被偷来的拐杖）","C": "金箍棒","D": "方天画戟"},
+                    "correct": "B",
+                    "analysis": "国丈使出“盘龙拐”——原来是老寿星（南极仙翁）的拐杖，被白鹿偷来当兵器。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "国丈打不过悟空后做了什么？",
+                    "options": {"A": "投降","B": "虚晃一拐化作寒光逃走，还带走了妖后","C": "请救兵","D": "跪下求饶"},
+                    "correct": "B",
+                    "analysis": "国丈与悟空斗二十多回合，盘龙拐抵不住金箍棒，虚晃一拐“化作一道寒光逃走”，把进贡的妖后也带出宫。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "国王躲在哪里被找到？",
+                    "options": {"A": "地窖","B": "谨身殿（由太监搀着出来）","C": "城墙","D": "宫外"},
+                    "correct": "B",
+                    "analysis": "悟空打败国丈后，众臣在“谨身殿”找到吓坏的国王，由四五个太监搀着出来——这个殿名也在提醒人要“谨身”。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "清华庄其实是什么地方？",
+                    "options": {"A": "一个大庄园","B": "清华洞（妖怪的洞府，门上写着“清华仙府”）","C": "一座城","D": "一个村子"},
+                    "correct": "B",
+                    "analysis": "土地说“此地只有个清华洞，没有清华庄”——妖怪在国王面前装“庄”，真实住处却是山洞。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "怎么打开清华洞的门？",
+                    "options": {"A": "念咒","B": "在九杈杨树根左转三圈、右转三圈，连叫三声“开门”","C": "推门","D": "砸门"},
+                    "correct": "B",
+                    "analysis": "土地指点：在南岸找九杈杨树根，左转三圈、右转三圈，连叫三声“开门”——洞门自开，树迹全无，像“芝麻开门”。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "八戒把九杈杨树推倒，发生了什么？",
+                    "options": {"A": "没什么","B": "流出血来——那棵树也是看门的树精","C": "塌了","D": "着火"},
+                    "correct": "B",
+                    "analysis": "八戒推倒九杈杨树，“鲜血直流、嘤嘤有声”——原来这树也是个精怪，是给白鹿看门的。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "国丈（老道士）的真身是什么？",
+                    "options": {"A": "白鹿精（南极仙翁的坐骑）","B": "白面狐狸","C": "青狮","D": "白象"},
+                    "correct": "A",
+                    "analysis": "国丈现出本相“原来是只白鹿”——南极仙翁说它是“我的一副脚力”，趁他下棋时偷了盘龙拐下凡。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "妖后（十六岁的美女）的真身是什么？",
+                    "options": {"A": "白鹿","B": "白面狐狸","C": "蜘蛛精","D": "白骨精"},
+                    "correct": "B",
+                    "analysis": "悟空八戒进洞追打，妖后化作寒光逃跑被一棒打死——现出原形“白面狐狸”。八戒要筑烂，悟空留它去见昏君。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "白鹿被收时，寿星用什么拴住它？",
+                    "options": {"A": "绳子","B": "勒袍腰带（扣住鹿颈）","C": "金链","D": "藤条"},
+                    "correct": "B",
+                    "analysis": "寿星“解下勒袍腰带，把这鹿扣住颈项”，牵鹿而去——它就是偷跑下凡的坐骑。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "国王的病是怎么治好的？",
+                    "options": {"A": "吃唐僧肉","B": "寿星送的三枚仙枣（东华帝君献茶的枣儿）","C": "喝仙水","D": "慢慢养"},
+                    "correct": "B",
+                    "analysis": "寿星说没带丹药，从袖中取出三枚东华帝君献茶的枣儿送国王——国王吞下“渐觉身轻，病退身好”。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "那些被藏起来的孩子最后怎么样了？",
+                    "options": {"A": "没找到","B": "半空中落下1111只鹅笼，孩子们全被神送回来，满城认领","C": "被妖怪吃了","D": "留在山坳"},
+                    "correct": "B",
+                    "analysis": "悟空让诸神“半空中一声风响，路两边落下1111个鹅笼，里面有小孩子啼哭”——孩子全被平安送回，满城欢庆。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "百姓感谢师徒时，用了哪四个精准的动词？",
+                    "options": {"A": "抱、亲、摸、亲","B": "抬着猪八戒、扛着沙和尚、顶着孙悟空、簇拥着唐三藏","C": "拉着、牵着、推着、背着","D": "围着、拥着、扶着、搀着"},
+                    "correct": "B",
+                    "analysis": "百姓“抬着猪八戒（最重）、扛着沙和尚、顶着孙悟空（最小）、簇拥着唐三藏”——四个动词按各自身形写得精准又有情。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "悟空剖腹滚出一堆心，唯独没有______心。",
+                    "answer": "黑",
+                    "analysis": "“黑心”是国丈要的，悟空偏偏没有——他说“我和尚家一片都是好心，黑心在你这国丈身上”。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "国丈“认得当年孙大圣，______桃会上旧知名”。",
+                    "answer": "蟠",
+                    "analysis": "“蟠桃会”是天庭盛会。国丈在蟠桃会上见过悟空，这一句就暴露他是天上下来的妖怪。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "国丈的兵器是盘______拐，原是老寿星的拐杖。",
+                    "answer": "龙",
+                    "analysis": "“盘龙拐”上雕着龙，是南极仙翁的拐杖——被白鹿偷来下凡当兵器，最后寿星“把我拐棒也偷来了”一句话点破。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "清华洞的门要绕九杈______树根左三圈、右三圈才开。",
+                    "answer": "杨",
+                    "analysis": "“九杈杨树”是洞门的机关，也是个看门树精——八戒推倒它，还流出血来。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "国丈现出本相，原来是一只白______精。",
+                    "answer": "鹿",
+                    "analysis": "“白鹿”是南极仙翁的坐骑，趁他下棋偷了拐杖下凡——寿星用勒袍腰带拴住鹿颈牵走。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "妖后现出原形，是一只白面______狸。",
+                    "answer": "狐",
+                    "analysis": "“白面狐狸”是吸国王精气的妖后——悟空留它尸身去见昏君，让国王看看自己的“美人”是啥。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "寿星从袖中取出三枚______枣，医好国王的病。",
+                    "answer": "仙",
+                    "analysis": "“仙枣”是东华帝君献茶之物，南极仙翁自己都没吃——三枚下肚，国王身轻病退。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "半空中落下1111只鹅______，小孩全被送回。",
+                    "answer": "笼",
+                    "analysis": "“鹅笼”是装孩子的笼子——诸神把它们连笼送回，满城百姓欢欢喜喜认领，救儿之恩没齿难忘。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“心里装什么”】悟空剖腹滚出悭贪心、嫉妒心、好胜心、杀害心等，却唯独没有黑心。请谈谈：为什么“心里装的念头”决定一个人是谁？你如何守护自己的“好心”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>相由心生，行由心定：</strong> 作者把人的种种心思“装进”肚子里——<strong>一个人心里装着善，就做善事；装着贪和嫉，就做坏事</strong>。</p>\n                        <p class=\"mt-2\"><strong>守护好心：</strong> ①看见别人好，为ta高兴，不嫉妒；②想要东西，凭努力争取，不贪不占；③有坏念头时，马上提醒自己“换个想法”；④多做帮助人的小事，让善念变习惯；⑤每天睡前想想“今天的心，干净吗”。<strong>心是人生的“方向盘”——把好方向盘，路就不会偏</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“表里不一”】妖怪装成体面的“清华庄”人家，实则是住在洞里的野兽。请谈谈：为什么“看一个人做什么”比“听一个人说什么”更可靠？你如何判断一个人的“真面目”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>说得好听，不如做得好看：</strong> 国丈自称“清华庄”的体面老丈人，实际是吃小孩心肝的白鹿——<strong>嘴上说的不算，做出来的才算</strong>。</p>\n                        <p class=\"mt-2\"><strong>看真面目：</strong> ①多观察他“怎么做”，少听他“怎么说”；②看他对待弱者和服务员的态度；③看他在没人监督时做什么；④看他答应的事有没有做到；⑤时间长了，伪装自然会破。<strong>路遥知马力，日久见人心</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“知错与改过”】国王被妖道骗得团团转，差点害死一千多个孩子，最后羞愧无地。请谈谈：为什么“承认错误”需要勇气？犯错之后，你如何补救、如何避免再犯？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>认错，是改正的第一步：</strong> 国王在满朝文武面前“羞愧无地”，却也因此保住了一国孩子——<strong>不认错的错，才是真正的错；肯认错的人，才有救</strong>。</p>\n                        <p class=\"mt-2\"><strong>知错就改：</strong> ①做错事，第一时间承认，不推卸；②真诚道歉，说清“错在哪、怎么改”；③把补救做在前面，尽量减少损失；④想一想“为什么会错”，堵住根源；⑤用行动证明自己改了。<strong>犯错不可怕，可怕的是错了还不认、不改</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“救人救到底”】悟空不仅赶跑妖怪，还把孩子全送回、劝国王改过。请谈谈：为什么“帮人帮到底”才算真帮忙？你如何把事情“做完整”而不是“半途而废”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>帮一半，等于没帮：</strong> 悟空若只赶跑白鹿，孩子还藏在山坳里、国王还在生病——<strong>只有把孩子们送回、把病治好，这件事才算“做完整”</strong>。</p>\n                        <p class=\"mt-2\"><strong>做完整：</strong> ①做事前想“这件事的‘完整’是什么样”；②做完主体，再检查“还有没有尾巴”；③答应帮忙，就负责到底，不中途撂挑子；④把“差不多”换成“确认无误”；⑤善始善终，是最大的靠谱。<strong>有头有尾，才值得托付</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“舍利取义”】唐僧拒收国王的金银路费，分文不受。请谈谈：为什么“该拿的才拿、不该拿的不拿”是一种品格？你如何做到“不为小利失大义”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>君子爱财，取之有道：</strong> 唐僧救了全国孩子，国王送金银，他却分文不受——<strong>帮人不是为了“回报”，收了反而玷污了这份善</strong>。</p>\n                        <p class=\"mt-2\"><strong>不为小利失大义：</strong> ①别人感激你的谢礼，可酌情接受，但不当“交易”；②帮了忙就“漫天要价”，会让人心寒；③该拒绝的“好处”要拒绝，守住底线；④把“这件事对不对”放在“划不划算”前面；⑤真正的收获，是内心的踏实和别人的敬重。<strong>人品，比小利值钱得多</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“积德行善”】师徒在比丘国救下1111个孩子，被满城百姓立牌位供奉。请谈谈：为什么“救人一命，胜造七级浮屠”？你如何理解“赠人玫瑰，手有余香”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>善行的回响：</strong> 唐僧师徒救了一千多个孩子，百姓“抬着、扛着、顶着、簇拥着”不让他们走，还立牌位供奉——<strong>你对世界付出的善，世界会加倍还给你</strong>。</p>\n                        <p class=\"mt-2\"><strong>赠人玫瑰：</strong> ①帮同学讲一道题，自己也更熟练；②扶老人过马路，心里暖暖的；③分享零食、传递善意，收获友谊；④做志愿、捐旧衣，让爱流动；⑤记住：帮人时你收获的快乐，比受助者还多。<strong>每一个善举，都会在你心里开出花来</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

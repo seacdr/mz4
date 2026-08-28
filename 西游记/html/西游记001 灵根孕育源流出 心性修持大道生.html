@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第一回精读：心性的历程</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第一回精读：心性的历程</h1>
+            <p class="text-lg text-gray-700 serif">“灵根孕育源流出，心性修持大道生”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-origin')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-origin">第一章：幻化与象征</button>
+                <button onclick="NavigationModule.switchTab('section-crisis')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-crisis">第二章：觉醒与危机</button>
+                <button onclick="NavigationModule.switchTab('section-world')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-world">第三章：堪破红尘</button>
+                <button onclick="NavigationModule.switchTab('section-enlighten')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-enlighten">第四章：悟空之谜</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+
+        <!-- Section 1: Origin -->
+        <section id="section-origin" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">世界观与仙石的隐喻</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    本章节将带您探索《西游记》庞大的宇宙观以及主角孙悟空诞生的本源。在这里，您会发现名著并非随意的神话编造，四大部洲的设定与花果山仙石的尺寸，皆是古人对宇宙时空与自然法则的具象化隐喻。点击并观察下方数据，理解“天地精华”的真正含义。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>四大部洲设定</h3>
+                    <p class="text-sm text-gray-600 mb-4">西游记的世界由四大部洲组成，它们并非现实世界的洲际划分，而是带有特定象征意义的音译领域。</p>
+                    <div class="grid grid-cols-2 gap-3 text-center">
+                        <div class="bg-gray-50 p-3 rounded border border-gray-200">东胜神洲<br><span class="text-xs text-gray-500">傲来国所在</span></div>
+                        <div class="bg-gray-50 p-3 rounded border border-gray-200">西牛贺洲<br><span class="text-xs text-gray-500">寻道圣地</span></div>
+                        <div class="bg-amber-50 p-3 rounded border border-amber-200 font-bold text-amber-900">南赡部洲<br><span class="text-xs text-amber-700">人类俗世</span></div>
+                        <div class="bg-gray-50 p-3 rounded border border-gray-200">北俱芦洲<br><span class="text-xs text-gray-500">偏远之地</span></div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>仙石的时空密码</h3>
+                    <p class="text-sm text-gray-600 mb-4">花果山山顶的仙石，其尺寸暗合天地运行的规律。它不仅是石头，更是宇宙时空的缩影。</p>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between items-center border-b border-gray-100 pb-2">
+                            <span class="font-medium">高度：三丈六尺五寸</span>
+                            <span class="text-amber-700 bg-amber-50 px-2 py-1 rounded text-sm">按周天365度</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-100 pb-2">
+                            <span class="font-medium">圆周：二丈四尺</span>
+                            <span class="text-amber-700 bg-amber-50 px-2 py-1 rounded text-sm">政立24节气</span>
+                        </li>
+                        <li class="flex justify-between items-center pb-2">
+                            <span class="font-medium">孔窍：九窍八孔</span>
+                            <span class="text-amber-700 bg-amber-50 px-2 py-1 rounded text-sm">九宫八卦</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 rounded-xl p-8 text-center mt-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：石猴代表了什么？</h3>
+                <p class="text-gray-800 italic mb-4">“内观不识因无相，外合明知作有形”</p>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    原著中的诗句揭示了谜底：这只由天地精华孕育的石猴，其实代表了我们每个人的<strong class="text-amber-900">“心性”与“心灵”</strong>。心灵无形无相（无相），却能认知世界（有形）。</br>西游记讲述的，本质上是一个修心的故事。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: Crisis -->
+        <section id="section-crisis" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">从哲学思考到生死危机</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    猴群为何能诞生王者？因为他们提出了哲学式的终极一问：“水是从哪里来的？”——这象征着人类对生命起源的追问。然而，即便拥有了安身立命的水帘洞，三百年的安逸后，美猴王却陷入了存在主义的危机。本区图表展示了石猴“道心”开发的情感轨迹。
+                </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
+                <h3 class="text-lg font-bold mb-6 text-center serif">美猴王心性觉醒轨迹图</h3>
+                <div class="chart-container">
+                    <canvas id="monkeyJourneyChart"></canvas>
+                </div>
+                <div class="mt-4 text-center text-sm text-gray-500">
+                    点击上方图表节点查看详细心境变化
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-6 bg-gray-50 rounded-lg border-l-4 border-gray-400">
+                    <h4 class="font-bold text-lg mb-2">哲学王的诞生</h4>
+                    <p class="text-gray-700 text-sm">
+                        猴子们不再仅仅满足于吃饱喝足，而是去寻找瀑布的源头（意义）。石猴不仅找到了源头，还找到了庇护所，并引用《论语》“人而无信，不知其可”确立契约，从而称王。
+                    </p>
+                </div>
+                <div class="p-6 bg-amber-50 rounded-lg border-l-4 border-amber-600">
+                    <h4 class="font-bold text-lg mb-2 text-amber-900">无常与远虑</h4>
+                    <p class="text-gray-700 text-sm">
+                        三百年后，猴王突然落泪。他意识到自由自在的生命终将结束（生死无常）。通臂猿猴指出这是“道心开发”，因为只有对生死有了长远的忧虑，才会踏上真正的修心大道。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The World -->
+        <section id="section-world" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">南赡部洲：红尘百态的倒影</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    美猴王离开舒适圈，渡海来到南赡部洲（人类世界）寻找神仙。他在这里游历了八九年，学会了人类的语言和穿衣，但更重要的是，他观察到了人类社会的盲目与欲望。请<strong class="text-amber-700">点击下方诗句</strong>，解析作者借猴王之眼对世俗名利的深刻批判。
+                </p>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8 items-start">
+                <div class="w-full md:w-1/2 bg-[#fdfbf7] p-8 rounded-xl shadow-inner border border-gray-200">
+                    <h3 class="text-xl font-bold mb-6 serif text-center">《争名夺利诗》</h3>
+                    <div class="space-y-4 text-center text-lg serif">
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line1', this)">“争名夺利几时休？早起迟眠不自由。”</p>
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line2', this)">“骑着驴骡思骏马，官居宰相望王侯。”</p>
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line3', this)">“只愁衣食耽劳碌，何怕阎君就取勾。”</p>
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line4', this)">“继子荫孙图富贵，更无一个肯回头。”</p>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-1/2 bg-white p-8 rounded-xl shadow-md border-t-4 border-amber-800 min-h-[300px] flex flex-col justify-center transition-all" id="meaning-panel">
+                    <div class="text-center">
+                        <span class="text-4xl">👆</span>
+                        <h4 class="text-xl font-bold mt-4 mb-2 text-gray-400">点击左侧诗句查看解析</h4>
+                        <p class="text-gray-500">深入理解西游记对世俗欲望的批判。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-12 p-6 bg-stone-100 rounded text-center">
+                <p class="text-gray-700 text-left">猴王在人类社会没有找到觉悟者，因为世人皆困于名利。</br>于是他再次横渡大洋，前往<span class="font-bold text-amber-900">西牛贺洲</span>，终于在樵夫的歌声（“相逢处非仙即道，静坐讲黄庭”）中寻得仙踪。</p>
+            </div>
+        </section>
+
+        <!-- Section 4: Enlightenment -->
+        <section id="section-enlighten" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">解密：方寸之间与孙悟空</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    在西牛贺洲，猴王终于拜入了须菩提祖师门下。《西游记》在此处展现了极其精妙的文字游戏与哲学隐喻。在这里，修行之地不在远方高山，而在于人体之内；主角的名字，更是点明了佛家修行的最高境界。点击翻转卡片，揭开千古谜底。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-location')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">修行之地</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-location-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">灵台方寸山，斜月三星洞</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘隐喻)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-location-back">
+                        <div class="text-4xl font-bold text-amber-900 mb-4 serif">心</div>
+                        <p class="text-gray-700 text-left">
+                            <strong>字谜解析：</strong><br>
+                            “灵台”和“方寸”在古文中皆是“心”的别称。<br>
+                            “斜月三星”更是汉字“心”的象形：那一弯斜钩好似斜月，三点宛如三星。<br><br>
+                            <strong>寓意：</strong> 修仙不必外求，真正的道场就在自己的内心里。修仙即是修心。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-name')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">主角赐名</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-name-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">孙悟空</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘隐喻)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-name-back">
+                        <div class="text-2xl font-bold text-amber-900 mb-4 serif flex justify-center gap-4">
+                            <span>孙 (婴儿本初)</span>
+                            <span>悟 (觉醒)</span>
+                            <span>空 (万法皆空)</span>
+                        </div>
+                        <p class="text-gray-700 text-left text-sm">
+                            <strong>孙：</strong> 繁体作“孫”，拆为“子系”。子者男儿，系者婴细，合称“婴儿之本论”，象征未受污染的纯净初生之态（赤子之心）。<br>
+                            <strong>悟空：</strong> 须菩提祖师本是佛家“解空第一”的弟子。“悟空”直指终极智慧：破除“顽空”（僵化虚无），从混沌到觉悟，由执着归于空明。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-amber-50 rounded-xl p-8 text-center mt-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“鸿蒙初辟原无姓，打破顽空须悟空”</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    至此，天地生成的石猴拥有了姓名与方向。</br>接下来的九九八十一难，表面是降妖除魔，实则是<strong class="text-amber-900">克服内心杂念与执念的“历劫明心”之旅。</strong>
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》绝不仅是一本讲述降妖伏魔的神话故事，它更是一部关于“心性成长”、探索人生意义与认识社会的智慧之书。本练习册结合第一回精读讲义设计，希望你在答题的过程中，不仅读懂名著，更能启发对自我与社会的思考。
+                </div>
+            </div>
+
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第一回原文精讲内容构建</p>
+    </footer>
+
+    <!-- JavaScript Application Logic Local -->
+    <script>
+        /**
+         * 页面本地数据
+         * 集中管理页面中的所有的结构化数据
+         */
+        const Page_DATA = {
+            poemData: {
+                line1: {
+                    title: "无尽的奔波",
+                    content: "反映了世人一生被名声和利益驱使，早出晚归，失去了生命本真的自由。这是对现代人'996'式劳碌的古代预言。",
+                    icon: "🏃‍♂️"
+                },
+                line2: {
+                    title: "欲望的膨胀",
+                    content: "得陇望蜀。有了驴子就想要骏马，当了宰相还想做王侯。揭示了人类欲望的无止境，越满足越贪婪。",
+                    icon: "📈"
+                },
+                line3: {
+                    title: "无视生死大事",
+                    content: "人们只担忧眼前的衣食生计，为了物质劳碌一生，却根本不害怕死神（阎君）的降临，完全不思考生命的终极归宿。",
+                    icon: "⚖️"
+                },
+                line4: {
+                    title: "执念的传承",
+                    content: "哪怕到了生命的尽头，依然想着要把财富传承给子孙继续享受，至死没有一个人愿意回头反思生命的意义。",
+                    icon: "🔄"
+                }
+            },
+            chartData : {
+                labels: ['石猴诞生', '入水帘洞称王', '三百年享乐', '突发悲泣(悟死)', '云游寻道'],
+                values: [100, 40, 30, 80, 95],
+                details: [
+                    "天地精华，纯洁无暇 (未食凡间烟火)",
+                    "寻找意义，建立契约，获得安居",
+                    "失去远虑，沉溺于自由自在的玩乐",
+                    "意识到生命终结，产生危机感",
+                    "放弃王位与安逸，立下远大志向"
+                ]
+            }
+        };
+
+        // 图表渲染模块
+        const ChartModule = {
+            init() {
+                const ctx = document.getElementById('monkeyJourneyChart').getContext('2d');
+                const hoverLinePlugin = {
+                    id: 'hoverLine',
+                    afterDraw: chart => {
+                        if (chart.tooltip?._active?.length) {
+                            let x = chart.tooltip._active[0].element.x;
+                            let yAxis = chart.scales.y;
+                            let ctx = chart.ctx;
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.moveTo(x, yAxis.top);
+                            ctx.lineTo(x, yAxis.bottom);
+                            ctx.lineWidth = 1;
+                            ctx.strokeStyle = '#92400e';
+                            ctx.setLineDash([5, 5]);
+                            ctx.stroke();
+                            ctx.restore();
+                        }
+                    }
+                };
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Page_DATA.chartData.labels,
+                        datasets: [{
+                            label: '心灵觉悟指数',
+                            data: Page_DATA.chartData.values,
+                            borderColor: '#92400e',
+                            backgroundColor: 'rgba(146, 64, 14, 0.1)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#92400e',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                titleColor: '#92400e',
+                                bodyColor: '#333',
+                                borderColor: '#e5e7eb',
+                                borderWidth: 1,
+                                padding: 12,
+                                displayColors: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        let text = Page_DATA.chartData.details[context.dataIndex];
+                                        let wrapped = [];
+                                        for(let i=0; i<text.length; i+=16) {
+                                            wrapped.push(text.substring(i, i+16));
+                                        }
+                                        return wrapped;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 110,
+                                title: { display: true, text: '道心 / 觉悟度', font: { family: 'Noto Sans SC' } },
+                                ticks: { display: false },
+                                grid: { color: '#f3f4f6' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { font: { family: 'Noto Sans SC', weight: 'bold' } }
+                            }
+                        },
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                    },
+                    plugins: [hoverLinePlugin]
+                });
+            }
+        };
+
+        // 诗句互动管理模块
+        const PoemModule = {
+            updateMeaning(lineKey, element) {
+                document.querySelectorAll('.poem-line').forEach(line => line.classList.remove('active'));
+                element.classList.add('active');
+
+                const panel = document.getElementById('meaning-panel');
+                const data = Page_DATA.poemData[lineKey];
+                
+                panel.innerHTML = `
+                    <div class="text-center animate-fade-in">
+                        <span class="text-4xl">${data.icon}</span>
+                        <h4 class="text-2xl font-bold mt-4 mb-4 text-amber-900 serif">${data.title}</h4>
+                        <p class="text-gray-700 leading-relaxed text-lg">${data.content}</p>
+                    </div>
+                `;
+                panel.style.opacity = '0';
+                setTimeout(() => {
+                    panel.style.transition = 'opacity 0.4s ease';
+                    panel.style.opacity = '1';
+                }, 50);
+            }
+        };
+
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            try { ChartModule.init(); }   catch(e) { console.error('ChartModule:', e); }
+        });
+    </script>
+
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "花果山仙石高度为“三丈六尺五寸”，圆周为“二丈四尺”，且上有“九窍八孔”。关于这些尺寸数理在原著中的象征隐喻，下列说法最准确的是：",
+                    "options": {
+                        "A": "分别对应周天365度、二十四节气与九宫八卦，象征天地时空秩序的完备与融合",
+                        "B": "分别对应三十六天罡、二十四诸天与九品莲台，象征该石吸收了佛道两教的至高法力",
+                        "C": "分别对应一年365天、二十四小时与人体九窍八脉，象征仙石具有与人类完全相同的生理结构",
+                        "D": "分别对应三山五岳、二十四史与八荒九州，象征这块仙石承载着中华大地厚重的历史气运"
+                    },
+                    "correct": "A",
+                    "analysis": "原著第一回明确说明：石按三丈六尺五寸高，按周天365度；按二丈四尺围，按政立二十四节气；上有九窍八孔，按九宫八卦。这体现了天地时空与自然规律的具象化融合。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "石猴出世之初“目运金光，射冲斗府”，惊动了天庭玉皇大帝。但为何在他“服水饮食”之后，眼中的金光便渐渐熄灭了？",
+                    "options": {
+                        "A": "因为花果山的水木精华含有凡俗浊气，抑制了石猴体内的先天神力",
+                        "B": "象征生命一旦食用了后天烟火食物，便从纯净的先天天地精华落入了凡俗世俗生活",
+                        "C": "因为玉帝派遣千里眼与顺风耳暗中施展法术，收回了石猴的天生神通",
+                        "D": "因为石猴在暴饮暴食后伤及脾胃，导致体内真气无法汇聚于双目"
+                    },
+                    "correct": "B",
+                    "analysis": "石猴未进食前是纯粹的先天灵根、天地精华；一旦“服水饮食”，即开始接触后天物质与人间烟火，代表从超凡的先天灵性降为凡俗生命。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "众猴在山涧洗澡时，忽然提出“这股水不知是哪里的水”，并决定顺流而寻其源头。这一情节在哲学与人性觉醒层面代表了什么？",
+                    "options": {
+                        "A": "反映了猴群在物质生活得到满足后，开始产生探索自然规律与寻找生命本源的理性思考",
+                        "B": "暗示花果山即将发生重大水患，表现了猴群对生存环境的忧患意识",
+                        "C": "说明石猴早已暗中得知水帘洞的存在，故意以此考验并引导众猴",
+                        "D": "体现了古代劳动人民在面对水资源短缺时积极寻找新水源的实践精神"
+                    },
+                    "correct": "A",
+                    "analysis": "追问“水从哪里来”是对“源头”与“本源”的追问。从单纯享乐到探寻源头，标志着生命的智慧开始萌芽，脱离纯粹的动物本能，走向对意义的探索。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "石猴跳入瀑布发现水帘洞并安全返回后，引用《论语》“人而无信，不知其可”劝说众猴践行承诺拜他为王。这表明石猴能够称王的关键在于：",
+                    "options": {
+                        "A": "拥有绝对的武力优势，使众猴不得不屈服于他的威严",
+                        "B": "依靠天生石猴的高贵出身，赢得了老猴们的推崇与拥戴",
+                        "C": "不仅具备敢为人先的担当勇气，更强调社会交往中的契约精神与信用原则",
+                        "D": "巧妙利用了众猴对未知水帘洞的恐惧心理，实现了权力的垄断"
+                    },
+                    "correct": "C",
+                    "analysis": "石猴率先探洞体现了勇气与贡献；回洞后引《论语》“人而无信不知其可”，要求众猴履行此前“谁进得去出得来就拜谁为王”的约定，确立了契约与信用。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "原著第一回诗云：“内观不识因无相，外合明知作有形……历代人人皆属此，称王称圣任纵横。”结合精读讲义，这里的“石猴”本质上隐喻着：",
+                    "options": {
+                        "A": "古代社会中突破封建礼教束缚的农民起义领袖形象",
+                        "B": "每个人内心深处那颗无形无相却能认知世界、造就万物的“心”（心性/心灵）",
+                        "C": "道家学说中追求长生不老、羽化登仙的修道者典范",
+                        "D": "大自然在千百年演化过程中孕育出的神奇灵性生物"
+                    },
+                    "correct": "B",
+                    "analysis": "《西游记》以猴喻心。“内观不识因无相，外合明知作有形”指人心无形无相，却能内省认知、外合万物。石猴的诞生与修持，本质上是对心灵（心性）探索的隐喻。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "美猴王享乐三百年后，在欢宴中忽发忧虑，潸然泪下。通臂猿猴称赞他这是“道心开发”。美猴王此时落泪的根本原因是什么？",
+                    "options": {
+                        "A": "担心花果山的果实终有吃尽的一天，猴群将面临饥荒危机",
+                        "B": "因长时间未离开花果山而感到孤独寂寞，渴望前往外界繁华世界",
+                        "C": "意识到当下的安逸快乐是短暂的，生命终将面临“阎王老子管着”的生死无常",
+                        "D": "感叹自己虽为猴王，却始终未能掌握飞天遁地的神通法术"
+                    },
+                    "correct": "C",
+                    "analysis": "美猴王忧虑“将来年老血衰，暗中有阎王老子管着，一旦身亡，焉不能固久居人世”。这种对“生死无常”的悲悯与警醒，标志着对生命终极价值的思考（即“道心开发”）。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "通臂猿猴指点美猴王，世上有三类人不受阎王管辖，可实现长生不老。这三类人分别是“佛、仙、神圣”，他们在文化内涵上分别对应了中国传统文化中的：",
+                    "options": {
+                        "A": "佛教（释）、道教（道）、儒家（儒）",
+                        "B": "墨家、法家、道家",
+                        "C": "天道、人道、地道",
+                        "D": "神仙、菩萨、罗汉"
+                    },
+                    "correct": "A",
+                    "analysis": "通臂猿猴所说的“佛、仙、神圣”分别对应释家（佛）、道家（仙）与儒家（圣），体现了三教合一的传统文化思想背景。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "美猴王在南赡部洲游历八九年，目睹世人“争名夺利几时休，早起迟眠不自由”。原著借《争名夺利诗》主要批判了怎样的社会现象？",
+                    "options": {
+                        "A": "底层百姓生活极其困苦，终日劳作却依然无法温饱的残酷现实",
+                        "B": "世人困于功名富贵与物质欲望，终日奔波劳碌，却从未思考过生命的真正归宿",
+                        "C": "古代社会官场腐败，官员们为了升官发财而不择手段的丑态",
+                        "D": "世人缺乏长远的人生产业规划，导致子孙后代无法继承家业"
+                    },
+                    "correct": "B",
+                    "analysis": "《争名夺利诗》“骑着驴骡思骏马，官居宰相望王侯。只愁衣食耽劳碌，何怕阎君就取勾”深刻批判了世人被无限膨胀的欲望和名利所奴役，终日劳碌却忽视生命生死大项的盲目状态。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "樵夫在山林中所唱的歌谣《满庭芳》中提到了“烂柯”的典故（“观棋烂柯”）。这一典故在原著中主要用来表达什么意境？",
+                    "options": {
+                        "A": "山中神仙棋艺高超，普通凡人无法企及",
+                        "B": "砍柴工具极其容易损坏，提醒樵夫要及时更换",
+                        "C": "超脱世俗名利的清静自在，以及山中岁月漫长、人间光阴飞逝的沧桑感",
+                        "D": "隐居生活十分艰苦，缺乏基本的物资保障"
+                    },
+                    "correct": "C",
+                    "analysis": "“烂柯”典自晋代王质入山伐木看仙人下棋、斧柄朽烂的传说，象征山中仙界与世俗时间节奏的差异，表达了超脱红尘、岁月流逝的脱俗意境。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "须菩提祖师的住处名为“斜月三星洞”，隐语精妙。结合汉字结构与象形特征，“斜月三星”其实是哪一个汉字的隐喻？",
+                    "options": {
+                        "A": "仙（一斜人旁加三笔）",
+                        "B": "心（一弯斜钩如月，三点如星）",
+                        "C": "道（一首走之如月，三点如星）",
+                        "D": "悟（左旁如月，右旁如星）"
+                    },
+                    "correct": "B",
+                    "analysis": "“斜月三星洞”是汉字“心”的字谜象形：斜钩像弯月，上面的三点就像三颗星星。“灵台方寸山，斜月三星洞”合起来即指“人心”，意即修行道场就在自己的心中。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "菩提祖师为石猴赐姓为“孙”。根据祖师的拆字解析，繁体字“孫”由“子”和“系”组成，符合“婴儿之本论”。这暗含了修行者应当具备的哪种心性状态？",
+                    "options": {
+                        "A": "如同婴儿般脆弱，需要依靠师门的庇护方能成长",
+                        "B": "保持未受世俗污染、纯洁无瑕的“赤子之心”与本真状态",
+                        "C": "遵从师长教诲，像子孙孝敬长辈一样恪守师门规矩",
+                        "D": "斩断世俗的血缘亲情与宗族纽带，一心向道"
+                    },
+                    "correct": "B",
+                    "analysis": "祖师道：“孙”字去掉了兽旁，乃是“子系”。子者男儿，系者婴细，正合“婴儿之本论”（赤子之心）。象征修行需要回归到未被红尘污染的本初纯真状态。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "须菩提祖师按门派排辈给石猴取名“悟空”。结合佛家思想与第一回主题，“悟空”这一名字的核心禅理在于：",
+                    "options": {
+                        "A": "彻底看破红尘虚无，放弃世间所有的努力与追求，归于死寂",
+                        "B": "掌握隐身与变化之术，让敌人无法察觉自己的存在",
+                        "C": "领悟万法皆空的终极智慧，破除执着与顽空，实现心灵的觉悟与解脱",
+                        "D": "承认自己本领空虚，需要虚心向天下名师求教"
+                    },
+                    "correct": "C",
+                    "analysis": "“悟空”即领悟“空性”。须菩提是佛家“解空第一”的弟子。“打破顽空须悟空”意味着不仅要破除世俗执着，更要破除僵化死板的“顽空”，在心性上达到洞察本质、自性觉悟的最高境界。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq13",
+                    "num": 13,
+                    "question": "在《西游记》的世界观中，天地间共有四大部洲，分别是：东胜神洲、______、______和北俱芦洲。孙悟空的老家花果山位于______。",
+                    "answer": "西牛贺洲|南赡部洲|东胜神洲",
+                    "analysis": ""
+                },
+                {
+                    "id": "bq14",
+                    "num": 14,
+                    "question": "第一回的回目是：“灵根孕育源流出，______”。这句话点明了全书关于“修心”的核心主题。",
+                    "answer": "心性修持大道生",
+                    "analysis": ""
+                },
+                {
+                    "id": "bq15",
+                    "num": 15,
+                    "question": "石猴在水帘洞内看到的石板上刻着两句话：“花果山福地，______”，这成为了群猴安身立命的家园。",
+                    "answer": "水帘洞洞天",
+                    "analysis": ""
+                },
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "通臂猿猴告诉美猴王，世上有三类人可以躲过阎王管辖、延年益寿，他们是“佛、仙、神圣”。这三类人恰好对应了中国传统文化中的三大流派：______家、______家和______家。",
+                    "answer": "儒|释|道",
+                    "analysis": "儒|儒家   释|佛|释家|佛家   道|道家"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "樵夫在山林中所唱的歌谣名为《观棋烂柯》。“烂柯”这个典故源自晋代王质观棋，斧柄朽烂的故事，用来比喻______。",
+                    "answer": "时间流逝",
+                    "analysis": "时间的迅速流逝与世俗沧桑的变化（或超脱世俗）|时间流逝|时间的流逝|岁月流逝|世事沧桑|超脱世俗|时间的飞逝"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "菩提祖师是佛家“解空第一”的弟子，他给石猴取名“悟空”，“悟”字是师门第十辈的排辈，而“空”字代表了佛家关于______的至高智慧。",
+                    "answer": "万法皆空（或破除执着、洞察本质）",
+                    "analysis": "万法皆空（或破除执着、洞察本质）|万法皆空|破除执着|洞察本质|性空"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q19",
+                    "num": 19,
+                    "question": "【关于探索与收获】群猴为了寻找“水是从哪里来的”，最终却意外找到了可以遮风挡雨的水帘洞。这个过程对你的学习或生活有什么启发？当我们在探索一个看似“没用”的哲学问题或科学难题时，可能会给我们带来什么？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>启发：</strong> 很多时候，看似“无用”的思考和探索，往往会带领我们走向意想不到的广阔天地。</p>\n                        <p class=\"mt-2\"><strong>解析：</strong> 猴群探索水的源头，看似不能直接当饭吃，却让他们找到了安身立命的水帘洞。我们在学习中，对未知事物保持好奇心、追根究底（比如多问“为什么”），不仅能拓宽视野，还能在这个过程中培养解决问题的能力，找到属于自己的“安身立命之所”。</p>\n                    "
+                },
+                {
+                    "id": "q20",
+                    "num": 20,
+                    "question": "【关于危机感与成长】美猴王在花果山过着无忧无虑、“朝游暮宿”的生活，为什么在两三百年后突然哭了？通臂猿猴为什么夸赞他这是“道心开发”？请结合你自己的生活，谈谈“适度的危机感”对一个人成长的重要性。",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>哭的原因：</strong> 他意识到安逸是短暂的，生命有尽头，面对“生死无常”，现在的快乐终将烟消云散。</p>\n                        <p class=\"mt-1\"><strong>道心开发：</strong> 通臂猿猴赞他不再满足于低级的物质享受，而是开始思考生命终极的意义。</p>\n                        <p class=\"mt-1\"><strong>危机感与成长：</strong> 舒适圈容易让人沉沦和麻木。适度的危机感能让人保持警醒，促使我们跳出当下的安逸，去学习新技能、树立远大目标，从而实现人生阶梯的跨越。</p>\n                    "
+                },
+                {
+                    "id": "q21",
+                    "num": 21,
+                    "question": "【关于志向与选择】美猴王为了追求“长生不老”、破除生死无常，果断放弃了花果山安逸舒适的尊贵王位，独自漂洋过海去寻仙访道。你觉得美猴王身上具备怎样的品质？如果换作是你，你愿意为了更远大的目标而放弃眼前的“舒适圈”吗？为什么？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>品质：</strong> 具有远大的志向、极强的行动力、敢于冒风险的勇气和百折不挠的坚韧意志。</p>\n                        <p class=\"mt-2\"><strong>个人思考（开放性）：</strong> 鼓励结合自身回答。例如：我愿意放弃眼前的舒适，因为长期沉溺于玩游戏或看电视等短暂快乐，无法带给我真正的成长。为了考上理想学校或掌握一项本领，短期内走出舒适圈虽然辛苦，但能实现更大的人生价值。</p>\n                    "
+                },
+                {
+                    "id": "q22",
+                    "num": 22,
+                    "question": "【关于社会观察】石猴在南赡部洲（人类世界）生活了八九年，学人礼貌、学人说话，同时他也观察到了世人“骑着驴骡思骏马，官居宰相望王侯”的现象。请结合现实生活（如学习上的盲目攀比、对流行物品的盲目追求等），谈谈你对这种“欲望无休止”现象的看法，我们应该如何建立健康的人生态度？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>现象看法：</strong> 这揭示了人性中盲目攀比与欲望无止境的一面（“骑着驴思骏马”）。只追求物质名利或与同学盲目攀比，容易让人沦为欲望的奴隶，终日焦虑不安。</p>\n                        <p class=\"mt-2\"><strong>健康态度：</strong> 我们应当树立正确的价值观，知足常乐；在学习和生活中追求内心的充实与能力的提升，而不是盲目与他人攀比财富、外声或名牌。</p>\n                    "
+                },
+                {
+                    "id": "q23",
+                    "num": 23,
+                    "question": "【关于内心的力量】须菩提祖师的住处叫“灵台方寸山，斜月三星洞”（指“心”），并且他的核心能力是“历劫明心”。结合精讲内容，谈谈为什么说《西游记》不仅是孙悟空降妖伏魔的冒险，更是一场“修心”和“炼心”的过程？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>解析：</strong> 孙悟空的诞生（灵根孕育）代表人心的萌发，水帘洞代表安顿心灵，“灵台方寸山斜月三星洞”点明修行的战场就在内心。孙悟空一路上克服的妖魔鬼怪，很多时候是他内心贪、嗔、痴、慢等杂念（心魔）的具象化。“历劫明心”意味着真正的强大不是武力多高，而是内心经过磨砺后变得坚定、智慧与通透。</p>\n                    "
+                },
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“悟空”的理解】“打破顽空须悟空”。在成长过程中，我们常常会被固执的观念（顽空）、暂时的挫折（如考试失利、社交挫折）或外界的评价所困扰。请结合你的实际经历，谈谈“悟空”（领悟空性、放下面子与执念）能够如何帮助你在面对这些具体困难时战胜困难？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>解析：</strong> “顽空”指的是僵化的思维方式、面子包袱或对失败的恐惧。“悟空”意味着学会“看破与放下”——放下骄傲、放下对一时的得失执念。在学习中，当我们遇到不会的难题或考试受挫时，如果固执于“我怎么这么笨”或“这太难了”，就是陷在了“顽空”里；而“悟空”则是清空内心的焦虑，回归冷静，以开放、谦虚的态度重新面对挑战，从而实现自我突破。</p>\n                    "
+                }
+            ]
+        };
+
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

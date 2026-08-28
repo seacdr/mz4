@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第五回精读：欲望与失控</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第五回精读：欲望与失控</h1>
+            <p class="text-lg text-gray-700 serif">“乱蟠桃大圣偷丹，反天宫诸神捉怪”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-idle')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-idle">第一章：闲职与桃园</button>
+                <button onclick="NavigationModule.switchTab('section-peach')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-peach">第二章：蟠桃之惑</button>
+                <button onclick="NavigationModule.switchTab('section-rebel')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-rebel">第三章：反出天宫</button>
+                <button onclick="NavigationModule.switchTab('section-mind')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-mind">第四章：心魔之思</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Idle -->
+        <section id="section-idle" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">“闲中生事”：一个悖论</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空当上“齐天大圣”后，每日无所事事、四处结交朋友。许旌阳真人担心他“闲中生事”，建议玉帝给他一件事管——结果恰恰是这“管事”的安排，把悟空送上了偷桃的歧途。点击下方卡片，看清这个讽刺性的循环。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>虚名的真相</h3>
+                    <p class="text-sm text-gray-600 mb-4">“齐天大圣”只是玉帝安抚悟空的虚名，无实权、无俸禄，目的是“养在天宫之间，收其邪心”。</p>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between items-center border-b border-gray-100 pb-2">
+                            <span class="font-medium">有没有实权？</span>
+                            <span class="text-red-700 bg-red-50 px-2 py-1 rounded text-sm">没有</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-100 pb-2">
+                            <span class="font-medium">有没有俸禄？</span>
+                            <span class="text-red-700 bg-red-50 px-2 py-1 rounded text-sm">没有</span>
+                        </li>
+                        <li class="flex justify-between items-center pb-2">
+                            <span class="font-medium">悟空知道吗？</span>
+                            <span class="text-amber-700 bg-amber-50 px-2 py-1 rounded text-sm">浑然不觉，自得其乐</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>许旌阳的奏请</h3>
+                    <p class="text-sm text-gray-600 mb-4">许旌阳真人启奏：“今有齐天大圣，日日无事闲游”，恐其“闲中生事”，提议“不如给他一件事管”。</p>
+                    <div class="bg-amber-50 p-4 rounded border border-amber-200">
+                        <p class="text-amber-900 font-bold text-sm mb-2">结果：玉帝把“蟠桃园”交给他管</p>
+                        <p class="text-sm text-amber-800">
+                            让一只爱偷吃桃子的猴子去看守桃园，这是全书最著名的<strong>反讽</strong>之一。怕他闹事，反而促成闹事——这是“怕什么来什么”的叙事悖论。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center mt-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：认知错位</h3>
+                <p class="text-gray-800 italic mb-4">悟空以为“地位尊崇”，实则“不受重视”</p>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    孙悟空误以为被封齐天大圣就真的被天庭认可了，四处结交朋友、自得其乐，<strong class="text-amber-900">完全没有察觉自己依然不被重视</strong>。这正是许多人在“虚名”面前容易犯的错误——把别人的敷衍，当成了真诚的认可。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Peach -->
+        <section id="section-peach" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">蟠桃园：欲望的试炼场</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    蟠桃园里三千六百株仙桃，分三等，越是成熟越诱人。悟空“脱去官服，爬上大树，捡熟透的大桃自在受用”。点击下方卡片，认识这三种蟠桃，体会“脱下规矩”背后的象征。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-peach1')">
+                    <div class="bg-pink-700 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">前一千二百株</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-peach1-front">
+                        <p class="text-3xl font-bold text-pink-700 mb-3 serif">三千年一熟</p>
+                        <p class="text-gray-500">(点击揭秘功效)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-pink-50" id="card-peach1-back">
+                        <p class="text-gray-700 text-sm">人吃了<strong>成仙了道，体健身轻</strong>。</p>
+                        <p class="text-gray-700 text-sm mt-2">这是最初级的仙桃，却已是凡间梦寐以求的珍宝。</p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-peach2')">
+                    <div class="bg-red-700 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">中一千二百株</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-peach2-front">
+                        <p class="text-3xl font-bold text-red-700 mb-3 serif">六千年一熟</p>
+                        <p class="text-gray-500">(点击揭秘功效)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-red-50" id="card-peach2-back">
+                        <p class="text-gray-700 text-sm">人吃了<strong>霞举飞升，长生不老</strong>。</p>
+                        <p class="text-gray-700 text-sm mt-2">服用后能腾云驾雾、永生不死，诱惑力已然翻倍。</p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-peach3')">
+                    <div class="bg-purple-700 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">后一千二百株</h3>
+                    </div>
+                    <div class="p-6 text-center" id="card-peach3-front">
+                        <p class="text-3xl font-bold text-purple-700 mb-3 serif">九千年一熟</p>
+                        <p class="text-gray-500">(点击揭秘功效)</p>
+                    </div>
+                    <div class="p-6 text-center hidden bg-purple-50" id="card-peach3-back">
+                        <p class="text-gray-700 text-sm">人吃了<strong>与天地齐寿，日月同庚</strong>。</p>
+                        <p class="text-gray-700 text-sm mt-2">这是终极仙桃，象征着无上的诱惑与长生。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>偷吃的“心理过程”</h3>
+                    <ul class="space-y-3 text-sm text-gray-700">
+                        <li><strong>初尝：</strong>“早知有这玩意儿，当年还费什么劲……早知道吃俩桃就结束了”</li>
+                        <li><strong>成瘾：</strong>三五日一次入园赏玩，不再理会其他事务</li>
+                        <li><strong>放肆：</strong>脱去官服，爬上大树，捡熟透的桃自在受用</li>
+                        <li><strong>失控：</strong>不知不觉间，熟桃几乎被吃光</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold mb-4 serif flex items-center"><span class="circle-dot"></span>“脱衣”的象征</h3>
+                    <p class="text-sm text-gray-600 mb-4">悟空偷桃前先脱去官服，既是为防汁水弄脏衣服暴露行迹，更是深层象征：</p>
+                    <div class="bg-amber-50 p-4 rounded border border-amber-200">
+                        <p class="text-amber-900 font-bold text-sm mb-2">脱衣 = 抛却人间规矩</p>
+                        <p class="text-sm text-amber-800">
+                            脱下官服，意味着悟空暂时放下了“齐天大圣”的身份约束，回归了想吃就吃的<strong>本性</strong>。一旦欲望占了上风，规矩就被抛到了脑后。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Section 3: Rebel -->
+        <section id="section-rebel" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">从偷桃到反天宫</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空发现蟠桃会竟没有邀请自己，愤而搅乱瑶池、偷饮仙酒、误入兜率宫吞食金丹，随后逃回花果山，又再盗仙酒举办“仙酒会”。天庭震怒，十万天兵围剿花果山。点击下方诗句，串联这场大乱的因果。
+                </p>
+            </div>
+            <div class="flex flex-col md:flex-row gap-8 items-start mb-10">
+                <div class="w-full md:w-1/2 bg-[#fdfbf7] p-8 rounded-xl shadow-inner border border-gray-200">
+                    <h3 class="text-xl font-bold mb-6 serif text-center">大乱的“四步曲”</h3>
+                    <div class="space-y-4 text-center text-lg serif">
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line1', this)">① 未被邀请 · 愤而偷吃</p>
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line2', this)">② 搅乱瑶池 · 偷饮仙酒</p>
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line3', this)">③ 误入兜率宫 · 吞食金丹</p>
+                        <p class="poem-line" onclick="PoemModule.updateMeaning('line4', this)">④ 再盗仙酒 · 回山举办仙酒会</p>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 bg-white p-8 rounded-xl shadow-md border-t-4 border-amber-800 min-h-[300px] flex flex-col justify-center transition-all" id="meaning-panel">
+                    <div class="text-center">
+                        <span class="text-4xl">👆</span>
+                        <h4 class="text-xl font-bold mt-4 mb-2 text-gray-400">点击左侧四步曲查看解析</h4>
+                        <p class="text-gray-500">理清这场天宫大乱的因果链条。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">十万天兵围剿</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-gray-700 text-sm mb-4">
+                            <strong>玉帝震怒：</strong>偷桃、偷酒、偷丹，定住七仙女，骗赤脚大仙，假传圣旨——罪状重重。玉帝调集四大天王、李天王、哪吒太子、二十八宿、九曜星官等，率<strong class="text-amber-900">十万天兵</strong>下界围困花果山，布下十八架天罗地网。
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-gray-700 text-sm mb-4">
+                            <strong>悟空应战：</strong>一棒打退九曜星，单挑四大天王与哪吒，毫毛化出千百化身。但当独角鬼王与七十二洞妖王被捕后，悟空<strong class="text-amber-900">大哭三声又大笑三声</strong>——哭伙伴被擒，笑自己取胜无损。
+                        </p>
+                        <p class="text-gray-700 text-sm italic">“胜败乃兵家常事”，他安慰众人道。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Section 4: Mind -->
+        <section id="section-mind" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">“本事越大，走邪路灾祸越重”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    这一回最值得深思的问题：悟空该不该被惩罚？起初被轻视（弼马温）而闹，尚有情理；可已被封“齐天大圣”仍行偷盗，则纯属自身魔性。点击下方卡片，直面这个关于“能力与责任”的命题。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-mind1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">悟空变了吗？</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-mind1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">明知故犯</h4>
+                        <p class="text-gray-500 mt-4">(点击展开分析)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-mind1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空的行为<strong>不是一时冲动</strong>，而是明知故犯：他清楚偷桃偷丹是触犯天条，却仗着自己本事大、法力高，把天规视若无物。从“被冤枉的受害者”到“理亏的犯错者”，角色的转变就在这一回完成。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-mind2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">作者的态度</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-mind2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“魔性初显”</h4>
+                        <p class="text-gray-500 mt-4">(点击展开分析)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-mind2-back">
+                        <p class="text-gray-700 text-left">
+                            此时悟空已<strong>非修道之士</strong>，亦非真正的齐天大圣，而是一个<strong>神通广大的“妖魔”</strong>。“道高一尺，魔高一丈”——能力越强，若心术不正，危害越大。这一回为后续如来出手、压五行山埋下了必然的伏笔。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 mt-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心启示：能力是一把双刃剑</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    七仙女曾提及蟠桃会邀请了西天佛祖、南海菩萨等<strong class="text-amber-900">更高阶的神佛</strong>。这也暗示：一个真正能收服“心猿”的更高力量，即将登场。能力越强，越要学会驾驭自己的欲望与骄傲，否则终将被更大的力量所制——这是全书的深层警示。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第五回“乱蟠桃大圣偷丹，反天宫诸神捉怪”讲的是欲望失控的故事。悟空本事越大，越要管住自己的贪念。这一回不仅情节精彩，更让我们思考：当一个人能力很强时，如何用好自己的能力？请认真作答，并联系自己的学习与生活。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第五回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic Local -->
+    <script>
+        /**
+         * 页面本地数据
+         */
+        const Page_DATA = {
+            poemData: {
+                line1: {
+                    title: "未被邀请 · 愤而偷吃",
+                    content: "七仙女透露蟠桃会名单中没有“齐天大圣”，悟空方知自己从未被真正接纳。愤怒之下，他偷吃蟠桃、定住仙女，迈出反叛第一步。",
+                    icon: "😡"
+                },
+                line2: {
+                    title: "搅乱瑶池 · 偷饮仙酒",
+                    content: "悟空化作赤脚大仙模样进入瑶池，偷饮御酒、吃遍八珍百味，把为蟠桃会准备的美酒佳肴糟蹋一空。",
+                    icon: "🍷"
+                },
+                line3: {
+                    title: "误入兜率宫 · 吞食金丹",
+                    content: "醉醺醺的悟空误入太上老君的兜率宫，见无人看守，把五葫芦九转金丹当作炒豆一般吃了个精光——这正是他能炼成“金刚之躯”的伏笔。",
+                    icon: "💊"
+                },
+                line4: {
+                    title: "再盗仙酒 · 回山办会",
+                    content: "逃回花果山后，悟空嫌弃凡间酒果，再次上天偷来四瓮仙酒，与群妖举办“仙酒会”，扬言众妖各饮半杯皆可长生。",
+                    icon: "🍺"
+                }
+            }
+        };
+        // 诗句互动管理模块
+        const PoemModule = {
+            updateMeaning(lineKey, element) {
+                document.querySelectorAll('.poem-line').forEach(line => line.classList.remove('active'));
+                element.classList.add('active');
+                const panel = document.getElementById('meaning-panel');
+                const data = Page_DATA.poemData[lineKey];
+                
+                panel.innerHTML = `
+                    <div class="text-center animate-fade-in">
+                        <span class="text-4xl">${data.icon}</span>
+                        <h4 class="text-2xl font-bold mt-4 mb-4 text-amber-900 serif">${data.title}</h4>
+                        <p class="text-gray-700 leading-relaxed text-lg">${data.content}</p>
+                    </div>
+                `;
+                panel.style.opacity = '0';
+                setTimeout(() => {
+                    panel.style.transition = 'opacity 0.4s ease';
+                    panel.style.opacity = '1';
+                }, 50);
+            }
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            // 无图表，仅保留诗面板
+        });
+    </script>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "孙悟空当上“齐天大圣”后每日无所事事，许旌阳真人启奏建议给他一件事管。下列对这一情节的理解最准确的是：",
+                    "options": {
+                        "A": "许旌阳想帮助悟空在天庭建功立业，体现天庭的爱才之心",
+                        "B": "许旌阳担心悟空“闲中生事”，建议给他事管以防生乱，却反而促成闹事，构成悖论",
+                        "C": "悟空主动请求管事，许旌阳代为转达",
+                        "D": "玉帝打算借管事之名剥夺悟空的齐天大圣封号"
+                    },
+                    "correct": "B",
+                    "analysis": "许旌阳奏称悟空“日日无事闲游”恐“闲中生事”，建议“不如给他一件事管”。结果玉帝把蟠桃园交给他管，反而让悟空有了偷桃的机会，形成“怕他闹事反而促成闹事”的讽刺性悖论。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "玉帝命孙悟空看管蟠桃园。这一安排的“反讽”之处在于：",
+                    "options": {
+                        "A": "蟠桃园根本不需要人看管，悟空的任务形同虚设",
+                        "B": "让一只最爱吃桃的猴子去看守装满仙桃的园子，等于把诱惑送到了贪嘴者面前",
+                        "C": "蟠桃园的桃子都是坏的，悟空看管后才发现上当了",
+                        "D": "玉帝本想让悟空看守桃园修炼心性，结果悟空没有领会"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空学艺时就爱偷吃桃（“吃了七回饱桃”），把这只爱桃的猴子安排在蟠桃园旁，是全书最著名的反讽之一——把最大的诱惑放在最抵挡不住的人面前。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "蟠桃园共有三千六百株桃树，分为三等。下列关于三等蟠桃功效的说法正确的是：",
+                    "options": {
+                        "A": "三千年一熟者“与天地齐寿”，六千年一熟者“成仙了道”，九千年一熟者“霞举飞升”",
+                        "B": "三千年一熟者“成仙了道，体健身轻”，六千年一熟者“霞举飞升，长生不老”，九千年一熟者“与天地齐寿，日月同庚”",
+                        "C": "三种蟠桃功效完全相同，只是口感不同",
+                        "D": "三千年一熟者人吃了可“霞举飞升”，六千年一熟者“与天地齐寿”，九千年一熟者“成仙了道”"
+                    },
+                    "correct": "B",
+                    "analysis": "原著：前一千二百株三千年一熟，“人吃了成仙了道，体健身轻”；中一千二百株六千年一熟，“人吃了霞举飞升，长生不老”；后一千二百株九千年一熟，“人吃了与天地齐寿，日月同庚”。功效逐级增强，诱惑层层加深。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "悟空偷吃蟠桃前“脱去官服”这一细节，其深层象征意义是：",
+                    "options": {
+                        "A": "官服太紧不舒服，脱了方便爬树",
+                        "B": "脱衣象征抛却人间规矩、回归贪吃的本性，不再受身份约束",
+                        "C": "官服被桃汁弄脏会暴露行迹，仅是为防被发现",
+                        "D": "悟空决定辞去齐天大圣之职，脱下官服以示决裂"
+                    },
+                    "correct": "B",
+                    "analysis": "脱衣既有实用考量（防汁水弄脏衣服），更是深层象征：脱下官服意味着悟空暂时抛却“齐天大圣”的身份约束，回归想吃就吃的本性。一旦欲望占了上风，规矩便被抛到脑后。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "七仙女来蟠桃园摘桃时，发现“花果稀疏，只有毛蒂青皮的未熟桃”。这暗示：",
+                    "options": {
+                        "A": "蟠桃园遭遇了虫害，桃子大多没有成熟",
+                        "B": "熟透的大桃已被悟空偷吃殆尽，只留下未熟的青桃",
+                        "C": "七仙女来晚了，错过了最佳的采摘时节",
+                        "D": "桃树刚刚栽种，尚未到结果的年份"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空“在不知不觉之间，把熟桃几乎吃光”，七仙女摘桃时只见“花果稀疏”，仅余“毛蒂青皮”的未熟桃，从侧面证实悟空偷吃的规模之大。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "悟空得知蟠桃会没有邀请自己后，他的第一反应是：",
+                    "options": {
+                        "A": "静心反省，认识到自己地位还不够高",
+                        "B": "化身为赤脚大仙，混进瑶池搅乱蟠桃会，偷吃仙酒美食",
+                        "C": "立刻找玉帝理论，要求补上请柬",
+                        "D": "黯然离开天庭，回花果山闭关修炼"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空得知自己不在蟠桃会邀请名单后，心中大怒，化作赤脚大仙的模样混入瑶池，搅乱盛会、偷饮御酒、吃遍八珍百味，充分暴露了其愤怒与欲望的失控。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "悟空醉酒后误入太上老君的兜率宫，将五葫芦九转金丹当作“炒豆”吃了个精光。这一情节的重要伏笔是：",
+                    "options": {
+                        "A": "为后来悟空被擒后刀枪不入的“金刚之躯”埋下伏笔",
+                        "B": "让悟空从此患上金丹依赖症，需要不断偷丹",
+                        "C": "导致太上老君从此与悟空结下私仇",
+                        "D": "使悟空法力大增，直接超越如来佛祖"
+                    },
+                    "correct": "A",
+                    "analysis": "悟空服食了蟠桃、御酒、九转金丹等仙家至宝，内外交炼，才炼成了“金刚之躯”，为后来被押上斩妖台时刀斧雷火皆不能伤埋下伏笔。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "悟空逃回花果山后，又再次上天偷来四瓮仙酒，举办“仙酒会”。他这么做的理由是：",
+                    "options": {
+                        "A": "花果山的酒不好喝，想换换口味",
+                        "B": "他嫌弃凡间酒果，自认“吃惯了天上的”，并想让群妖共享长生",
+                        "C": "他想用仙酒贿赂天兵天将，避免被围剿",
+                        "D": "他被玉帝赶下天界，临走时顺手牵羊"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空回山后嫌弃凡间酒果“吃惯了天上的”，决定再上天偷取仙酒，并扬言让众妖“各饮半杯”皆可长生不老。这显示他的欲望已从“自利”扩展到“收买人心、炫耀神通”。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "天庭多方告状的对象与内容，下列对应不正确的是：",
+                    "options": {
+                        "A": "七仙女向王母禀报——桃园大桃尽失，系齐天大圣所为",
+                        "B": "太上老君奏报——九转金丹被盗",
+                        "C": "赤脚大仙陈述——被假传圣旨骗至通明殿",
+                        "D": "玉帝向如来奏报——请求立刻派佛兵下界"
+                    },
+                    "correct": "D",
+                    "analysis": "原著中并未出现“玉帝向如来奏报”的情节。告状的分别是：七仙女（偷桃、定身）、王母（打人偷桃）、蟠桃会总管（偷酒）、赤脚大仙（被骗）、太上老君（金丹被盗）。玉帝震怒后调天兵围剿。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "玉帝调集大军围剿花果山时，出动了哪些力量？",
+                    "options": {
+                        "A": "仅四大天王与李天王",
+                        "B": "四大天王、李天王、哪吒太子、二十八宿、九曜星官、十二元辰等，共十万天兵，布下十八架天罗地网",
+                        "C": "仅十万天兵，没有天将",
+                        "D": "四大天王与二郎神、梅山六兄弟"
+                    },
+                    "correct": "B",
+                    "analysis": "玉帝大恼，令四大天王协同李天王、哪吒太子，统率二十八宿、九曜星官、十二元辰、五方揭谛、四值功曹等，十万天兵齐发，布下十八架天罗地网，足见对悟空的重视与愤怒。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "面对九曜星叫阵，悟空最初并不出战，反而吟诵“今朝有酒今朝醉，莫管门前是与非”。这反映了悟空当时怎样的心态？",
+                    "options": {
+                        "A": "恐惧天兵，不敢应战",
+                        "B": "自负洒脱，自恃神通广大，把天兵围剿视作小事",
+                        "C": "打算暗中偷袭，故意麻痹对方",
+                        "D": "后悔偷桃偷丹，想以酒浇愁"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空正饮酒作乐，面对叫阵不以为意，吟出“今朝有酒今朝醉”，展现其自信与洒脱，也体现他尚未把十万天兵真正放在眼里。直到敌军破门而入才大怒出战。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "战斗中独角鬼王与七十二洞妖王全数被捕，而悟空回洞后“大哭三声，又嘻嘻哈哈大笑三声”。下列对这种反常表现的理解正确的是：",
+                    "options": {
+                        "A": "悟空精神失常，被天兵吓出了毛病",
+                        "B": "哭是因为伙伴被擒，笑是因为自己取胜无损，一忧一喜交织",
+                        "C": "大哭是为了麻痹敌人，大笑是庆祝胜利",
+                        "D": "悟空哭是因为丢盔弃甲，笑是因为捡到便宜"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空回洞后情绪异常：哭因七十二洞妖王被捕，笑因自己得胜无损。这种“哭笑无常”生动展现了他虽为“齐天大圣”却已沦为孤家寡人式的妖魔心态。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "悟空安慰众人时说出“胜败乃兵家常事，明日再战”。这句话体现了悟空什么性格特点？",
+                    "options": {
+                        "A": "悲观沮丧，准备放弃",
+                        "B": "乐观自信、坚韧不服输，遇挫不馁",
+                        "C": "推卸责任，不愿承担战败后果",
+                        "D": "故作镇定，内心其实慌乱"
+                    },
+                    "correct": "B",
+                    "analysis": "“胜败乃兵家常事”体现悟空乐观自信、百折不挠的性格。即使伙伴被擒、战况不利，他依然保持斗志，相信明日再战可扭转局势，这种坚韧正是其英雄气概的一部分。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "精读分析认为，此时悟空的形象已经变成：",
+                    "options": {
+                        "A": "一个真正被天庭认可的齐天大圣",
+                        "B": "一个神通广大、无视天规、明知理亏仍肆意妄为的“妖魔”",
+                        "C": "一个改邪归正、准备潜心修行的得道高僧",
+                        "D": "一个被打回原形、法力尽失的普通猴子"
+                    },
+                    "correct": "B",
+                    "analysis": "分析指出，悟空此时已非修道之士，亦非真正的齐天大圣，而是依仗本领、无视天规、明知理亏仍肆意妄为的“妖魔”，已完全陷入魔道。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "关于“悟空闹天宫是否应受惩罚”，精读视频给出的观点是：",
+                    "options": {
+                        "A": "悟空完全无辜，是天庭逼他反叛",
+                        "B": "起初被轻视（弼马温）可闹，但已被重用（齐天大圣）仍行偷盗，属自身魔性，应受惩罚",
+                        "C": "悟空闹天宫有理，天庭活该被打",
+                        "D": "悟空偷桃偷丹情有可原，不应追究"
+                    },
+                    "correct": "B",
+                    "analysis": "观点认为：悟空起初被天庭轻视而反抗，尚可理解；但他已被封齐天大圣（表面重用）后仍偷桃偷丹、搅乱天宫，是明知故犯、内心堕落，故应受惩罚。这体现了“能力越大，责任越大”的反思。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "许旌阳真人担心悟空“______”，建议玉帝给他一件事管，结果玉帝让他去看管______。",
+                    "answer": "闲中生事|蟠桃园",
+                    "analysis": "许旌阳真人向玉帝报告，说齐天大圣整日游手好闲，担心他「闲中生事」，建议派个差事给他。玉帝便让他去看管蟠桃园。谁知悟空「监守自盗」，反而更方便偷桃。可见：管理一个人，光给他「事」还不够，还要看这「事」合不合适、有没有监督。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "蟠桃园中后一千二百株桃树九千年一熟，人吃了“与天地齐寿，______”。",
+                    "answer": "日月同庚",
+                    "analysis": "原著写蟠桃园分三片：前一千二百株三千年一熟，吃了「成仙了道」；中一千二百株六千年一熟，吃了「长生不老」；后一千二百株九千年一熟，吃了「与天地齐寿，日月同庚」。悟空专挑最珍贵的那片下手，说明他胃口越来越大、越来越贪。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "悟空偷吃蟠桃前先______，象征抛却人间规矩、回归贪吃的本性。",
+                    "answer": "脱去官服",
+                    "analysis": "原著写悟空「脱了冠服，爬上大树，拣那熟透的大桃，摘了许多，就在树枝上自在受用」。他先脱掉官服，等于抛开天庭的规矩与身份，回归猴子贪吃的本性。这个细节很妙：官服一脱，约束全无，放纵就开始了。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "悟空醉酒后误入______宫的兜率宫，将五葫芦九转金丹吃了个精光。",
+                    "answer": "太上老君",
+                    "analysis": "悟空醉酒后「踉踉跄跄，误入兜率宫」，兜率宫正是太上老君炼丹的地方。他趁老君不在，把五葫芦九转金丹像吃炒豆一样吃了个精光。偷桃、偷酒、偷丹，悟空一步步「无法无天」，把天庭得罪了个遍，为后面被镇压埋下伏笔。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "悟空逃回花果山后再次上天偷来四瓮______，与群妖举办“仙酒会”。",
+                    "answer": "仙酒",
+                    "analysis": "悟空偷了蟠桃、吃了金丹，还嫌不够，又溜回天宫偷来四瓮仙酒，带回花果山与群猴开「仙酒会」庆贺。桃、酒、丹三样宝贝都偷齐了，他已彻底走上与天庭对抗的路，一场「大战」在所难免。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "玉帝调集十万天兵下界围困花果山，布下十八架______。",
+                    "answer": "天罗地网",
+                    "analysis": "玉帝得知悟空偷桃偷丹、大闹蟠桃会，勃然大怒，调集十万天兵天将下界，把花果山围得水泄不通，布下「十八架天罗地网」。这是全书第一次大规模「剿猴」，可见天庭已把悟空当成头号大敌，一场恶战一触即发。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "悟空面对九曜星叫阵，吟诵“今朝有酒今朝醉，莫管门前______”。",
+                    "answer": "是与非",
+                    "analysis": "悟空面对九曜星等天将的围攻毫无惧色，还吟诗「今朝有酒今朝醉，莫管门前是与非」。这一句把他「今朝有酒今朝醉」的任性、天不怕地不怕的性子写活了，也暗示他只图眼前快活、不管后果的性格，正是他闯祸的根源。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "七仙女曾提及蟠桃会邀请了西天______、南海菩萨等更高阶的神佛，暗示能收服“心猿”的更高力量即将登场。",
+                    "answer": "佛祖",
+                    "analysis": "七仙女提到，蟠桃会照例要请西天佛老、南海菩萨等更高阶的神佛参加。这些「更高力量」的名字被提前提起，是作者埋下的伏笔：悟空虽然能打败天兵天将，但真正能收服「心猿」的，是如来佛这样的更高存在，为第十三回「五行山下定心猿」做了铺垫。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于闲与事】许旌阳担心悟空“闲中生事”，建议给他事管，结果反而促成他偷桃大闹。请结合你的学习生活，谈谈“无所事事”与“管理时间”的关系：一个人闲下来容易出什么问题？我们该如何合理安排空闲时间？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>闲下来的问题：</strong> 人一旦长期无所事事，容易空虚、无聊，甚至想通过“搞事情”来寻找刺激，就像悟空闲得发慌便去偷桃。</p>\n                        <p class=\"mt-2\"><strong>如何安排：</strong> ①制定合理的时间表，学习、运动、兴趣相结合；②培养一两个有益爱好（读书、画画、打球），让空闲变得充实；③休息要适度，但不要沉迷于无意义的消遣。把时间用在成长上，就不会“闲中生事”。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于诱惑】悟空偷桃时“脱去官服”，从“齐天大圣”变回了想吃就吃的本性。这告诉我们，人在独处或无人监督时最容易放纵自己。请谈谈：如何在没有老师和家长监督时，管住自己不去做那些明知不该做的事？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>核心：自律</strong> 悟空脱衣偷桃，是因为放下了身份的约束。真正的自律不是靠别人盯着，而是靠内心的“尺子”。</p>\n                        <p class=\"mt-2\"><strong>方法：</strong> ①事前想后果——偷吃一个桃看似小事，却可能酿成大祸；②给自己立规矩，比如“作业做完才能玩”；③把诱惑放远一点，比如写作业时把手机放客厅；④学会延迟满足，告诉自己“先吃苦后享乐”。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于能力与责任】悟空“本事越大，走邪路灾祸越重”。请结合现实思考：一个人的能力（比如聪明、力气大、口才好）如果用在错误的方向，会带来怎样的危害？我们该如何把能力用在正道上？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>危害：</strong> 能力越强，破坏力越大。一个聪明的学生如果用来作弊，一个力气大的孩子如果用来欺负同学，伤害都比普通人更严重。</p>\n                        <p class=\"mt-2\"><strong>如何用对：</strong> ①树立正确的价值观，明白“能力越大，责任越大”；②把聪明用在解决难题、帮助同学上；③当发现自己想用能力“走捷径”时，及时提醒自己这是错的；④多想想自己的行为会不会伤害别人。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于情绪的化解】悟空得知蟠桃会没邀请自己后，不是沟通而是直接偷吃大闹。请谈谈：当我们感到被忽视、不被尊重时，除了发火和“捣乱”，还有哪些更好的处理方式？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>更好的处理方式：</strong> ①先冷静下来，别让愤怒冲昏头脑；②主动沟通，礼貌地表达自己的想法和感受；③反思是否有误会，比如对方可能只是疏忽；④把委屈转化为努力，用实力赢得认可。</p>\n                        <p class=\"mt-2\"><strong>对比悟空：</strong> 悟空如果去找王母或玉帝当面问清楚，也许不会闹到不可收拾。冲动发泄只能一时痛快，却会带来更大的麻烦。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于欲望的连锁反应】悟空从“偷一个桃”发展到“偷酒、偷丹、大闹天宫”，欲望像滚雪球一样越滚越大。请用生活中的例子，说明“小贪心”如果不加控制，会怎样演变成“大错误”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>滚雪球效应：</strong> 一次小小的纵容，会降低下一次犯错的心理门槛。悟空第一次偷桃还“脱衣谨慎”，后来偷酒偷丹已毫无顾忌。</p>\n                        <p class=\"mt-2\"><strong>生活例子：</strong> 比如第一次抄同学作业觉得“就一次没关系”，第二次、第三次就成了习惯，最后考试也想作弊；第一次偷拿别人一支笔，尝到甜头后可能越拿越多。所以一定要在“第一次”就守住底线。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于正视批评】悟空因偷桃大闹，最终招致十万天兵围剿。这一回中，有没有谁应该早点“提醒”他？这启示我们在犯错时，应该如何对待别人的提醒与批评？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>反思：</strong> 悟空身边没有真正敢直言劝谏的朋友，独角鬼王等人只会迎合他的欲望，让他在错误的道路上越走越远。</p>\n                        <p class=\"mt-2\"><strong>对待批评：</strong> ①良药苦口利于病，忠言逆耳利于行，敢于批评我们的人往往是真正关心我们的人；②听到批评先别急着反驳，冷静想想对方说的有没有道理；③有则改之，无则加勉。像悟空那样听不进劝告，最终吃亏的是自己。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于自我定位】悟空一直以为自己是“被天庭重用的大圣”，实际上只是被虚名安抚的边缘人。请谈谈：为什么认清自己的真实处境很重要？我们如何避免被“好听的名头”或他人的奉承迷惑？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>认清处境的重要性：</strong> 如果悟空早看清“齐天大圣”只是虚名，也许就不会产生那么大的落差与愤怒。认清现实，才能做出正确的选择。</p>\n                        <p class=\"mt-2\"><strong>避免被迷惑：</strong> ①多听不同意见，尤其是那些敢说真话的人；②看一个人或一件事的真实价值，要看实际成果而不是名头；③对自己有清醒的认知，不因别人的夸奖而飘飘然，也不因批评而妄自菲薄。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

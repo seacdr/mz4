@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第七十三回精读：口蜜腹剑与找对人抓关键</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第七十三回精读：口蜜腹剑与找对人抓关键</h1>
+            <p class="text-lg text-gray-700 serif">“情因旧恨生灾毒，心主遭魔幸破光”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">黄花观</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">毒茶</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">蜘蛛灭亡</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">多目怪</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 黄花观 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">口蜜腹剑的“老神仙”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    师徒四人进了黄花观，门上对联写着“黄芽白雪神仙府，瑶草琪花羽客家”，东廊下有个道士在团药丸。这道士正是七个蜘蛛精的师兄。他表面满面生春、满口“出家人见出家人亲”，背地里却登屋梁取下一包毒药——要毒死唐僧师徒。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">同门师兄</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">冤家路窄</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            盘丝洞七个女妖逃出后投奔师兄——黄花观的道士。她们确认来的“白胖和尚”就是唐僧、“长嘴大耳朵”就是八戒，<strong>求师兄替她们报仇</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">口蜜腹剑</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">满脸堆笑，暗藏毒药</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            道士听说唐僧是“十世修行真体”，吃一口肉能长生不老——他表面<strong>满面生春、谦恭有礼</strong>，心里盘算的不是替师妹报仇，而是<strong>自己想吃唐僧肉</strong>。这就是个阴险又虚伪的“口甜人”。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">小心“嘴甜的人”</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    八戒早说过“曾着卖糖君子哄，到今不信口甜人”——<strong>越是对你甜言蜜语、夸个不停的陌生人，越要多留个心眼</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 毒茶 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">红枣藏毒：黑枣与红枣的秘密</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    道士取出一包毒药：凡人吃一厘就死，神仙吃三厘也绝。他掐破十二颗红枣、每颗塞一粒毒药，每盅放三颗；又拿两颗黑枣放进自己那盅，用颜色区分有毒无毒。悟空眼乖，看出盘中剩下的两颗黑枣不对劲，要跟道士换茶——却被唐僧拦住：“仙长实乃爱客之意”。八戒、沙僧、唐僧都吃了毒枣，瞬间倒地。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">毒药</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">一厘入腹就死</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            道士说这药<strong>凡人吃一厘入腹就死，神仙吃三厘入口即绝</strong>。他把毒药掐进十二颗红枣，每盅放三颗，又用两颗黑枣放进自己的茶盅——<strong>用颜色区分“有毒”“无毒”</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">换茶被拦</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">师傅拦住了悟空</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            悟空看到盘中剩下两颗黑枣，要跟道士“穿换一杯”——道士谎称“山野贫道没什么茶果”。唐僧却劝：“<strong>仙长实乃爱客之意</strong>，你换什么换？”——一个好意的阻拦，让三人中了毒。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">好意，有时会坏大事</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    唐僧以为道士是“好心”，结果恰恰害了大家。<strong>善良不是错，但“看不清坏人”的善良，常常会把好人带进坑里</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 蜘蛛灭亡 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">七十根毫毛，绞尽蛛丝</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空识破毒茶，与道士翻脸。七个女妖从肚脐吐丝搭起天棚，被悟空撞破；他拔下七十根毫毛变出七十个小行者，各持双脚叉棒绞蛛丝——丝吐尽了，七个蜘蛛精被顺丝拖出，悟空把她们捣烂。道士却背信弃义：“妹妹，我要吃唐僧，救不得你了。”
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">七十个小行者</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">双脚叉棒绞丝</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            悟空从尾巴上拔下<strong>七十根毫毛</strong>变出七十个小行者，又变出七十根<strong>双脚叉棒</strong>——像纺线收丝那样把蛛丝一圈圈绞在棒上，<strong>“不信你能吐个没完”</strong>，直到把蜘蛛精的丝吐尽。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">背信弃义</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">我要吃唐僧，救不得你了</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            七个蜘蛛精被摁住，高喊“师兄救我命”，道士却说“<strong>妹妹，我要吃唐僧，救不得你了</strong>”——他答应报仇是假，想吃唐僧肉是真。悟空一怒之下把七个蜘蛛精尽数捣烂。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">看清“伪朋友”的真面目</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    道士嘴上把师妹们叫得亲热，关键时刻为了一口唐僧肉就抛弃她们。<strong>真正的朋友，不是“嘴上甜”，而是“患难时靠得住”</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 多目怪 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">千眼金光与一枚绣花针</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    道士解衣露肋，两胁下一千只眼迸出金光，罩住十多里，悟空撞得顶梁皮都软了，变穿山甲钻地二十多里才逃出。梨山老母点化他去请紫云山千花洞的毗蓝婆。毗蓝婆取出一枚眼中炼成的绣花针，一声响破了金光；又给三粒红丸解了毒。道士现出原形——一条七尺长的大蜈蚣，被毗蓝婆收去看守洞门。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">千眼金光</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">穿山甲钻地</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            道士“解开衣带，双手一抬”，<strong>肋下两胁现出一千只眼，眼中迸出金光</strong>，罩住十来里，前进不得、后退不能。悟空撞得“顶梁皮撞软”头一回疼，只得变作<strong>穿山甲</strong>硬钻地二十多里逃出。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">毗蓝婆</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">绣花针破金光</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            梨山老母指点悟空去请<strong>紫云山千花洞的毗蓝婆</strong>。毗蓝婆取出一枚“非钢非铁非金、<strong>眼中炼成</strong>”的绣花针，往空中一抛，一声响破了金光，又用三粒红丸救活中毒的三人。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c33')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">大蜈蚣</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c33-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">鸡克蜈蚣</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c33-back">
+                        <p class="text-gray-700 text-left">
+                            道士现出原形——<strong>一条七尺长的大蜈蚣</strong>（多目怪/百眼魔君）。毗蓝婆是昴日星官（大公鸡）之母，<strong>“鸡最能降蜈蚣”</strong>——一物降一物，正是动物的天性。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">找对人，抓关键</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空打不过金光，不是因为不够强，而是没找对“克星”。<strong>解决问题的关键，是先找到“症结”和“对的人”</strong>——找对了，一枚绣花针就够。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第七十三回“情因旧恨生灾毒，心主遭魔幸破光”讲的是黄花观之难：口蜜腹剑的道士用红枣藏毒茶毒倒唐僧师徒，悟空识破翻脸；七十根毫毛绞尽蛛丝、捣烂七个蜘蛛精；百眼魔君（多目怪）千眼金光困住悟空，梨山老母指点请来毗蓝婆，一枚绣花针破金光、三粒红丸解剧毒，道士现出大蜈蚣原形。这一回让我们看到：小心嘴甜的人、好意有时会坏大事、看清伪朋友、找对人抓关键。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第七十三回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "黄花观的道士是七个蜘蛛精的什么人？",
+                    "options": {"A": "父亲","B": "师兄（同门学艺）","C": "丈夫","D": "师傅"},
+                    "correct": "B",
+                    "analysis": "盘丝洞七女妖和这道士“同堂学艺，是同一个师傅”——她们逃出后特来投奔师兄，求他报仇。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "道士见到唐僧师徒时是什么表现？",
+                    "options": {"A": "直接动手","B": "满面生春、谦恭有礼，心里却盘算下毒","C": "逃跑","D": "求助"},
+                    "correct": "B",
+                    "analysis": "道士一听“东土大唐”便“满面生春”满脸堆笑，实际是个口蜜腹剑的阴险角色——想独吞唐僧肉。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "道士说他的毒药有多厉害？",
+                    "options": {"A": "凡人吃一厘入腹就死，神仙吃三厘入口即绝","B": "只对凡人有毒","C": "只是泻药","D": "没毒"},
+                    "correct": "A",
+                    "analysis": "道士说“凡人吃了一厘入腹就死，神仙吃了三厘入口即绝”——这毒连神仙都扛不住三厘。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "道士怎么区分有毒的茶和无毒的茶？",
+                    "options": {"A": "闻味道","B": "有毒的用红枣、自己用的用黑枣","C": "数数量","D": "看大小"},
+                    "correct": "B",
+                    "analysis": "道士在十二颗红枣里掐进毒药（每盅三颗），自己那盅放两颗黑枣——用颜色区分“有毒”“无毒”。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空是怎么察觉茶里有问题的？",
+                    "options": {"A": "闻出毒味","B": "看到盘中剩下的茶是两颗黑枣，与大家的红枣不同，提出换茶","C": "八戒提醒","D": "道士说漏嘴"},
+                    "correct": "B",
+                    "analysis": "悟空眼乖，看到“盘子剩下的那个是两颗黑枣”与大家的红枣不同，便提出与道士“穿换一杯”试探——这正是作者安排悟空最后拿茶的设计。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "唐僧为什么阻止悟空换茶？",
+                    "options": {"A": "嫌悟空多事","B": "觉得“仙长实乃爱客之意”，不好意思换","C": "急着吃茶","D": "不喜欢黑枣"},
+                    "correct": "B",
+                    "analysis": "唐僧劝道“仙长实乃爱客之意，你换什么换”——一片好意，却恰好让三人喝下了毒茶。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "吃了毒枣后，唐僧、八戒、沙僧分别有什么症状？",
+                    "options": {"A": "都晕倒","B": "八戒脸上变色、沙僧满眼流泪、唐僧口中吐沫，一起晕倒在地","C": "只是肚子疼","D": "都没事"},
+                    "correct": "B",
+                    "analysis": "“八戒脸上变色，沙僧满眼流泪，唐僧口中吐沫”，三人一起晕倒在地——这是互文手法，其实三人都有这些症状。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "悟空识破毒茶后是怎么翻脸的？",
+                    "options": {"A": "直接挥棒","B": "把茶盅朝着道士劈面一泼，茶盅跌得粉碎","C": "泼到地上","D": "喝掉"},
+                    "correct": "B",
+                    "analysis": "悟空情知有毒，“把茶盅举起来朝着道士劈面一泼”，道士拿袖子一挡，茶盅跌得粉碎——正式撕破脸。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "悟空用什么办法对付七个蜘蛛精的蛛丝？",
+                    "options": {"A": "放火烧","B": "拔七十根毫毛变七十个小行者，各持双脚叉棒绞收蛛丝","C": "请菩萨","D": "用芭蕉扇"},
+                    "correct": "B",
+                    "analysis": "悟空从尾巴上拔下七十根毫毛，变出七十个小行者，各拿一根双脚叉棒，把蛛丝一圈圈绞在棒上——“不信你能吐个没完”，直到丝尽。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "七个蜘蛛精最后是怎么死的？",
+                    "options": {"A": "被烧死","B": "丝吐尽被顺丝拖出，悟空用铁棒尽数捣烂","C": "被八戒筑死","D": "被观音收走"},
+                    "correct": "B",
+                    "analysis": "蜘蛛精的丝被绞尽后，被“顺着丝拖出来”七个蜘蛛，悟空把叉棒变回铁棒，双手举起“把七个蜘蛛精直接捣烂”。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "道士拒绝救师妹时说了什么？",
+                    "options": {"A": "“我不认识她们”","B": "“妹妹，我要吃唐僧，救不得你了”","C": "“她们活该”","D": "“等会儿再说”"},
+                    "correct": "B",
+                    "analysis": "七个蜘蛛精喊“师兄救我命”，道士却说“我要吃唐僧，救不得你了”——暴露了他只想独吞唐僧肉的真面目。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "百眼魔君（多目怪）的绝招是什么？",
+                    "options": {"A": "喷火","B": "解开衣带，肋下两胁现出一千只眼，迸出金光","C": "放毒烟","D": "喷水"},
+                    "correct": "B",
+                    "analysis": "道士“解开衣带，双手一抬”，肋下两胁现出一千只眼，眼中迸出金光，罩住十多里——前进不得、后退不能。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "悟空是怎么从金光里逃出来的？",
+                    "options": {"A": "撞破金光飞走","B": "变作穿山甲，硬钻地二十多里逃出","C": "念紧箍咒","D": "请帮手"},
+                    "correct": "B",
+                    "analysis": "悟空往上一撞，金光硬得“顶梁皮撞软”头一回疼；只得念咒变作穿山甲，硬着头钻地二十多里方才出来。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "是谁指点悟空去请毗蓝婆的？",
+                    "options": {"A": "观音菩萨","B": "黎山老母（化作穿孝妇人，说完便现真身）","C": "太上老君","D": "土地"},
+                    "correct": "B",
+                    "analysis": "悟空遇一个穿孝妇人啼哭，妇人指点他去请毗蓝婆；回头一看，妇人不见了，抬头见空中原来是黎山老母。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "毗蓝婆用什么破掉千眼金光？",
+                    "options": {"A": "芭蕉扇","B": "一枚眼中炼成的绣花针（非钢非铁非金）","C": "净瓶水","D": "金刚琢"},
+                    "correct": "B",
+                    "analysis": "毗蓝婆从衣领中取出一枚“眉毛粗细、五六分长短”的绣花针，往空中一抛，“一声响就破了金光”——这针是她的“小儿”（昴日星官）眼中炼成的。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "黄花观道士的原形是什么？为什么毗蓝婆能降住他？",
+                    "options": {"A": "蜈蚣精；毗蓝婆是昴日星官（公鸡）之母，鸡最能降蜈蚣","B": "蝎子精；用针扎","C": "蛇精；用雄黄","D": "蜘蛛精；用网"},
+                    "correct": "A",
+                    "analysis": "道士现出原形“一条七尺长的大蜈蚣”（多目怪）；毗蓝婆是昴日星官之母，昴日星官是大公鸡，“鸡最能降蜈蚣”——一物降一物。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "黄花观门上对联：“黄芽白雪神仙府，瑶草琪花______客家。”",
+                    "answer": "羽",
+                    "analysis": "“羽客”是道士的美称。对联文雅清幽，显出“神仙府”的气象——越是这样文雅的门面，越藏着阴险的主人。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "道士把毒药掐进十二颗红______，每盅放三颗。",
+                    "answer": "枣",
+                    "analysis": "“红枣藏毒”是道士的毒计：每颗枣掐破塞一粒毒药，每盅三颗——只有自己那盅放黑枣区分。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "悟空从尾巴上拔下七十根______毛，变出七十个小行者。",
+                    "answer": "毫",
+                    "analysis": "“毫毛”是悟空的变化之源。七根变七十个，一个蜘蛛精配十个，各持双脚叉棒绞蛛丝——对症下药。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "悟空把七个蜘蛛精尽数捣______，为师弟报仇。",
+                    "answer": "烂",
+                    "analysis": "“捣烂”是悟空对背信弃义的师兄的愤怒——他答应报仇是假、想吃唐僧是真，蜘蛛精被弃如敝履。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "多目怪解开衣带，肋下两胁现出______只眼，迸出金光。",
+                    "answer": "千",
+                    "analysis": "“一千只眼”是多目怪名字的由来，密集得吓人，金光罩住十多里——比七个师妹的蛛丝厉害得多。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "悟空变作穿______甲，硬钻地二十多里逃出金光。",
+                    "answer": "山",
+                    "analysis": "“穿山甲”擅打洞钻地。悟空撞金光撞软了头，只得变穿山甲钻地逃生——硬的不行就换个“软”办法。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "毗蓝婆住在紫云山______花洞。",
+                    "answer": "千",
+                    "analysis": "“千花洞”是毗蓝婆的居所，她是昴日星官之母、住在紫云山的隐世菩萨。悟空请她，全靠黎山老母指点。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "黄花观道士现出原形，是一条七尺长的______蚣。",
+                    "answer": "蜈",
+                    "analysis": "“蜈蚣”多足多节、浑身毒，正应“多目”“用毒”的特征；而公鸡是天克蜈蚣的天敌，所以毗蓝婆一出手就降住他。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“口蜜腹剑”】道士满口“出家人见出家人亲”，背地里却下毒。请谈谈：为什么“嘴上越甜”有时越危险？你如何识别“伪善的人”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>甜言蜜语可能是毒药的外衣：</strong> 道士越热情、越谦恭，背后的毒药就越狠。<strong>“口甜”的人，不一定“心善”</strong>。</p>\n                        <p class=\"mt-2\"><strong>识别伪善：</strong> ①看他“做什么”，不只听他“说什么”；②夸你夸过头、好得反常的，多留个心眼；③认识不久就掏心掏肺的，先保持距离；④多观察他对别人、对弱者的态度；⑤真朋友会当面说“不好听”的真话，假朋友只捡好听的说。<strong>时间是最好的试金石——路遥知马力，日久见人心</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“好心办坏事”】唐僧一片好意拦住悟空换茶，结果三人中毒。请谈谈：为什么“善良”也需要“辨别力”？你如何做到“好心，而且看得清”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>善良不能没有眼睛：</strong> 唐僧以为道士是“爱客”，结果害了大家——<strong>心地善良，还要带上一双“看人”的眼睛</strong>。</p>\n                        <p class=\"mt-2\"><strong>好心又有辨别力：</strong> ①帮人之前，先想“这事靠不靠谱”；②有人让你“别听别人劝”，反而要多想；③陌生人的“好”，先求证再接受；④朋友有异样，提醒他“别急着做”；⑤把“相信人”和“保护自己”结合起来。<strong>聪明的善良，才帮得了人；糊涂的善良，常害了自己</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“伪朋友”】道士嘴上叫妹妹，关键时刻却抛弃蜘蛛精。请谈谈：为什么“患难见真情”？你如何分辨谁是真朋友？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>真朋友，扛得住事：</strong> 蜘蛛精喊“师兄救我”，道士却只顾吃唐僧——<strong>平时叫得再亲，关键时候靠不靠得住，才是真朋友的标准</strong>。</p>\n                        <p class=\"mt-2\"><strong>分辨真朋友：</strong> ①看你落难时，谁愿意伸手；②看你犯错时，谁愿意提醒；③看你得意时，谁不嫉妒；④借东西、帮忙，看谁真出力；⑤别只交“玩得来”的，更要交“信得过”的。<strong>锦上添花易，雪中送炭难——真朋友，是在你最需要时出现的那个人</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“一物降一物”】孙悟空再强也破不了金光，但毗蓝婆一枚绣花针就解决了。请谈谈：为什么“找对方法/找对人”比“蛮干”更重要？你如何找到解决难题的“那把钥匙”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>钥匙，永远在“对”的地方：</strong> 悟空的金箍棒打不破金光，毗蓝婆的绣花针一声响就破了——<strong>不是力量不够，是没找对“钥匙”</strong>。</p>\n                        <p class=\"mt-2\"><strong>找那把钥匙：</strong> ①卡壳时先想“问题的关键在哪”；②问自己“谁最擅长解决这类问题”；③向老师、同学、家长请教，别一个人硬扛；④多试几种“角度”，别撞南墙不回头；⑤记住：每个人都有“克星”，每道难题都有“钥匙”。<strong>会找钥匙的人，再难的锁也开得了</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“硬的不行换软的”】悟空撞不破金光，就变穿山甲钻地逃跑。请谈谈：为什么“灵活变通”能让人绝处逢生？你如何做到“此路不通就换条路”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>此路不通，绕道而行：</strong> 悟空上撞撞软了头，立刻改“钻地”逃生——<strong>硬碰硬撞得头破血流时，换个方向就是出路</strong>。</p>\n                        <p class=\"mt-2\"><strong>灵活变通：</strong> ①一个方法行不通，先停一下，别硬撑；②把“我不能”改成“我还没找到办法”；③多准备几个“备用方案”；④换个角度想：正面不行，侧面、背面行不行？⑤失败了就调整，不把“一条道”走到黑。<strong>路是死的，人是活的；会转弯的人，走到哪都有路</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“找关键”】这一难里，从下毒、金光到救师，每一步都靠“抓住关键”。请谈谈：为什么“抓主要矛盾”能事半功倍？你如何找到一件事的“关键”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>牵牛要牵牛鼻子：</strong> 毒茶要靠解毒丸、金光要靠绣花针、救师要找毗蓝婆——<strong>每一步都抓住“关键”，难题就迎刃而解</strong>。</p>\n                        <p class=\"mt-2\"><strong>抓关键：</strong> ①列一列“有哪些问题”，找出“最要命”的那个；②先解决“不解决就卡住”的环节；③写作业先啃“不会的”，别在会的上面磨蹭；④作文先定“中心”，再写细节；⑤分清“轻重缓急”，先抓“七寸”。<strong>抓住了关键，一拳就打在要害上；抓不住关键，十拳都打在棉花上</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

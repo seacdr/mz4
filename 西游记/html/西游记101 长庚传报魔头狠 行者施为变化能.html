@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第七十四回精读：心理战与变化之能</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第七十四回精读：心理战与变化之能</h1>
+            <p class="text-lg text-gray-700 serif">“长庚传报魔头狠，行者施为变化能”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-ch1')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch1">太白金星报信</button>
+                <button onclick="NavigationModule.switchTab('section-ch2')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch2">巡山小妖</button>
+                <button onclick="NavigationModule.switchTab('section-ch3')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch3">总钻风</button>
+                <button onclick="NavigationModule.switchTab('section-ch4')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-ch4">吓散小妖</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: 太白金星报信 -->
+        <section id="section-ch1" class="content-section block">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">还没开打，神仙先来示警</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    一座高山拦路，一个白发老者提前警告：山上有一伙妖魔“吃尽阎浮世上人”，不可前进。唐僧吓得跌下马来。悟空变作干净小和尚去问，老者的回答吓人：这妖魔一封书到灵山五百阿罗来迎，一纸简上天十一曜相亲，四海龙王为友、八洞仙作会。八戒再去问，得知此山叫八百里狮驼岭，洞里有三个魔头、四万七八千小妖。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c01')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">太白金星</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c01-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">李长庚来报信</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c01-back">
+                        <p class="text-gray-700 text-left">
+                            老者说完便不见了，悟空追上高空，见<strong>彩霞黄亮，原来是太白金星</strong>亲自报信。金星说：这魔头神通广大，<strong>只能靠“变化计谋”才能过去，稍一怠慢就过不去</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c02')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">人脉通天</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c02-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">一封书到灵山</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c02-back">
+                        <p class="text-gray-700 text-left">
+                            老者说妖魔：<strong>一封书到灵山，五百阿罗来迎；一纸简上天，十一曜相亲</strong>；四海龙曾与为友，八洞仙作会，阎王与他称兄弟——偏偏这么“有面子”的，是吃人的妖魔。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">强敌总在“低调”中</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    还没开打，神仙就来报信——<strong>真正的强敌，往往在你毫无准备时出现</strong>。提前“摸清底细、做好防备”，是对付大麻烦的第一步。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 巡山小妖 -->
+        <section id="section-ch2" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">妖怪也学会了“防孙悟空”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空变苍蝇飞进山里，正撞见巡山小妖边走边念：“我等巡山的个人要谨慎提防孙行者，他会变苍蝇！”——妖怪那边居然也知道悟空的本事，提前布了心理防线。悟空变作同样装束的小妖去搭话，谎称自己是“烧火的”，却被当场识破：狮驼岭的妖怪有编制、家法甚严。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c11')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">提前防备</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c11-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">提防孙行者会变苍蝇</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c11-back">
+                        <p class="text-gray-700 text-left">
+                            小妖边走边念“<strong>提防孙行者，他会变苍蝇</strong>”——原来魔头早已警告过手下。<strong>这一难不光是悟空提防妖怪，妖怪也在提防悟空</strong>，针尖对麦芒。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c12')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">编制严整</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c12-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">烧火的不巡山</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c12-back">
+                        <p class="text-gray-700 text-left">
+                            悟空自称“烧火的”，小妖却摇头：洞里烧火的兄弟我都认识，没有你；<strong>况且烧火的不巡山、巡山的不烧火</strong>——狮驼岭的妖怪分工明确、家法甚严，不好糊弄。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">对手也在变聪明</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    妖怪学会了“防孙悟空”，悟空就得想更新的招。<strong>面对也会“学习”的对手，原地踏步的老办法必然失灵</strong>——要比别人多想一步，才不被拿住。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: 总钻风 -->
+        <section id="section-ch3" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">变出个“总钻风”，套出三魔底细</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空拔根毫毛变出一面“总钻风”的金牌，自称是大王新封的巡山长官，管着四百名小钻风。小钻风们立刻巴结，悟空趁机套出三个魔头的底细：老大一口曾吞十万天兵，老二一鼻子卷人魂飞魄散，老三云程万里鹏还带着“阴阳二气瓶”，能把人一时三刻化为血水——而且他五百年前吃尽了狮驼国满城百姓。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c21')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">三魔神通</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c21-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">吞、卷、飞</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c21-back">
+                        <p class="text-gray-700 text-left">
+                            ①老大：<strong>会变大变小，一口曾吞十万天兵</strong>（吓得天兵关了南天门）；②老二：<strong>一鼻子卷过去</strong>，铁背铜身也魂亡魄丧；③老三云程万里鹏：翅膀厉害，还有宝贝<strong>阴阳二气瓶</strong>，装进去一时三刻化为血水。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c22')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">妖怪之国</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c22-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">五百年前的狮驼国</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c22-back">
+                        <p class="text-gray-700 text-left">
+                            老三原住西下四百里的<strong>狮驼国</strong>——五百年前他吃尽全城百姓、夺了江山，如今整个国家都是妖怪。<strong>这是《西游记》里唯一一个“全国皆妖”的国家</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">打探消息是致胜第一步</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空不急着开打，先变“总钻风”把三个魔头的底细摸得清清楚楚。<strong>信息就是力量——知道对手的强项和弱点，才能制定对策</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: 吓散小妖 -->
+        <section id="section-ch4" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">一席话，吓跑四万八千小妖</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空打死最初那个小钻风，变成他的模样进洞。他利用小妖们怕孙悟空的心理，自称“撞见了孙行者”，说孙行者正在涧边磨碗粗的铁棒，扬言“先打死门前一万精”；又鼓动小妖：唐僧肉就几斤，四万八千个妖怪分不着什么，何必替人顶缸。一席话，四万八千小妖“呼的一声轰然而散”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c31')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">夸大其词</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c31-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">磨杠子的孙行者</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c31-back">
+                        <p class="text-gray-700 text-left">
+                            悟空编故事：孙行者蹲在涧边，站起来十几丈长，手里碗粗铁棒蘸水磨，口里念“<strong>这一去十万妖精都替我打死</strong>，先打死你们门前一万精”——小妖听得心惊胆战。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-c32')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">瓦解斗志</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-c32-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">唐僧肉才几斤</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-c32-back">
+                        <p class="text-gray-700 text-left">
+                            悟空问小妖：唐僧肉才几斤？<strong>四万八千个妖怪分不着什么，何必替他顶缸</strong>？本是狼虫虎豹的妖怪没有军纪，“呼的一声轰然而散”——不费一兵一卒，清空了洞口。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif text-center">攻心为上，攻城为下</h3>
+                <p class="text-gray-700 max-w-3xl mx-auto text-left">
+                    悟空不动一棒，只用两段话就瓦解了数万小妖的斗志。<strong>打败一支队伍，最高明的办法是先动摇它的“心”</strong>——士气一散，再多人也不堪一击。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第七十四回“长庚传报魔头狠，行者施为变化能”是狮驼岭之难的序幕：太白金星亲自报信，八百里狮驼岭三个魔头神通广大、四万七八千小妖吃人；妖怪竟也学会“防孙悟空”，编了“提防孙行者会变苍蝇”的口令；悟空变总钻风套出三魔底细，又变回小钻风，用一席话吓散洞口数万小妖。这一回让我们看到：强敌总在低调中出现、对手也在变聪明、打探消息是致胜第一步、攻心为上。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第七十四回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "是谁提前来给唐僧师徒报信？",
+                    "options": {"A": "土地神","B": "太白金星（化作白发老者）","C": "观音","D": "山神"},
+                    "correct": "B",
+                    "analysis": "老者说完便不见了，悟空追上半空，见“彩霞黄亮”，原来是太白金星（李长庚）亲自报信——足见此难之险。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "老者说妖怪有什么“面子”？",
+                    "options": {"A": "人人喊打","B": "一封书到灵山五百阿罗来迎、一纸简上天十一曜相亲，四海龙王为友、八洞仙作会","C": "没有朋友","D": "被天庭通缉"},
+                    "correct": "B",
+                    "analysis": "这妖怪人脉通天：五百阿罗来迎、十一曜相亲、龙王为友、八洞仙作会、阎王称兄弟——偏偏是吃人的妖魔。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "八百里狮驼岭里有几个魔头、多少小妖？",
+                    "options": {"A": "三个魔头，四万七八千小妖","B": "一个魔头，一万小妖","C": "两个魔头，五千小妖","D": "四个魔头，十万小妖"},
+                    "correct": "A",
+                    "analysis": "老者说洞里有三个魔头，手下有名有姓带牌的小妖“四万七八千”，其余未入册的不计其数。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "巡山小妖边走边念什么？",
+                    "options": {"A": "“快去捉唐僧”","B": "“提防孙行者，他会变苍蝇”","C": "“小心猪八戒”","D": "“别偷懒”"},
+                    "correct": "B",
+                    "analysis": "小妖念“提防孙行者，他会变苍蝇”——魔头早已警告手下，连悟空的变化手段都成了“防患”的口令。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空自称“烧火的”，为什么被识破？",
+                    "options": {"A": "长得不像","B": "洞里烧火的兄弟小妖都认识，而且烧火的不巡山、巡山的不烧火","C": "口音不对","D": "没有工具"},
+                    "correct": "B",
+                    "analysis": "狮驼岭的妖怪有编制、分工明确：烧火的只管烧火、巡山的只管巡山——悟空编的瞎话露了馅。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "悟空变出“总钻风”的金牌，自称是什么？",
+                    "options": {"A": "烧火班长","B": "大王新封的巡山长官，管四百名小钻风","C": "做饭的","D": "守门的"},
+                    "correct": "B",
+                    "analysis": "悟空说大王见他烧火好，“升了我做总巡风”，管着一班四十名、十班共四百名巡山小妖——小钻风们立刻巴结。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "三个魔头中，老大的本事是什么？",
+                    "options": {"A": "喷火","B": "会变大变小，一口曾吞十万天兵（吓得天兵关了南天门）","C": "放毒","D": "念咒"},
+                    "correct": "B",
+                    "analysis": "老大“变化法身，张开大口似城门”，吓得十万天兵不敢交锋、关了南天门——不是真吃，是震慑。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "三个魔头中，老二的本事是什么？",
+                    "options": {"A": "用鼻子卷人，铁背铜身也魂亡魄丧","B": "用嘴吹风","C": "喷沙","D": "放箭"},
+                    "correct": "A",
+                    "analysis": "老二身高三丈，牙似扁担、鼻如蛟龙，“一鼻子卷过去”，就算铁背铜身也魂亡魄丧——这是一头大象精。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "三个魔头中，老三是什么来历？",
+                    "options": {"A": "牛魔王","B": "云程万里鹏（大鹏鸟），原住狮驼国","C": "青牛精","D": "黄眉怪"},
+                    "correct": "B",
+                    "analysis": "老三“不是凡间之物，名号云程万里鹏”——是只大鹏鸟，五百年前吃尽狮驼国全城百姓、夺了江山。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "老三的宝贝是什么？有多厉害？",
+                    "options": {"A": "芭蕉扇","B": "阴阳二气瓶，装进去一时三刻化为血水","C": "紫金铃","D": "金刚琢"},
+                    "correct": "B",
+                    "analysis": "老三随身带着“阴阳二气瓶”，如果把人装在瓶里，“一时三刻化为血水”——悟空听后也暗惊，说要“仔细点小心那个瓶儿”。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "老三为什么主动来与老大、老二结拜？",
+                    "options": {"A": "讲义气","B": "忌惮孙行者神通广大，自己难以独力对付，来结义同捉唐僧","C": "借地方住","D": "躲仇家"},
+                    "correct": "B",
+                    "analysis": "大鹏鸟想吃唐僧肉，又怕孙行者太厉害，“自己一个难以对付”，所以来与狮驼岭两大王结为兄弟，同心合伙捉唐僧。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "悟空把最初的小钻风怎么了？",
+                    "options": {"A": "放了","B": "一棒压成肉饼，取了他的牌儿，变作他的模样","C": "绑起来","D": "一起进洞"},
+                    "correct": "B",
+                    "analysis": "悟空“掣出铁棒，当头一压压成一个肉饼”，解下他的牌儿带在腰里，变作小钻风的模样进洞——总钻风的身份回去会露馅。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "悟空用什么办法吓跑洞口的小妖？",
+                    "options": {"A": "挥棒乱打","B": "编故事说孙行者正在磨棒、要先打死门前一万精，又劝唐僧肉分不着几斤","C": "放火","D": "念咒"},
+                    "correct": "B",
+                    "analysis": "悟空先夸孙行者可怕（磨碗粗铁棒、要打死一万精），再瓦解斗志（唐僧肉才几斤，何必顶缸）——一席话让数万小妖“轰然而散”。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "小妖们为什么“呼的一声轰然而散”？",
+                    "options": {"A": "收到命令","B": "本是无纪律的狼虫虎豹，士气被瓦解后一哄而散","C": "去搬救兵","D": "怕大王"},
+                    "correct": "B",
+                    "analysis": "这些小妖本是狼虫虎豹走兽飞禽，不像军队有纪律，听悟空一说“各自顾命”，便“呼的一声轰然而散”，如楚歌吹散八千兵。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "“楚歌吹散八千兵”用的是什么典故？",
+                    "options": {"A": "赤壁之战","B": "刘邦项羽垓下之战（四面楚歌瓦解楚军斗志）","C": "官渡之战","D": "长坂坡"},
+                    "correct": "B",
+                    "analysis": "项羽被围垓下，四面响起楚歌，楚军斗志瓦解——作者借这个典故形容小妖被一席话吓散。"
+                },
+                {
+                    "id": "q16",
+                    "num": 16,
+                    "question": "太白金星嘱咐悟空靠什么过狮驼岭？",
+                    "options": {"A": "硬拼","B": "变化计谋（光靠打没用，要有智谋）","C": "绕路","D": "求饶"},
+                    "correct": "B",
+                    "analysis": "金星说“只靠你那变化计谋方可过去，稍怠慢些儿，就过不去”——提前点明此难要用智谋，不能蛮干。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "此山叫八百里______驼岭，洞叫狮驼洞。",
+                    "answer": "狮",
+                    "analysis": "“狮驼岭”一名点出主妖——狮子精（老大）。山名“狮驼”，洞名“狮驼”，与老三的“狮驼国”呼应。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "巡山小妖念“提防______行者，他会变苍蝇”。",
+                    "answer": "孙",
+                    "analysis": "“孙行者”即孙悟空。妖怪提前警告手下提防他变苍蝇——悟空正变成苍蝇叮在小妖身上，听了吓一跳。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "悟空拔毫毛变出“总______风”的金牌，自称巡山长官。",
+                    "answer": "钻",
+                    "analysis": "“总钻风”是对“小钻风”的升格——悟空又爱充大，从“小”变“总”，压小钻风们一头。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "老大一口曾吞十万______兵（其实是吓得天兵关了南天门）。",
+                    "answer": "天",
+                    "analysis": "“十万天兵”围剿时，老大张开大口似城门，吓得天兵不敢交锋、关了南天门——不是真吞，是震慑。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "老三的宝贝叫阴阳二气______，装进去一时三刻化为血水。",
+                    "answer": "瓶",
+                    "analysis": "“阴阳二气瓶”是大鹏鸟的法宝，与金角银角的净瓶、紫金葫芦同类，能化人为血水——悟空专门叮嘱小心这瓶子。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "老三五百年前吃尽______驼国全城百姓，夺了江山。",
+                    "answer": "狮",
+                    "analysis": "“狮驼国”是《西游记》里唯一全国皆妖的国家——五百年前被大鹏鸟吃光了人，如今整个国家都是妖怪。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "悟空把最初的小钻风压成肉______，变作他的模样。",
+                    "answer": "饼",
+                    "analysis": "“压成肉饼”是悟空处理冒牌目标的方式——取他的牌儿带在腰间，冒充小钻风混进狮驼洞。"
+                },
+                {
+                    "id": "bq24",
+                    "num": 24,
+                    "question": "小妖们被一席话吓散，“呼的一声轰然而散”，如______歌吹散八千兵。",
+                    "answer": "楚",
+                    "analysis": "“楚歌”用项羽垓下之围“四面楚歌”的典故——歌声瓦解军心，比喻悟空用语言瓦解了数万小妖的斗志。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“提前准备”】还没开打，太白金星就提前报信。请谈谈：为什么“未雨绸缪”能让人少吃苦头？面对即将到来的考试或挑战，你如何提前做好准备？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>先下手为强：</strong> 太白金星提前报信，悟空才能从容布置计谋——<strong>提前知道“前面有坑”，就能绕开或者填平它</strong>。</p>\n                        <p class=\"mt-2\"><strong>未雨绸缪：</strong> ①考前制定复习计划，不临时抱佛脚；②比赛前提前“踩场”、试设备；③出门前看天气预报，带好雨具；④做事前先想“可能出什么问题”及对策；⑤把“等出事了再说”改成“先防患于未然”。<strong>早准备的人，不慌；晚准备的人，慌乱</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“对手也在进步”】妖怪竟然学会了“防孙行者变苍蝇”。请谈谈：为什么“知己知彼”要双向进行？面对也会进步的对手，你如何“不断升级自己”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>你在研究他，他也在研究你：</strong> 妖怪摸清了悟空会变苍蝇，提前设防——<strong>只有比对手多想一步，才占得上风</strong>。</p>\n                        <p class=\"mt-2\"><strong>不断升级自己：</strong> ①老办法不灵时，主动学新招；②关注“别人怎么超越我”，而不是只看自己；③每次失败后，问“我哪里可以升级”；④多读多学，让自己“版本更新”；⑤把“这题我会了”改成“我还能会更多”。<strong>原地不动就是退步；只有一直学习，才能一直领先</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“信息就是力量”】悟空变“总钻风”套出三个魔头的底细才动手。请谈谈：为什么“先掌握信息”能让你少走弯路？你如何主动获取有用的信息？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>摸清底细，百战不殆：</strong> 悟空知道老大能吞、老二能卷、老三有阴阳二气瓶，心里才有底——<strong>信息越多，判断越准</strong>。</p>\n                        <p class=\"mt-2\"><strong>获取信息：</strong> ①上课先听“重点”，回家先看“错题”；②要决定一件事，先查资料、问懂的人；③读新闻、读书，扩大信息面；④向老师同学“请教”，不耻下问；⑤把“大概知道”变成“确切知道”。<strong>会收集信息的人，等于比别人多带了一张地图</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“攻心为上”】悟空不动一棒，用一席话吓散四万八千小妖。请谈谈：为什么“瓦解对方士气”比“正面硬拼”更高级？你如何用“沟通”而不是“冲突”解决问题？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>胜人者力，胜心者智：</strong> 悟空不费一兵一卒就清空洞口——<strong>让对方自己“不想打”，比打赢对方更厉害</strong>。</p>\n                        <p class=\"mt-2\"><strong>用沟通代替冲突：</strong> ①和同学有分歧，先讲道理，不先动手；②让对方明白“这样做对他没好处”，他就不会坚持；③把“你错了”换成“你看这样会不会更好”；④化解矛盾，从“大家的目标”出发；⑤少结仇，多结盟。<strong>会说话的人，一根舌头顶得上千军万马</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“勇谋并用”】悟空既敢单枪匹马闯狮驼岭，又会变总钻风套情报。请谈谈：为什么“有勇有谋”才能成大事？你如何培养“胆大心细”的品质？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>有勇无谋是莽夫，有谋无勇是懦夫：</strong> 悟空胆敢独自闯洞，又懂得先套情报——<strong>勇敢加上智慧，才是真本领</strong>。</p>\n                        <p class=\"mt-2\"><strong>胆大心细：</strong> ①敢于尝试，但先想清楚再动手；②关键时刻敢站出来，平时多留意细节；③上台发言前，把“可能问什么”准备好；④做事既看“大局”，又抠“细节”；⑤遇到大场面，深呼吸、稳住、按计划来。<strong>胆子要大，心思要细——这是成大事的“两个翅膀”</strong>。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“灵活身份”】悟空一会儿变小和尚、一会儿变总钻风、一会儿又变回小钻风。请谈谈：为什么“懂得随机应变、切换角色”很重要？你在不同场合如何调整自己的“角色”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>角色对了，事就顺了：</strong> 悟空见老者变“干净小和尚”，套话变“总钻风”，进洞又变“小钻风”——<strong>不同场合，用不同的“身份”应对</strong>。</p>\n                        <p class=\"mt-2\"><strong>切换角色：</strong> ①在学校是学生，在家是孩子，各有各的样子；②上台发言要大方，私下交流要亲切；③对长辈有礼，对同学友善；④做事时认真，休息时放松；⑤看场合说话做事，不“一个腔调走天下”。<strong>会切换角色的人，到哪儿都合得来</strong>。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>

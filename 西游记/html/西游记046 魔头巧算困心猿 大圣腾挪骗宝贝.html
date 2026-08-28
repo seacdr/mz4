@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《西游记》第三十四回精读：葫芦易主</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- exercises.js -->
+    <script src="./js/exercises.js"></script>
+    <!-- Google Fonts for Classical Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9;
+            color: #2d3748;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+                max-height: 300px;
+            }
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #92400e;
+            border-bottom: 2px solid #92400e;
+            font-weight: 700;
+        }
+        .reveal-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reveal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .poem-line {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .poem-line:hover, .poem-line.active {
+            color: #92400e;
+            font-weight: 700;
+        }
+        
+        .circle-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #92400e;
+            margin-right: 8px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #78350f;
+            background: transparent;
+            outline: none;
+            text-align: center;
+            color: #78350f;
+            font-size: revert;
+            font-weight: bold;
+            padding: 2px 6px;
+            width: 140px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        .blank-input:focus {
+            border-bottom-color: #92400e;
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+        .blank-input.input-correct {
+            background-color: #d1fae5 !important;
+            border: 1.5px solid #10b981 !important;
+            color: #065f46 !important;
+        }
+        .blank-input.input-wrong {
+            background-color: #fee2e2 !important;
+            border: 1.5px solid #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .input-answer {
+            font-size: large;
+        }
+        .option-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option-item:hover {
+            background-color: #fef3c7;
+        }
+        .option-item.correct-selected {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+        .option-item.wrong-selected {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .essay-textarea {
+            width: 100%;
+            height: 3.6rem;
+            line-height: 1.8rem;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 1.7rem,
+                #78350f 1.7rem,
+                #78350f 1.8rem
+            );
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 0.95rem;
+            color: #1f2937;
+            padding: 0 4px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+    <!-- Header -->
+    <header class="bg-[#f4efe8] border-b border-[#e2d8c9] py-8 sticky z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">《西游记》第三十四回精读：葫芦易主</h1>
+            <p class="text-lg text-gray-700 serif">“魔头巧算困心猿，大圣腾挪骗宝贝”</p>
+            
+            <!-- Navigation Tabs -->
+            <nav class="mt-8 flex justify-center space-x-4 md:space-x-8 overflow-x-auto">
+                <button onclick="NavigationModule.switchTab('section-spy')" class="tab-btn active px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-spy">第一章：小妖失宝</button>
+                <button onclick="NavigationModule.switchTab('section-kneel')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-kneel">第二章：忍辱求绳</button>
+                <button onclick="NavigationModule.switchTab('section-reverse')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-reverse">第三章：反遭其祸</button>
+                <button onclick="NavigationModule.switchTab('section-take')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-take">第四章：葫芦易主</button>
+                <button onclick="NavigationModule.switchTab('section-exercises')" class="tab-btn px-3 py-2 text-md font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap" id="tab-exercises">融会贯通</button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+        <!-- Section 1: Spy -->
+        <section id="section-spy" class="content-section block fade-in">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">小妖失宝：悟空变“苍蝇”探听</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    精细鬼、伶俐虫发现被骗，垂头丧气回洞。悟空变成一只苍蝇，悄悄跟在后面，把妖怪的老底摸了个一清二楚。点击翻转卡片，看看悟空如何“顺藤摸瓜”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-s1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">发现被骗</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-s1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“坏啦，被骗了！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-s1-back">
+                        <p class="text-gray-700 text-left">
+                            小妖试念咒语，<strong>葫芦忽然坠地（毫毛收回）</strong>，才发现<strong>上当受骗</strong>。两人<strong>惶恐不安</strong>，精细鬼还<strong>想推卸责任</strong>，让伶俐虫背锅。悟空<strong>抖身收回毫毛</strong>，两个小妖<strong>两手空空</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-s2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">变蝇跟踪</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-s2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“跟上去，探个底”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-s2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空<strong>变作苍蝇</strong>，<strong>悄悄跟在两个小妖身后</strong>，一路<strong>听他们汇报、听老魔发怒</strong>，得知妖怪<strong>还有三件宝贝</strong>，以及<strong>“幌金绳”藏在压龙山压龙洞母亲处</strong>。<strong>“知己知彼”，才能百战不殆</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">核心洞察：“摸底”的功夫</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    悟空没有急着硬闯，而是<strong class="text-amber-900">先摸清对方的老底</strong>。想要做成事，先要<strong class="text-amber-900">“侦察清楚”</strong>——妖怪有几件宝、宝在哪里、谁是关键人物。学习中<strong class="text-amber-900">“先看题、再下笔”</strong>，做事<strong class="text-amber-900">“先调研、再动手”</strong>，都是“摸底”的智慧。<strong class="text-amber-900">心中有数，手中有招</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 2: Kneel -->
+        <section id="section-kneel" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">忍辱求绳：悟空“跪拜”九尾狐</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    妖怪派小妖去压龙洞请母亲（九尾狐狸）来吃唐僧肉，顺便取幌金绳。悟空半路截杀小妖，自己变作小妖，去见这位“老奶奶”。点击翻转卡片，看看悟空为何“下跪”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-k1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">截杀取绳</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-k1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“拦路打劫”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-k1-back">
+                        <p class="text-gray-700 text-left">
+                            妖怪派<strong>巴山虎、倚海龙</strong>去压龙洞请母亲取幌金绳。悟空<strong>半路截住，一棒打杀两个小妖</strong>，自己<strong>变作倚海龙</strong>，毫毛变作巴山虎，<strong>混进压龙洞</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-k2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">忍辱下跪</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-k2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“只拜过三人”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-k2-back">
+                        <p class="text-gray-700 text-left">
+                            面对九尾狐狸，悟空<strong>竟然下跪磕头</strong>，喊“奶奶磕头了”。他<strong>流泪不是怕</strong>，而是想起：“我齐天大圣，<strong>一生只拜过三人——佛祖、观音、师父</strong>。”如今<strong>为救师父，忍辱跪妖</strong>——<strong>这是成长与忠诚</strong>。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“忍一时，为了成大事”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    悟空<strong class="text-amber-900">宁跪妖怪，也要救师父</strong>——这叫<strong class="text-amber-900">“能屈能伸”</strong>。真正勇敢的人，不是永远“不服软”，而是<strong class="text-amber-900">知道什么时候该忍、为了什么而忍</strong>。学习中被批评、比赛一时落后，忍住“难受”，盯住“目标”，才能笑到最后。<strong class="text-amber-900">委屈一时，是为了赢得更重要的东西</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 3: Reverse -->
+        <section id="section-reverse" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">反遭其祸：幌金绳“反咬一口”</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空打死九尾狐，搜出幌金绳，变作“老母”回莲花洞。谁知被八戒识破，身份暴露，大战银角时，幌金绳还被对方用“松绳咒”反制。点击翻转卡片，看看这场“自己挖坑自己跳”。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-r1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">身份暴露</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-r1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“猴尾露馅了”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-r1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空变“老母”回洞，群妖<strong>跪拜迎接</strong>。可<strong>八戒一眼识破</strong>——他看到<strong>“弯腰还礼时举起了一条猴尾”</strong>！悟空还要<strong>“割八戒耳下酒”</strong>，八戒<strong>反将一军</strong>：“我喊出来不好听啊！”<strong>细节，藏不住真相</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-r2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">绳被反制</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-r2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“紧绳咒”上身</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-r2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空抛<strong>幌金绳</strong>想擒银角，银角却念<strong>“松绳咒”脱身</strong>，反手<strong>用绳扣住悟空</strong>，念<strong>“紧绳咒”收紧</strong>，悟空<strong>被金圈套住脖子</strong>——<strong>本想用别人的宝，反而把自己困住</strong>。好在他<strong>金刚不坏</strong>，砍头无伤。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-8 text-center">
+                <h3 class="text-xl font-bold text-amber-900 mb-2 serif">“法器要会念咒，光有不行”</h3>
+                <p class="text-gray-700 max-w-2xl mx-auto text-left">
+                    悟空<strong class="text-amber-900">拿到绳，却不会“念咒”</strong>，反被主人反制。宝贝<strong class="text-amber-900">“用对”才是宝，“用错”反成祸</strong>。生活中也如此：工具再好，<strong class="text-amber-900">不会用等于白搭</strong>；机会再好，<strong class="text-amber-900">没本事接不住</strong>。<strong class="text-amber-900">“拥有”与“会用”，是两回事</strong>——踏实练本领，才能“拿到就能用”。
+                </p>
+            </div>
+        </section>
+        <!-- Section 4: Take -->
+        <section id="section-take" class="content-section hidden">
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold text-amber-900 mb-4">葫芦易主：“者行孙”大显神通</h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto text-left">
+                    悟空用金箍棒变钢锉磨断绳子，又用“调包计”换回真幌金绳。他自称“者行孙”再战，却不小心应声被吸入葫芦。点击翻转卡片，看看悟空如何在“葫芦肚里”翻云覆雨。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t1')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">应声入葫芦</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t1-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“者行孙在此！”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t1-back">
+                        <p class="text-gray-700 text-left">
+                            悟空磨断绳子脱身，自称<strong>“者行孙”</strong>（倒读“孙行者”）再战。银角大王<strong>用葫芦叫“者行孙”</strong>，悟空<strong>因为“要面子”，忍不住应了一声</strong>，<strong>“嗖”地一声被吸入葫芦</strong>——这才明白：<strong>管你真名假名，只要应声就被装</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="reveal-card bg-white rounded-xl shadow border border-gray-200 overflow-hidden" onclick="CardModule.toggle('card-t2')">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-lg font-bold serif">葫芦里的翻身</h3>
+                    </div>
+                    <div class="p-8 text-center" id="card-t2-front">
+                        <h4 class="text-2xl font-bold text-amber-900 mb-2 serif">“毕竟葫芦还姓孙”</h4>
+                        <p class="text-gray-500 mt-4">(点击揭秘)</p>
+                    </div>
+                    <div class="p-8 text-center hidden bg-amber-50" id="card-t2-back">
+                        <p class="text-gray-700 text-left">
+                            悟空在葫芦里<strong>假装化脓</strong>，骗妖怪摇晃。又<strong>拔毫毛变半个身子</strong>留在葫芦底，<strong>真身变小虫钉在葫芦口边</strong>。妖怪<strong>揭盖时飞出，变小妖</strong>，借<strong>“递酒”之机换走真葫芦</strong>。<strong>“饶君手段千般痕，毕竟葫芦还姓孙。”</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-stone-100 rounded-xl p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 serif text-center">“绝境不认输，总能翻盘”</h3>
+                <p class="text-gray-700 text-left max-w-3xl mx-auto">
+                    被吸进葫芦、眼看<strong class="text-amber-900">要化脓水</strong>，悟空<strong class="text-amber-900">依然冷静设局</strong>：假化脓、留假身、变小虫、趁递酒换宝——<strong class="text-amber-900">绝境里不乱方寸，才能找到翻盘的“出口”</strong>。考试失利、比赛落后，都像“进了葫芦”——别慌、别放弃，<strong class="text-amber-900">稳住心态、开动脑筋，总能找到“脱身之计”</strong>。
+                </p>
+            </div>
+        </section>
+        <!-- Section 5: Complete Exercises -->
+        <section id="section-exercises" class="content-section hidden">
+            <div class="mb-8 text-center">
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200 text-gray-700 mx-auto text-left">
+                    <strong>【导语】</strong> 亲爱的同学，《西游记》第三十四回“魔头巧算困心猿，大圣腾挪骗宝贝”是“平顶山之难”的高潮之一。这一回让我们看到：摸底调查的功夫、能屈能伸的胸怀、绝境翻盘的智慧。请认真作答。
+                </div>
+            </div>
+            <!-- Part 1: Choice Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第一部分：选择题</span>
+                    <button onclick="QuizModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有解析</button>
+                </h3>
+                <div class="space-y-6" id="choice-questions-container"></div>
+            </div>
+            <!-- Part 2: Blank-filling Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第二部分：填空题</span>
+                    <button onclick="BlankModule.checkAll()" class="text-xs bg-amber-800 text-white px-3 py-1.5 rounded hover:bg-amber-900 font-normal">一键校验所有填空</button>
+                </h3>
+                <div class="space-y-6" id="blank-questions-container"></div>
+            </div>
+            <!-- Part 3: Essay Questions -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-amber-800 pb-2 serif flex items-center justify-between">
+                    <span>第三部分：问答与深度思考题</span>
+                    <button onclick="EssayModule.toggleAllAnswers()" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200 font-normal">展开/收起本区所有参考答案与思路</button>
+                </h3>
+                <div class="space-y-6" id="essay-questions-container"></div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200">
+        <p class="text-sm text-gray-500">基于《西游记》第三十四回原文精讲内容构建</p>
+    </footer>
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * 导航模块
+         */
+        const NavigationModule = {
+            switchTab(tabId) {
+                document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.content-section').forEach(el => el.classList.remove('block'));
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                const activeBtnId = tabId.replace('section-', 'tab-');
+                document.getElementById(activeBtnId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /**
+         * 卡片翻转模块
+         */
+        const CardModule = {
+            toggle(cardId) {
+                const front = document.getElementById(`${cardId}-front`);
+                const back = document.getElementById(`${cardId}-back`);
+                if (front && back) {
+                    front.classList.toggle('hidden');
+                    back.classList.toggle('hidden');
+                }
+            }
+        };
+
+
+
+        /**
+         * 选择题模块
+         */
+        const QuizModule = {
+            init() {
+                const container = document.getElementById('choice-questions-container');
+                container.innerHTML = API_DATA.choiceQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="space-y-3 pl-11">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div onclick="QuizModule.selectOption('${q.id}', '${key}', this)" class="option-item p-3 rounded border border-gray-200 bg-gray-50" data-question="${q.id}" data-option="${key}">
+                                    <span class="font-bold text-amber-700 mr-2">${key}.</span>
+                                    <span class="text-gray-700">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pl-11 hidden" id="analysis-${q.id}">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p class="text-sm font-bold text-green-800 mb-2">✅ 正确答案：${q.correct}</p>
+                                <p class="text-sm text-green-700">${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            selectOption(questionId, selectedOption, element) {
+                const parentGrid = element.closest('.space-y-3');
+                if (parentGrid.dataset.done === '1') return;
+                parentGrid.dataset.done = '1';
+                parentGrid.style.pointerEvents = 'none';
+                parentGrid.style.opacity = '0.75';
+                
+                const question = API_DATA.choiceQuestions.find(q => q.id === questionId);
+                const allOptions = document.querySelectorAll(`[data-question="${questionId}"]`);
+                
+                allOptions.forEach(opt => {
+                    opt.classList.remove('correct-selected', 'wrong-selected');
+                });
+                
+                const analysisEl = document.getElementById(`analysis-${questionId}`);
+                
+                if (selectedOption === question.correct) {
+                    element.classList.add('correct-selected');
+                    analysisEl.classList.remove('hidden');
+                } else {
+                    element.classList.add('wrong-selected');
+                    analysisEl.classList.remove('hidden');
+                }
+            },
+            
+            toggleAllAnswers() {
+                const allAnalyses = document.querySelectorAll('[id^="analysis-"]');
+                const isHidden = Array.from(allAnalyses).some(el => el.classList.contains('hidden'));
+                allAnalyses.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 填空题模块
+         */
+        const BlankModule = {
+            init() {
+                const container = document.getElementById('blank-questions-container');
+                container.innerHTML = API_DATA.blankQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                const blanks = q.answer.split('|');
+                let questionText = q.question;
+                blanks.forEach((_, index) => {
+                    questionText = questionText.replace('______', `<input type="text" class="blank-input" data-question="${q.id}" data-blank="${index}" autocomplete="off">`);
+                });
+                
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${questionText}</p>
+                        </div>
+                        <div class="pl-11">
+                            <button onclick="BlankModule.checkOne('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">校验答案</button>
+                            <div class="mt-3 hidden" id="feedback-${q.id}">
+                                <p class="text-sm text-green-700"><strong>参考答案：</strong>${q.answer.replace(/\|/g, ' / ')}</p>
+                                <p class="text-sm text-gray-600 mt-1"><strong>解析：</strong>${q.analysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            checkOne(questionId) {
+                const question = API_DATA.blankQuestions.find(q => q.id === questionId);
+                const inputs = document.querySelectorAll(`[data-question="${questionId}"]`);
+                const correctAnswers = question.answer.split('|').map(a => a.trim());
+                let allCorrect = true;
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim();
+                    const isCorrect = correctAnswers.some(ans => ans.includes(userAnswer) || userAnswer.includes(ans));
+                    
+                    if (isCorrect && userAnswer) {
+                        input.classList.add('input-correct');
+                        input.classList.remove('input-wrong');
+                    } else {
+                        input.classList.add('input-wrong');
+                        input.classList.remove('input-correct');
+                        allCorrect = false;
+                    }
+                });
+                
+                const feedbackEl = document.getElementById(`feedback-${questionId}`);
+                feedbackEl.classList.remove('hidden');
+            },
+            
+            checkAll() {
+                API_DATA.blankQuestions.forEach(q => this.checkOne(q.id));
+            }
+        };
+
+        /**
+         * 问答题模块
+         */
+        const EssayModule = {
+            init() {
+                const container = document.getElementById('essay-questions-container');
+                container.innerHTML = API_DATA.essayQuestions.map(q => this.renderQuestion(q)).join('');
+            },
+            
+            renderQuestion(q) {
+                return `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-sm">${q.num}</span>
+                            <p class="text-gray-800 font-medium flex-1">${q.question}</p>
+                        </div>
+                        <div class="pl-11">
+                            <textarea class="essay-textarea mb-3" placeholder="在此写下你的思考..."></textarea>
+                            <button onclick="EssayModule.toggleAnswer('${q.id}')" class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded hover:bg-amber-200">查看参考答案与思路</button>
+                            <div id="answer-${q.id}" class="answer-box hidden mt-4 p-4 bg-amber-50 rounded border border-amber-200 text-sm text-gray-800 leading-relaxed">
+                                ${q.answerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            toggleAnswer(questionId) {
+                const answerEl = document.getElementById(`answer-${questionId}`);
+                answerEl.classList.toggle('hidden');
+            },
+            
+            toggleAllAnswers() {
+                const allAnswers = document.querySelectorAll('[id^="answer-"]');
+                const isHidden = Array.from(allAnswers).some(el => el.classList.contains('hidden'));
+                allAnswers.forEach(el => {
+                    if (isHidden) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            }
+        };
+
+        /**
+         * 模拟 API 接口数据仓库
+         */
+        const API_DATA = {
+            "choiceQuestions": [
+                {
+                    "id": "q1",
+                    "num": 1,
+                    "question": "小妖精细鬼、伶俐虫发现被骗后，精细鬼的“小算盘”是：",
+                    "options": {
+                        "A": "老实认错",
+                        "B": "把罪责推给伶俐虫，想让自己少受罚",
+                        "C": "逃走",
+                        "D": "求悟空原谅"
+                    },
+                    "correct": "B",
+                    "analysis": "精细鬼提议把责任推给伶俐虫，认为大王平日对伶俐虫好，或许能留命，暴露了自私心理。"
+                },
+                {
+                    "id": "q2",
+                    "num": 2,
+                    "question": "悟空变作什么，悄悄跟踪小妖探听情报？",
+                    "options": {
+                        "A": "蚊子",
+                        "B": "苍蝇",
+                        "C": "蜜蜂",
+                        "D": "蝴蝶"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空摇身变作苍蝇，飞随两个小妖，一路听他们汇报、听老魔发怒，摸清了妖怪的老底。"
+                },
+                {
+                    "id": "q3",
+                    "num": 3,
+                    "question": "幌金绳藏在何处？",
+                    "options": {
+                        "A": "莲花洞里",
+                        "B": "压龙山压龙洞的母亲（九尾狐狸）处",
+                        "C": "天庭",
+                        "D": "花果山"
+                    },
+                    "correct": "B",
+                    "analysis": "妖怪的五件宝中，幌金绳存放在压龙山压龙洞的母亲九尾狐狸处。"
+                },
+                {
+                    "id": "q4",
+                    "num": 4,
+                    "question": "悟空半路截杀了哪两个去请老母的小妖？",
+                    "options": {
+                        "A": "精细鬼、伶俐虫",
+                        "B": "巴山虎、倚海龙",
+                        "C": "金角、银角",
+                        "D": "狐阿七、九尾狐"
+                    },
+                    "correct": "B",
+                    "analysis": "妖怪差遣巴山虎、倚海龙去请母亲取幌金绳，悟空半路截杀二妖，自己变作倚海龙混入压龙洞。"
+                },
+                {
+                    "id": "q5",
+                    "num": 5,
+                    "question": "悟空给九尾狐狸下跪时流泪，是因为：",
+                    "options": {
+                        "A": "害怕妖怪",
+                        "B": "想起自己一生只拜过三人（佛祖、观音、师父），如今为救师忍辱跪妖",
+                        "C": "膝盖疼",
+                        "D": "被感动了"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空流泪不是因为怕，而是自尊心极强的他，为了救师父竟然要向妖怪下跪，这体现了他的成长与忠诚。"
+                },
+                {
+                    "id": "q6",
+                    "num": 6,
+                    "question": "悟空是如何得到幌金绳的？",
+                    "options": {
+                        "A": "妖怪主动送的",
+                        "B": "打死九尾狐狸，从尸身搜出",
+                        "C": "捡到的",
+                        "D": "变出来的"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空在轿中一棒打死九尾狐狸，现出原形，从尸身搜出幌金绳。"
+                },
+                {
+                    "id": "q7",
+                    "num": 7,
+                    "question": "八戒是如何识破“老母”是悟空变的？",
+                    "options": {
+                        "A": "听声音",
+                        "B": "看到弯腰还礼时举起了一条猴尾",
+                        "C": "闻气味",
+                        "D": "悟空自己承认"
+                    },
+                    "correct": "B",
+                    "analysis": "八戒吊在梁上，看到“老母”弯腰还礼时露出了猴尾巴，立刻认出是悟空变的。"
+                },
+                {
+                    "id": "q8",
+                    "num": 8,
+                    "question": "悟空抛幌金绳想擒银角，为何反被银角用绳扣住？",
+                    "options": {
+                        "A": "悟空不会念绳咒，银角念“松绳咒”脱身后反制",
+                        "B": "绳子太旧",
+                        "C": "悟空力气不够",
+                        "D": "八戒捣乱"
+                    },
+                    "correct": "A",
+                    "analysis": "幌金绳是妖怪的法宝，银角会念咒。悟空拿到绳却不会用，反被银角用“松绳咒”脱身、再用“紧绳咒”反制。"
+                },
+                {
+                    "id": "q9",
+                    "num": 9,
+                    "question": "悟空被绳子捆住后，是如何脱身的？",
+                    "options": {
+                        "A": "请观音帮忙",
+                        "B": "暗使金箍棒变钢锉，磨断绳圈",
+                        "C": "等妖怪放他",
+                        "D": "变小逃走"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空趁妖怪不备，让金箍棒变成钢锉，磨断绳圈脱身，又用调包计换回真绳。"
+                },
+                {
+                    "id": "q10",
+                    "num": 10,
+                    "question": "悟空自称“者行孙”，却被银角用葫芦收走，原因是：",
+                    "options": {
+                        "A": "葫芦认人",
+                        "B": "悟空因“要面子”应了一声，而葫芦只要应声就装人",
+                        "C": "者行孙不是悟空",
+                        "D": "悟空故意被收"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空以为“不叫真名就没事”，结果银角叫“者行孙”时，他忍不住应了一声，就被吸进葫芦——管你真名假名，只要应声就装。"
+                },
+                {
+                    "id": "q11",
+                    "num": 11,
+                    "question": "悟空在葫芦里用了什么“金蝉脱壳”之计？",
+                    "options": {
+                        "A": "把葫芦打碎",
+                        "B": "假装化脓骗妖怪摇晃，拔毫毛变半个身子留在葫芦底，真身变小虫钉在葫芦口边，趁揭盖飞出",
+                        "C": "念咒语出来",
+                        "D": "求妖怪放他"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空假装化成脓水，又变出假身子留在葫芦里，真身变成小虫藏到葫芦口边，妖怪一揭盖就飞出去了。"
+                },
+                {
+                    "id": "q12",
+                    "num": 12,
+                    "question": "悟空最终是如何换回真葫芦的？",
+                    "options": {
+                        "A": "用假葫芦换的",
+                        "B": "借“递酒”之机，把真葫芦藏进袖中，用毫毛变的假葫芦交付",
+                        "C": "抢回来的",
+                        "D": "妖怪还的"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空变小妖接酒，趁机把真葫芦藏在袖中，用毫毛变的假葫芦递过去，神不知鬼不觉换了宝。"
+                },
+                {
+                    "id": "q13",
+                    "num": 13,
+                    "question": "“饶君手段千般痕，毕竟葫芦还姓孙”的意思是：",
+                    "options": {
+                        "A": "葫芦姓孙",
+                        "B": "不管妖怪怎么耍手段，宝贝最后还是回到悟空（孙）手里",
+                        "C": "悟空姓孙",
+                        "D": "葫芦是孙悟空的"
+                    },
+                    "correct": "B",
+                    "analysis": "这句话点明：无论妖怪如何斗智斗勇，真正的赢家还是悟空——宝贝最终回到他手里。"
+                },
+                {
+                    "id": "q14",
+                    "num": 14,
+                    "question": "悟空“忍辱跪妖”告诉我们的道理是：",
+                    "options": {
+                        "A": "遇到困难要放弃自尊",
+                        "B": "能屈能伸，为重要目标可以暂时忍耐，成熟的人知道“为了什么而忍”",
+                        "C": "男儿膝下有黄金不能跪",
+                        "D": "妖怪比悟空强"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空宁跪妖怪也要救师父，是“能屈能伸”的智慧。忍，不是软弱，而是为了更重要的目标暂时低头。"
+                },
+                {
+                    "id": "q15",
+                    "num": 15,
+                    "question": "本回悟空“先摸底、后行动”的做法，体现了：",
+                    "options": {
+                        "A": "多管闲事",
+                        "B": "知己知彼，百战不殆——先摸清对方底细，再想办法应对",
+                        "C": "浪费时间",
+                        "D": "胆小怕事"
+                    },
+                    "correct": "B",
+                    "analysis": "悟空先变苍蝇摸底，掌握了妖怪的法宝分布和关键人物，才有了后面的连环妙计。做事先“摸清底细”，才能胜券在握。"
+                }
+            ],
+            "blankQuestions": [
+                {
+                    "id": "bq16",
+                    "num": 16,
+                    "question": "悟空变作______，悄悄跟踪小妖探听妖怪底细。",
+                    "answer": "苍蝇",
+                    "analysis": "悟空变作一只「苍蝇」，悄悄跟踪两个小妖，听他们说话，摸清了「幌金绳藏在压龙山压龙洞九尾狐狸处」的底细。变「苍蝇」探情报，是悟空的老招数——「不入虎穴，焉得虎子」。"
+                },
+                {
+                    "id": "bq17",
+                    "num": 17,
+                    "question": "幌金绳藏在______山压龙洞的九尾狐狸处。",
+                    "answer": "压龙",
+                    "analysis": "幌金绳藏在「压龙山」压龙洞的九尾狐狸（金角、银角的「干娘」）那里。悟空变作小妖去「借绳」，又变作「老妖」……宝贝藏在「后方」，先要「断其后路」。"
+                },
+                {
+                    "id": "bq18",
+                    "num": 18,
+                    "question": "悟空为救师父，向九尾狐狸下跪，自称一生只拜过______、观音、师父三人。",
+                    "answer": "佛祖",
+                    "analysis": "悟空为了救师父，不得不向九尾狐狸下跪，还自称「一生只拜过佛祖、观音、师父三人」。堂堂齐天大圣，为救人「忍辱下跪」——「大丈夫能屈能伸」，为了「重要的事」，放得下「身段」。"
+                },
+                {
+                    "id": "bq19",
+                    "num": 19,
+                    "question": "八戒看到“老母”弯腰还礼时露出______，认出了悟空。",
+                    "answer": "猴尾",
+                    "analysis": "八戒被捆着，看到「老母」（悟空变的九尾狐狸）弯腰还礼时露出「猴尾巴」，立刻认出「那是大师兄」。一个「猴尾」，露了马脚——「伪装再像，细节出卖了你」。"
+                },
+                {
+                    "id": "bq20",
+                    "num": 20,
+                    "question": "银角念______咒脱身，反用幌金绳扣住悟空。",
+                    "answer": "松绳",
+                    "analysis": "银角大王念「松绳咒」把绳子松了，悟空一得意，反而被银角用「幌金绳」扣住。这一回悟空「聪明反被聪明误」：本来骗到了绳，一高兴「露了底」——「得意忘形」，往往就是「翻车」的开始。"
+                },
+                {
+                    "id": "bq21",
+                    "num": 21,
+                    "question": "悟空自称“______”与妖怪交战，不小心应声被吸入葫芦。",
+                    "answer": "者行孙",
+                    "analysis": "悟空自称「者行孙」去和妖怪交战（他以为叫「孙行者」会被葫芦收，换个名字就没事），结果银角大王一喊「者行孙」，他一答应，就被吸进「紫金红葫芦」。名字不重要，「应声」就中招——「祸从口出」。"
+                },
+                {
+                    "id": "bq22",
+                    "num": 22,
+                    "question": "悟空在葫芦里假装______，骗妖怪摇晃葫芦。",
+                    "answer": "化脓",
+                    "analysis": "悟空被装进葫芦里，假装「化成脓水」，骗妖怪摇葫芦听声音。悟空在葫芦里「顶天立地」，让葫芦「重千斤」……用「苦肉计」+「诈死」骗妖怪打开葫芦——「将计就计」，斗智斗勇。"
+                },
+                {
+                    "id": "bq23",
+                    "num": 23,
+                    "question": "“毕竟______还姓孙”，点明悟空最终赢回宝贝。",
+                    "answer": "葫芦",
+                    "analysis": "回目「毕竟葫芦还姓孙」：悟空几番「腾挪」，把宝贝葫芦「骗」了回来。姓「孙」的葫芦，最终还是回到「孙」的手里——「东西是谁的，绕一圈还是谁的」，悟空斗智，赢得漂亮。"
+                }
+            ],
+            "essayQuestions": [
+                {
+                    "id": "q24",
+                    "num": 24,
+                    "question": "【关于“摸底调查”】悟空变苍蝇摸清妖怪底细，才成功骗到宝贝。请谈谈：为什么“先了解情况，再行动”很重要？学习中如何“摸底”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>摸底的价值：</strong> 不了解就动手，容易碰壁。悟空摸清了妖怪有几件宝、宝在哪里、谁去取，才设计出“截杀—冒充—骗宝”的连环计。</p>\n                        <p class=\"mt-2\"><strong>学习中的摸底：</strong> ①考试前先看题型分布，再分配时间；②写作文前先列提纲、想好素材；③做难题先读三遍题、划出条件；④参加比赛先了解规则和对手。把“侦察”做足，行动才有把握。盲目冲刺，不如先看清方向。</p>\n                    "
+                },
+                {
+                    "id": "q25",
+                    "num": 25,
+                    "question": "【关于“能屈能伸”】悟空给妖怪下跪，是不是“没骨气”？请谈谈：如何区分“能屈能伸”与“没有原则”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>能屈能伸是智慧：</strong> 悟空跪妖是为了救师父，心里清楚自己在做什么，没有放弃目标，这是“屈身不屈服”。真正的骨气，是心里的原则和底线，不是表面的“不低头”。</p>\n                        <p class=\"mt-2\"><strong>如何区分：</strong> ①“能屈”是为了更大的善、更高的目标，不是懦弱逃跑；②“没原则”是放弃底线、讨好别人、坑害他人；③为了正义暂时低头，值得；为了私利出卖原则，不可取。守住底线，学会变通，才是成熟的骨气。</p>\n                    "
+                },
+                {
+                    "id": "q26",
+                    "num": 26,
+                    "question": "【关于“拥有与会用”】悟空拿到幌金绳却不会念咒，反被妖怪反制。请谈谈：为什么“拥有”不等于“会用”？如何把“拥有的东西”变成“真正的实力”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>拥有≠会用：</strong> 幌金绳在悟空手里“不灵”，因为他不掌握使用方法（咒语）。工具、机会、资源都一样——不会用，等于没有。</p>\n                        <p class=\"mt-2\"><strong>变成实力：</strong> ①学到知识要反复练习、真正理解，不只是“见过”；②有了一本好书，要读透、用上，不是摆在书架；③有了好机会，要提前练好本事去接住；④多实践、多请教，把“知道”变成“做到”。真正的实力，是“会用”出来的。</p>\n                    "
+                },
+                {
+                    "id": "q27",
+                    "num": 27,
+                    "question": "【关于“绝境翻盘”】悟空被吸进葫芦、快要化掉，却依然冷静脱身。请谈谈：为什么说“绝境中最重要的是心态”？你如何理解“稳住不慌，就有办法”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>心态决定出路：</strong> 悟空在葫芦里没有大喊大叫、没有放弃，而是冷静地“演了场戏”（假化脓、变小虫），一步步找到出口。慌了，脑子就不转了；稳住，办法才浮出来。</p>\n                        <p class=\"mt-2\"><strong>绝境中的做法：</strong> ①先深呼吸，告诉自己“冷静”；②把“我完了”换成“我还能做什么”；③观察环境，找可利用的条件；④不求一步到位，先做“眼前能做的一小步”。考试紧张、比赛落后都像“进葫芦”，稳住心态，就有翻盘的可能。</p>\n                    "
+                },
+                {
+                    "id": "q28",
+                    "num": 28,
+                    "question": "【关于“细节决定成败”】八戒凭一条“猴尾巴”识破悟空。请谈谈：为什么说“细节里藏着真相”？你有哪些因关注细节而成功的经历？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>细节见真章：</strong> 悟空伪装得再像，一条猴尾就露了馅。假的真不了，细节往往暴露真相。会观察细节，是一种重要的能力。</p>\n                        <p class=\"mt-2\"><strong>联系生活：</strong> ①做题时抓住“关键词”（“至少”“最多”）就不会答错；②审题时留意单位、数字细节，避免粗心；③观察人时注意言行是否一致；④阅读时留意伏笔和前后照应。粗心丢分，往往就是没抓住细节。练就“火眼金睛”，从关注细节开始。</p>\n                    "
+                },
+                {
+                    "id": "q29",
+                    "num": 29,
+                    "question": "【关于“不敢应声的教训”】悟空因为“要面子”应了一声，被吸进葫芦。请谈谈：为什么“死要面子”有时会吃大亏？如何正确看待“面子”？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>面子的代价：</strong> 悟空明明可以不答，却因为“不想丢了名头”应了一声，结果被收。死要面子，往往会付出实打实的代价。</p>\n                        <p class=\"mt-2\"><strong>正确看待面子：</strong> ①面子不是“逞强”，不懂装懂、硬撑场面，最后更丢脸；②不懂就问、错了就改，才是真自信；③真正的“面子”来自实力和人品，不来自“嘴上不输”；④在重要的“里子”（安全、原则、目标）面前，面子可以让步。放下面子，才能成长。</p>\n                    "
+                },
+                {
+                    "id": "q30",
+                    "num": 30,
+                    "question": "【关于“连锁妙计”】悟空一环扣一环：截杀、冒充、下跪、骗绳、脱绳、换宝。请谈谈：为什么说“周密的计划+灵活的应变”，才能成就大事？",
+                    "answerHtml": "\n                        <p class=\"font-bold text-amber-900 mb-2\">【参考答案与思路】</p>\n                        <p><strong>计划与应变：</strong> 悟空有大计划（骗到所有法宝），又随时根据变化调整（被识破就换招、被收走就演脱身戏）。有计划，方向不偏；能应变，路才走得通。</p>\n                        <p class=\"mt-2\"><strong>联系学习：</strong> ①复习要有计划（分科目、分阶段），也要根据掌握情况调整；②写作文先有提纲，写着发现更好的思路就大胆改；③解决问题先有方案，此路不通就换一条。计划是“地图”，应变是“开车”，两者配合才能到达目的地。</p>\n                    "
+                }
+            ]
+        };
+        // 页面初始化逻辑入口
+        document.addEventListener('DOMContentLoaded', () => {
+            QuizModule.init();
+            BlankModule.init();
+            EssayModule.init();
+        });
+    </script>
+</body>
+</html>
