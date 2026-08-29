@@ -123,11 +123,11 @@ h1, h2, h3, h4, .serif {
     color: #1f2937;
     padding: 0 4px;
 }
-/* ===== 性能优化：题目卡片离屏时跳过布局与绘制，滚动/点击更流畅 ===== */
+/* ===== 性能优化：题目卡片离屏时跳过布局与绘制，滚动/点击更流畅 =====
 .q-card {
     content-visibility: auto;
     contain-intrinsic-size: auto 200px;
-}
+} */
 @media (prefers-reduced-motion: reduce) {
     * {
         scroll-behavior: auto !important;
